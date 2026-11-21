@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>LeakLens report</title>
+<style>
+body{font:15px/1.5 system-ui,sans-serif;max-width:900px;margin:2rem auto;padding:0 1rem;color:#1b2430}
+h1{margin-bottom:.2rem} .muted{color:#667}
+table{border-collapse:collapse;width:100%;margin:.6rem 0 1.4rem} th,td{border:1px solid #d5dbe3;padding:.4rem .5rem;text-align:left;vertical-align:top;font-size:14px}
+th{background:#f2f5f9} .high{color:#b3261e;font-weight:600} .medium{color:#a15c00;font-weight:600} .low{color:#2d6a4f;font-weight:600}
+code{background:#f2f5f9;padding:0 .25rem;border-radius:3px}
+</style></head><body>
+<h1>LeakLens scan report</h1>
+<p class="muted">{{ r.filename }} &middot; {{ r.kind }} &middot; scanned {{ r.scanned_at }}</p>
+<h2>Overall risk: <span class="{{ r.summary.overall.level }}">{{ r.summary.overall.level|upper }} ({{ r.summary.overall.score }}/100)</span></h2>
+<p>{{ r.summary.overall.explanation }}
+Active findings: {{ r.summary.high }} high, {{ r.summary.medium }} medium, {{ r.summary.low }} low.
+Also listed: {{ r.summary.placeholder }} placeholder(s), {{ r.summary.likely_benign }} likely-benign.</p>
+
+<h2>Action taken</h2>
+<p>{{ r.action.redacted_count }} finding(s) redacted using the <code>{{ r.action.style }}</code> style &rarr; <code>{{ r.action.output_file }}</code>.
+{{ r.action.note }}</p>
+{% if r.verification and not r.verification.error %}
+<h2>Verification rescan of the sanitised file</h2>
+<p>Remaining active findings: <strong>{{ r.verification.active }}</strong>
+({{ r.verification.high }} high, {{ r.verification.medium }} medium, {{ r.verification.low }} low).
+Metadata fields remaining: {{ r.verification.metadata_remaining }}.</p>
+{% endif %}
+
+<h2>Findings</h2>
+<table><tr><th>#</th><th>Risk</th><th>Type</th><th>Location</th><th>Status</th><th>Preview</th><th>Why flagged</th><th>Redacted</th></tr>
+{% for f in r.findings %}
+<tr><td>{{ f.id }}</td><td class="{{ f.level }}">{{ f.level }} ({{ f.score }})</td><td>{{ f.label }}</td>
+<td>{% if f.page %}page {{ f.page }}, {% endif %}{% if f.line %}line {{ f.line }}{% else %}metadata{% endif %}</td>
+<td>{{ f.status }}</td><td><code>{{ f.preview }}</code></td>
+<td>{% for x in f.reasons %}{{ x.text }}{% if x.delta %} ({{ '%+d'|format(x.delta) }}){% endif %}<br>{% endfor %}
+<em>{{ f.action }}</em>
+{% if f.blast_radius %}<br><strong>Blast radius:</strong> {{ f.blast_radius }}{% endif %}</td>
+<td>{{ 'yes' if f.id in r.action.redacted_ids else ('stripped' if f.metadata else 'no') }}</td></tr>
+{% endfor %}</table>
+<p class="muted">Scores are transparent design values, not validated risk measurements. Redaction does not make an already-exposed secret safe: rotate any real credential.</p>
+</body></html>

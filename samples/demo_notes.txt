@@ -1,0 +1,6 @@
+Onboarding notes (fake data)
+Contact: meera.rao42@quartzmail.net
+Mobile: +91 98765 43210
+Aadhaar: 8987 1689 7681
+Wifi password: 0d9TH4QgTNBEjE4o
+Example config for the docs:  password = "changeme"

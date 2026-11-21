@@ -1,0 +1,1944 @@
+snippet,label
+auth_token: ghp_ncfBAepfJBd0Kh8oOOL8dKLzdocJ2isAjIhK,SENSITIVE
+"// see docs
+x = [n * 2 for n in range(5)]",NON_SENSITIVE
+"// TODO: move this to the vault
+postgres://priya:Harbor_7434!@db.brightcrest.co:5432/app",SENSITIVE
+"""license_key"": ""db-credentials"",",NON_SENSITIVE
+set TOKEN=eWJKY40uvSwMFLZDe1f8rESQedUStPKR0CsTy,SENSITIVE
+"headers = {""Authorization"": ""Bearer hBKqFYY_kv5ZJr3J1TWDtkwtDDb-xHKas1VOqg6""}",SENSITIVE
+"password_prompt: ""refresh""",NON_SENSITIVE
+conn_secret = 'Tiger#9296x',SENSITIVE
+const apikey = ${APIKEY};,NON_SENSITIVE
+"token_expiry: ""Enter your password""",NON_SENSITIVE
+"const API_SECRET = ""xjSI6bWHtP3fS2qHx6kwXoIIXGvOoNZY"";",SENSITIVE
+"// sample configuration
+Contact the support team through the help portal.",NON_SENSITIVE
+"# production credentials
+apikey: Jungle!5736!",SENSITIVE
+"// admin access
+headers = {""Authorization"": ""Bearer 9SkpXz9w3QlY7Zkuvqdt7s8S""}",SENSITIVE
+"headers = {""Authorization"": ""Bearer r3yBdGBL.EPH1qhT61.qtc4xatws8phP9nhFyJfm""}",SENSITIVE
+const api_key_header = 'Please type your secret code';,NON_SENSITIVE
+"api_key_header = ""hidden""",NON_SENSITIVE
+"// sample configuration
+BEARER_TOKEN = ${BEARER_TOKEN}",NON_SENSITIVE
+DB_PASSWORD=Orbit-6009x,SENSITIVE
+export API_KEY=tiger-tiger-92679,SENSITIVE
+"const webhook_key = os.getenv(""WEBHOOK_KEY"");",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer ioDnkHIfxIq2HZt_PlJhx2jIclHkCiHp6bR1IqfE""}",SENSITIVE
+tel: +1 555 0100 000,NON_SENSITIVE
+"client_secret = ""UGJmGEp7CgQ0PBQF""",SENSITIVE
+access_token := settings.ACCESS_TOKEN,NON_SENSITIVE
+"// see docs
+password_field = ""Bearer""",NON_SENSITIVE
+password_input = document.getElementById('password'),NON_SENSITIVE
+vault_token := ${VAULT_TOKEN},NON_SENSITIVE
+"# staging db login
+PAN: KHBPJ4569L",SENSITIVE
+password: jzLczbttOofL9H2WjQ,SENSITIVE
+"// see docs
+Use a strong, unique passphrase for each account.",NON_SENSITIVE
+Authentication is handled by the identity provider.,NON_SENSITIVE
+"os.environ[""REDIS_PASSWORD""] = ""3600""",NON_SENSITIVE
+postgres://arjun:Tiger#695x@db.brightcrest.co:5432/app,SENSITIVE
+export DB_PASSWORD=222f828767efc2f91624a8940f1f836f99eee369,SENSITIVE
+build_id: 8c662248b483b7ffc050fec94dbca3a0aac36098,NON_SENSITIVE
+The secret manager rotates credentials every 30 days.,NON_SENSITIVE
+"self.bearer_token = ""REPLACE_ME""",NON_SENSITIVE
+export ENCRYPTION_KEY=xoxb-VVPqzPptEJQzhkPkenG5ZFJoC6vW,SENSITIVE
+"const admin_login = ""60dcd6c8a1f8b46287cced9041dff02cee737443"";",SENSITIVE
+const token_type = 'Bearer';,NON_SENSITIVE
+"# staging db login
+const client_secret = ""omjMyXHCabM6JOF8EFd0Nhcy/1kGD2VD/"";",SENSITIVE
+"let secret_key = ""example-placeholder"";",NON_SENSITIVE
+"// TODO: move this to the vault
+DB_PASS: FNl5oFA6Qd8Mj7zdnbMjAdTdlzC5T4uUhf7",SENSITIVE
+"# staging db login
+self.private_key = ""river-tiger-14381""",SENSITIVE
+"headers = {""Authorization"": ""Bearer WTN3lg8zV5yPU8d0FZfWe7ihGyiRUI""}",SENSITIVE
+public static void main(String[] args) {,NON_SENSITIVE
+Phone: 555-0100,NON_SENSITIVE
+"# DO NOT SHARE
+Reach me at priya.ivanov18@northwind-labs.io",SENSITIVE
+"# temp, delete before commit
+private static final String BEARER_TOKEN = ""AKIAGmzWkpAePcEJIukB4geqNf"";",SENSITIVE
+token := secrets.token,NON_SENSITIVE
+"checksum = ""sha256:88b886e7577496a2c8773e130f7eb19731662b5e""",NON_SENSITIVE
+"# production credentials
+ftp_pw = ""0mYtluYI0KN1gNT11cUzYZ""",SENSITIVE
+"var vault_token = ""Orbit#856x""",SENSITIVE
+const password_field = '/etc/ssl/private/server.pem';,NON_SENSITIVE
+"self.admin_pass = ""6EudM7Oyf5TNS05kO""",SENSITIVE
+"# DO NOT SHARE
+Mobile: +91 71683 62395",SENSITIVE
+"commit = ""p8yib2en-us0h-mi4f-s9z6ykryu7oe""",NON_SENSITIVE
+"# temp, delete before commit
+Card: 4724873949835505",SENSITIVE
+Aadhaar: 4418 0578 8916,SENSITIVE
+"# loaded from env
+auth_method: ""Please type your secret code""",NON_SENSITIVE
+Set the API key in your environment before running the app.,NON_SENSITIVE
+Reach us at user@example.com,NON_SENSITIVE
+"""db_password"": ""NPcbdaKwtgHwIoALtLinxN1"",",SENSITIVE
+"// admin access
+pwd: ""Falcon!4339""",SENSITIVE
+const apiKey = process.env.API_KEY;,NON_SENSITIVE
+"config[""api_key""] = ""3064d6d59291f0cde2e5738713a818d8""",SENSITIVE
+"// see docs
+""client_secret"": ""hidden"",",NON_SENSITIVE
+"self.conn_secret = ""Pixel-8797Q""",SENSITIVE
+Phone: +1 555 0100 000,NON_SENSITIVE
+"password = ""7kwjSbbciSPOcSeVce2LWxm090I5Qe43W6T""",SENSITIVE
+"const redis_password = ""mALOR2HcSGKgVP8Kd0d3mS8g"";",SENSITIVE
+"# DO NOT SHARE
+Mobile: (406) 495-1884",SENSITIVE
+const key_path = 'Please type your secret code';,NON_SENSITIVE
+api_key = 'nPTmZYl2dVAMH2vWD6qeSPt5Pv74GDqQ7EyIM',SENSITIVE
+ticket id 663827539144,NON_SENSITIVE
+PAN: XDFPV2665G,SENSITIVE
+"password_label = ""./keys/id_rsa.pem""",NON_SENSITIVE
+"self.access_token = ""L7csGZaF31DDxp63OHm1FZuG296c0xPbX+neGBuz""",SENSITIVE
+postgres://aisha:HvAV8DnRlzGW7hUNwOdqryzdaeA@db.lumenworks.org:5432/app,SENSITIVE
+apikey := getpass.getpass(),NON_SENSITIVE
+Phone: (555) 555-0123,NON_SENSITIVE
+const password_prompt = 'Enter your password';,NON_SENSITIVE
+"key_path = ""required""",NON_SENSITIVE
+private_key: affd2b49c12a4b0062983475eb46c5296f62e338,SENSITIVE
+"token_expiry = ""oauth2""",NON_SENSITIVE
+"# example only
+build_id: 3gwnpfyh-vmut-tilo-fyczuj4zikdz",NON_SENSITIVE
+postgres://aisha:stone-river-80931@db.northwind-labs.io:5432/app,SENSITIVE
+bearer_token = ${BEARER_TOKEN},NON_SENSITIVE
+Phone: +1 555 0100 000,NON_SENSITIVE
+Aadhaar: 4605 0699 0795,SENSITIVE
+password_input = document.getElementById('password'),NON_SENSITIVE
+Card: 4276811732060016,SENSITIVE
+"password_min_length: ""oauth2""",NON_SENSITIVE
+Passwords must be at least 12 characters long.,NON_SENSITIVE
+PASSWD=Maple#251,SENSITIVE
+Phone: +91 87022 85361,SENSITIVE
+tel: +91 98417 45649,SENSITIVE
+Email: name@example.org,NON_SENSITIVE
+"self.admin_pass = ""Cobalt!4651""",SENSITIVE
+Email: li.silva@brightcrest.co,SENSITIVE
+const password_label = 'Password must be at least 8 characters';,NON_SENSITIVE
+Phone: +1 555 0100 000,NON_SENSITIVE
+"PASSWORD = System.getenv(""PASSWORD"")",NON_SENSITIVE
+const key_path = 'hidden';,NON_SENSITIVE
+"const api_key = ""Falcon$9477!"";",SENSITIVE
+timestamp = 120685155596,NON_SENSITIVE
+"# placeholder values
+passwd: changeme",NON_SENSITIVE
+"// sample configuration
+The secret manager rotates credentials every 30 days.",NON_SENSITIVE
+passwd := settings.PASSWD,NON_SENSITIVE
+"ftp_pw := ""blue-stone-83965""",SENSITIVE
+"headers = {""Authorization"": ""Bearer .Yx5uVECweGThdgH9hmsOazM4n""}",SENSITIVE
+"// TODO: move this to the vault
+DB_PASSWORD := ""Maple!3206""",SENSITIVE
+From: meera.haddad@lumenworks.org,SENSITIVE
+"private static final String BEARER_TOKEN = ""Orbit-7405x"";",SENSITIVE
+"let SECRET = ""Falcon!1799!"";",SENSITIVE
+version = '2.4.1',NON_SENSITIVE
+See the README for installation instructions.,NON_SENSITIVE
+"// admin access
+let SECRET: string = ""sjObCZGvGiCaY18HslxBc6AnrKli1lHXoTlmMf1"";",SENSITIVE
+"# example only
+self.redis_password = ""TODO""",NON_SENSITIVE
+Reach us at support@example.net,NON_SENSITIVE
+"password_field: ""3600""",NON_SENSITIVE
+"""redis_password"": ""Maple$8526Q"",",SENSITIVE
+Call me on +91 92002 48212,SENSITIVE
+private_key = ${PRIVATE_KEY},NON_SENSITIVE
+tel: (555) 555-0123,NON_SENSITIVE
+const bearer_token = process.env.BEARER_TOKEN;,NON_SENSITIVE
+"// sample configuration
+const key_path = 'refresh';",NON_SENSITIVE
+"# example only
+REDIS_PASSWORD = secrets.redis_password",NON_SENSITIVE
+"commit = ""c1bac7adac1a4b7d0b352ad6074dce1118813830""",NON_SENSITIVE
+Authentication is handled by the identity provider.,NON_SENSITIVE
+const auth_method = 'Enter your password';,NON_SENSITIVE
+"""access_token"": ""yLza7wk38puJuFrs4nsdXbkJeM3wCQdHy"",",SENSITIVE
+PAN: VXEPN6521V,SENSITIVE
+"// see docs
+commit = ""nb569abd-qk5f-t6ix-tinbh0hurbyd""",NON_SENSITIVE
+token = 'SG.4m9AFzCXN5LvSHV0fkxuxe0t',SENSITIVE
+"// admin access
+tel: +91 79586 48001",SENSITIVE
+"for i in range(10):
+    print(i)",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer Ymbdzw_Isz0psundmjv-73hbPsETJveIm""}",SENSITIVE
+"// sample configuration
+def add(a, b):
+    return a + b",NON_SENSITIVE
+"# replace with your own key
+const total = items.reduce((a, b) => a + b, 0);",NON_SENSITIVE
+owner: support@example.net,NON_SENSITIVE
+"self.redis_password = ""cf07255bc509cb3acac23db7c6e9b7d180a47426""",SENSITIVE
+"uuid = ""ttfosi0t-zswz-26dx-o4o33i7rlbxr""",NON_SENSITIVE
+"// admin access
+PAN: MLUPD3976J",SENSITIVE
+"""token"": ""example-placeholder"",",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer D_G3SaoKfgFoeOASl1YCJlS24R.5g""}",SENSITIVE
+From: kofi.mehta91@northwind-labs.io,SENSITIVE
+const passwd = ${PASSWD};,NON_SENSITIVE
+postgres://tomas:Cobalt-3970@db.ostrava-tech.cz:5432/app,SENSITIVE
+"const redis_password = ""Jungle-1942Q"";",SENSITIVE
+"# production credentials
+self.auth_token = ""axFncd5rtmhStC9hkuCDKxskJ""",SENSITIVE
+See the README for installation instructions.,NON_SENSITIVE
+"# example only
+api_key_header = ""basic""",NON_SENSITIVE
+public static void main(String[] args) {,NON_SENSITIVE
+"// admin access
+DB_PASS=AKIAgYU1tVNuylP0wuoxiJ6x11qpd",SENSITIVE
+"secret_name = ""Enter your password""",NON_SENSITIVE
+total_tokens = len(tokens),NON_SENSITIVE
+"bearer_token = ""Vae2sKjh1Ri4bwvWLa4Sz8kP62""",SENSITIVE
+ticket id 890408006670,NON_SENSITIVE
+"<input type=""password"" name=""pwd"" placeholder=""Password"">",NON_SENSITIVE
+"// see docs
+const token_type = '3600';",NON_SENSITIVE
+"response = requests.get(url, timeout=10)",NON_SENSITIVE
+"// admin access
+access_token = 'JVho31qPgmHQqTFoJDoIKS'",SENSITIVE
+"# placeholder values
+token = tokenizer.encode(text)",NON_SENSITIVE
+db_password: your_token_goes_here,NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer rVhZEgVfbB6Mpr2lzoTvURbGpE""}",SENSITIVE
+"let private_key = ""changeme"";",NON_SENSITIVE
+"// admin access
+Card: 4345370971071140",SENSITIVE
+"checksum = ""sha256:8e00a4ff1125cf5ec72ba694165beaecba0afa70""",NON_SENSITIVE
+"secret_name: ""3600""",NON_SENSITIVE
+"""DB_PASSWORD"": ""AKIAvdTvQu4YEGx5pZpwjina43QDzCzKXt7k"",",SENSITIVE
+"// admin access
+headers = {""Authorization"": ""Bearer jykwMT7T2i-OwJGcvIEcBgZ5zK.mzEhqgk""}",SENSITIVE
+"admin_login = ""tiger-moon-42927""",SENSITIVE
+Mobile: +44 7894 618373,SENSITIVE
+"SECRET = os.getenv(""SECRET"")",NON_SENSITIVE
+API_KEY=insert_token_here,NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer DH9eN6JUJqGb8mUtDZldrph.AxHUtwudSF""}",SENSITIVE
+"# example only
+owner: your.name@example.com",NON_SENSITIVE
+"# production credentials
+headers = {""Authorization"": ""Bearer ShDW0WCdGcH3EDTAP2JM_Bu9IrMKlQa-FuO5""}",SENSITIVE
+"password_field: ""jwt""",NON_SENSITIVE
+"// see docs
+client_secret = ""TODO""",NON_SENSITIVE
+"# DO NOT SHARE
+self.SECRET = ""Pixel$549x""",SENSITIVE
+"# loaded from env
+pin_code = process.env.PIN_CODE",NON_SENSITIVE
+PAN: QNAPF4668V,SENSITIVE
+export PWD=basic,NON_SENSITIVE
+"""password"": ""****"",",NON_SENSITIVE
+"checksum = ""sha256:0oyv3ywt-ezhr-nqr0-ueoziqo7nwqq""",NON_SENSITIVE
+PAN: CYQPL9584G,SENSITIVE
+build_id: 51acbd3d48c3bb9e28c9e3ef5404bf7bac806081,NON_SENSITIVE
+Use pass: Falcon$3919Q,SENSITIVE
+Call me on +44 7488 512362,SENSITIVE
+"let bearer_token = ""your_token_goes_here"";",NON_SENSITIVE
+"config[""DB_PASSWORD""] = ""0aQoVmzIc7RsJvXyXDhfo2eK0agFf2WnKDd0RmTv""",SENSITIVE
+"headers = {""Authorization"": ""Bearer gsPQyaxJHlOXGMY1gNMFW3GNzqgAV7-sURz6g""}",SENSITIVE
+Phone: +44 7921 720853,SENSITIVE
+"# example only
+self.db_password = ""<YOUR_API_KEY>""",NON_SENSITIVE
+Passwords must be at least 12 characters long.,NON_SENSITIVE
+api_key := ${API_KEY},NON_SENSITIVE
+export API_SECRET=your_token_goes_here,NON_SENSITIVE
+export REDIS_PASSWORD=Lotus$9194x,SENSITIVE
+"# temp, delete before commit
+Wifi password: ghp_yjPsoPISfmDjUlBvRzhc1whQ7nP8HH",SENSITIVE
+Card: 4137449981327437,SENSITIVE
+"self.secret_key = ""Maple@5468!""",SENSITIVE
+"// TODO: move this to the vault
+Reach me at meera.kim@ostrava-tech.cz",SENSITIVE
+"token: ""./keys/id_rsa.pem""",NON_SENSITIVE
+"# DO NOT SHARE
+contact = sven.silva@brightcrest.co",SENSITIVE
+export DB_PASSWORD=REPLACE_ME,NON_SENSITIVE
+pwd: AKIAIOSFODNN7EXAMPLE,NON_SENSITIVE
+Order #961898347969,NON_SENSITIVE
+"self.bearer_token = ""j1qbBzNHhsK4hfQLnopMX""",SENSITIVE
+"# placeholder values
+class User:
+    pass",NON_SENSITIVE
+"private_key := ""your_password_here""",NON_SENSITIVE
+"uuid = ""54b4667a20f1fa2261bd2b5ff4891e5dc9328776""",NON_SENSITIVE
+"checksum = ""sha256:tfu94gym-m219-kzha-a2lg8pdkzqqv""",NON_SENSITIVE
+total_tokens = len(tokens),NON_SENSITIVE
+token = tokenizer.encode(text),NON_SENSITIVE
+postgres://aisha:Maple-8171Q@db.brightcrest.co:5432/app,SENSITIVE
+"self.bearer_token = ""4e1af408461c58790dd2cfb8a5f1b461595919cb589f6aec38bcacf836ed5a14""",SENSITIVE
+"key_path = ""jwt""",NON_SENSITIVE
+public static void main(String[] args) {,NON_SENSITIVE
+"let private_key = ""23d39553ccaccfab54d946a2d207dc68"";",SENSITIVE
+access_token = getpass.getpass(),NON_SENSITIVE
+"// see docs
+logger.info('user logged in')",NON_SENSITIVE
+Meeting notes: discuss the release schedule on Friday.,NON_SENSITIVE
+private_key = input_value,NON_SENSITIVE
+password := secrets.password,NON_SENSITIVE
+"// sample configuration
+for i in range(10):
+    print(i)",NON_SENSITIVE
+"""bearer_token"": ""907508db2823ccd71ba82f4dee6a63c5"",",SENSITIVE
+"auth_token: ""Cobalt_4863""",SENSITIVE
+const password = getpass.getpass();,NON_SENSITIVE
+"# loaded from env
+token_type = ""required""",NON_SENSITIVE
+Reach me at meera.silva48@lumenworks.org,SENSITIVE
+"uuid = ""cdkl6ort-6cwe-kuud-3ekzpr3tptpe""",NON_SENSITIVE
+"# production credentials
+postgres://kofi:YV0oOVVPcpg6mZacDdzp879oXRc7JOK6Aq@db.quartzmail.net:5432/app",SENSITIVE
+"# placeholder values
+Email: name@example.org",NON_SENSITIVE
+From: rahul.okafor@ostrava-tech.cz,SENSITIVE
+Authentication is handled by the identity provider.,NON_SENSITIVE
+"// see docs
+API_KEY = getpass.getpass()",NON_SENSITIVE
+"# replace with your own key
+signing_salt = 'changeme'",NON_SENSITIVE
+"key_path: ""Your token has expired, please log in again""",NON_SENSITIVE
+"// see docs
+const pwd = ""<YOUR_API_KEY>"";",NON_SENSITIVE
+"// see docs
+ticket id 716432080878",NON_SENSITIVE
+"client_secret = ""{{ SECRET }}""",NON_SENSITIVE
+"# temp, delete before commit
+CLIENT_SECRET=Jungle#5325Q",SENSITIVE
+"let SECRET = ""0d0a7ba07a2531adab23e5617d266908"";",SENSITIVE
+"headers = {""Authorization"": ""Bearer KYFRGdlAHsiiYMjiibjUjso_J5wmG""}",SENSITIVE
+Email: tomas.rao@quartzmail.net,SENSITIVE
+"# replace with your own key
+key_path: ""Please type your secret code""",NON_SENSITIVE
+postgres://li:Orbit#2363Q@db.quartzmail.net:5432/app,SENSITIVE
+"# temp, delete before commit
+headers = {""Authorization"": ""Bearer iLbIqTUwrVGVUvoFvKWdCyCXU""}",SENSITIVE
+"# staging db login
+var DB_PASSWORD = ""ef33ef2c3ff57de13628bef7a127f6c31d175a63""",SENSITIVE
+"// see docs
+export SECRET=changeme",NON_SENSITIVE
+"// see docs
+password_field: ""Password must be at least 8 characters""",NON_SENSITIVE
+"for i in range(10):
+    print(i)",NON_SENSITIVE
+postgres://ana:xoxb-22xQ5PlSobMD5UfCn2csC@db.northwind-labs.io:5432/app,SENSITIVE
+"SECRET = ""oeExG28VFRnN5nm1EmtYDro9WucAlvA""",SENSITIVE
+Phone: +91 75224 89514,SENSITIVE
+contact = test@test.com,NON_SENSITIVE
+export ENCRYPTION_KEY=****,NON_SENSITIVE
+token = process.env.TOKEN,NON_SENSITIVE
+"// sample configuration
+const secret_key = ""{{ SECRET }}"";",NON_SENSITIVE
+bearer_token = 'oauth2',NON_SENSITIVE
+"self.token = ""refresh""",NON_SENSITIVE
+Wifi password: AKIAR0eSVdNREnRuZ6aCEvRWT9P4lD9u,SENSITIVE
+"self.apikey = ""tiger-moon-96472""",SENSITIVE
+"# temp, delete before commit
+PAN: UGIPD1584Q",SENSITIVE
+"password_min_length: ""Password must be at least 8 characters""",NON_SENSITIVE
+"secret_file = ""./keys/id_rsa.pem""",NON_SENSITIVE
+token: Lotus@6059!,SENSITIVE
+"# staging db login
+postgres://diego:MIAUJrbeZa1lfSpa@db.northwind-labs.io:5432/app",SENSITIVE
+"# loaded from env
+const pwd = ""example-placeholder"";",NON_SENSITIVE
+Reach me at sven.mehta12@northwind-labs.io,SENSITIVE
+"""conn_secret"": ""ygt2XLcDNj8mity57Dl83rby"",",SENSITIVE
+"# DO NOT SHARE
+owner: priya.kim70@quartzmail.net",SENSITIVE
+"// TODO: move this to the vault
+postgres://tomas:Orbit@5107!@db.northwind-labs.io:5432/app",SENSITIVE
+"while queue:
+    node = queue.pop()",NON_SENSITIVE
+"let admin_login = ""uGpjl7O4pDbmuhYGT"";",SENSITIVE
+Email: nora.okafor81@lumenworks.org,SENSITIVE
+set TOKEN=Jungle_7331!,SENSITIVE
+"jwt_secret = ""RNctQe2WQXvBHfjzSgT9Vdcs6XQiHg""",SENSITIVE
+"// TODO: move this to the vault
+api_key: ""SG.xh5pDJhfq8V85U5yEo9lMZsWDzTmUY""",SENSITIVE
+"password: ""db-credentials""",NON_SENSITIVE
+"// see docs
+return render_template('index.html')",NON_SENSITIVE
+"# loaded from env
+access_token = ""insert_token_here""",NON_SENSITIVE
+"const SECRET = os.environ[""SECRET""];",NON_SENSITIVE
+Phone: 1234567890,NON_SENSITIVE
+"commit = ""5498acd947a1b5a41eafe6ab7233a007b22f16ec""",NON_SENSITIVE
+"""jwt_secret"": ""ghp_DLKBbTiBflHs0GYVwgoYV"",",SENSITIVE
+contact = priya.okafor@brightcrest.co,SENSITIVE
+"# DO NOT SHARE
+os.environ[""PASSWORD""] = ""Orbit_6203x""",SENSITIVE
+"# placeholder values
+secret_name = ""Password must be at least 8 characters""",NON_SENSITIVE
+"// see docs
+bearer_token := ${BEARER_TOKEN}",NON_SENSITIVE
+postgres://diego:6e120a578757563e68d1f0e22d4ae56ad7675dbd@db.brightcrest.co:5432/app,SENSITIVE
+"class User:
+    pass",NON_SENSITIVE
+PAN: PPIPP9495G,SENSITIVE
+"// see docs
+password_label: ""jwt""",NON_SENSITIVE
+"const vault_token = ""Lotus_115"";",SENSITIVE
+Call: 1234567890,NON_SENSITIVE
+"const private_key = ""Pixel$9676x"";",SENSITIVE
+secret_key = 'your_password_here',NON_SENSITIVE
+"private_key = ""Password must be at least 8 characters""",NON_SENSITIVE
+"// sample configuration
+const apikey = input_value;",NON_SENSITIVE
+"// TODO: move this to the vault
+""DB_PASS"": ""Orbit-6191"",",SENSITIVE
+token = '3424d61fcd25491215310a53e5356b6b3dacd8e7f05554b1e1e0ee0ac414f5c5',SENSITIVE
+"private_key = ""sk-UQAv9E9L7Nku5ymr5nYQYN0aLSuuPWJq""",SENSITIVE
+Login with username t2k1L2alrnWJo34Gk5Vme,SENSITIVE
+"WEBHOOK_KEY = config.get(""webhook_key"")",NON_SENSITIVE
+return render_template('index.html'),NON_SENSITIVE
+Passwords must be at least 12 characters long.,NON_SENSITIVE
+"# temp, delete before commit
+contact = sven.haddad33@ostrava-tech.cz",SENSITIVE
+Aadhaar: 5797 1459 2213,SENSITIVE
+contact = your.name@example.com,NON_SENSITIVE
+"# temp, delete before commit
+let secret_key = ""Ember_7277x"";",SENSITIVE
+bearer_token := secrets.bearer_token,NON_SENSITIVE
+"# temp, delete before commit
+const secret_key = ""Harbor!4398!"";",SENSITIVE
+Reach us at your.name@example.com,NON_SENSITIVE
+"# example only
+timestamp = 604776845808",NON_SENSITIVE
+"""redis_password"": ""Jungle!3250x"",",SENSITIVE
+"# example only
+secret_key = System.getenv(""SECRET_KEY"")",NON_SENSITIVE
+"# staging db login
+Phone: (894) 794-1029",SENSITIVE
+"""password"": ""Orbit@1675x"",",SENSITIVE
+"self.apikey = ""blue-blue-78292""",SENSITIVE
+"const DB_PASS = System.getenv(""DB_PASS"");",NON_SENSITIVE
+"config[""SECRET""] = ""xoxb-w65xqIjkkjjhLYZhktGKKgJF""",SENSITIVE
+"token_type = ""oauth2""",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer Q8fCg5.EexziHkQlRk2Nj5FtwN3Pn2vf_puhK""}",SENSITIVE
+"# temp, delete before commit
+postgres://aisha:sk-BqQDfp5DaSoQzgmAfIRsxvprQQ@db.brightcrest.co:5432/app",SENSITIVE
+"# temp, delete before commit
+jwt_secret = '6OgyGRFqmgQ7FKZCse7L05Ei'",SENSITIVE
+pwd = 'pdoL8UrwkS1xAT0rkCClaifIUB',SENSITIVE
+Never commit passwords to the repository.,NON_SENSITIVE
+Aadhaar: 3495 8979 8344,SENSITIVE
+export JWT_SECRET=./keys/id_rsa.pem,NON_SENSITIVE
+"// see docs
+DB_PASS: ****",NON_SENSITIVE
+API_SECRET = getpass.getpass(),NON_SENSITIVE
+"private static final String AUTH_TOKEN = ""Jungle-5029Q"";",SENSITIVE
+"const token = os.environ[""TOKEN""];",NON_SENSITIVE
+"# DO NOT SHARE
+os.environ[""ADMIN_PASS""] = ""Cobalt$5530Q""",SENSITIVE
+"DB_PASSWORD := os.getenv(""DB_PASSWORD"")",NON_SENSITIVE
+"# replace with your own key
+password_field: ""./keys/id_rsa.pem""",NON_SENSITIVE
+"private_key = ""Pixel!3160x""",SENSITIVE
+"self.API_SECRET = ""river-river-24459""",SENSITIVE
+"apikey = ""793677fa31a2e376e9db073ac7d7a7c198ffe01ce75fc538e29e602225b0dde9""",SENSITIVE
+ftp_pw: 3Ino4yw2vMNJKrsWfN9Tx1hxQ,SENSITIVE
+"const encryption_key = ""your_password_here"";",NON_SENSITIVE
+postgres://nora:ZHDw6vVhdWCPZf/8zwiwxHrvOLr9orJ@db.brightcrest.co:5432/app,SENSITIVE
+Wifi password: Jungle_2078!,SENSITIVE
+Phone: 555-0100,NON_SENSITIVE
+"commit = ""yzd1m89o-rrv9-1gpi-stzcognc9yxd""",NON_SENSITIVE
+Aadhaar: 7632 5762 8260,SENSITIVE
+"private_key: ""changeme""",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer O3aMGrqvLm3733ymt0wtOC3XJtmxyu""}",SENSITIVE
+"commit = ""6e13d6975bb3f2594831167628828f5809e7b7d3""",NON_SENSITIVE
+const apiKey = process.env.API_KEY;,NON_SENSITIVE
+owner: name@example.org,NON_SENSITIVE
+"# loaded from env
+jwt_secret = getpass.getpass()",NON_SENSITIVE
+DB_PASSWORD := ${DB_PASSWORD},NON_SENSITIVE
+"# temp, delete before commit
+contact = ana.haddad@brightcrest.co",SENSITIVE
+"# loaded from env
+pwd = 'TODO'",NON_SENSITIVE
+DB_PASS = '6xTlNzOGVA5hhHDtF9CygB7oymuEPT1yzHWJr1h',SENSITIVE
+"# placeholder values
+self.jwt_secret = ""insert_token_here""",NON_SENSITIVE
+Phone: (234) 828-8280,SENSITIVE
+"// TODO: move this to the vault
+tel: +91 89292 12534",SENSITIVE
+"SELECT id, name FROM users;",NON_SENSITIVE
+"SECRET: ""Maple_1608Q""",SENSITIVE
+"headers = {""Authorization"": ""Bearer J_Lx3cK6PMJkm_RDVoO.LNVF0JE37G""}",SENSITIVE
+"// see docs
+JWT_SECRET=Bearer",NON_SENSITIVE
+export PRIVATE_KEY=Tiger$1721x,SENSITIVE
+"// see docs
+config[""apikey""] = ""{{ SECRET }}""",NON_SENSITIVE
+const password_prompt = 'Password must be at least 8 characters';,NON_SENSITIVE
+vault_token: pRVeTJ8l1x4Yr5YDEv,SENSITIVE
+Mobile: +91 72451 30404,SENSITIVE
+Call me on (410) 604-1198,SENSITIVE
+"# staging db login
+apikey: ""3ed27e961b130f4c4e8bc562ad69a1b3""",SENSITIVE
+"<input type=""password"" name=""pwd"" placeholder=""Password"">",NON_SENSITIVE
+admin_pass = 'pVRR5TininFQvm8vUCE',SENSITIVE
+"// sample configuration
+secret_key = 'your_token_goes_here'",NON_SENSITIVE
+"# loaded from env
+SECRET_KEY = os.getenv(""SECRET_KEY"")",NON_SENSITIVE
+"// sample configuration
+Email: support@example.net",NON_SENSITIVE
+pin_code = 'Harbor-8088!',SENSITIVE
+"password_prompt: ""Please type your secret code""",NON_SENSITIVE
+"DB_PASSWORD: ""{{ SECRET }}""",NON_SENSITIVE
+Reach us at user@example.com,NON_SENSITIVE
+export ACCESS_TOKEN=SG.gsOWMNdvtIp70Kz64KZQbBD4JOUL9jNU,SENSITIVE
+Phone: (555) 555-0123,NON_SENSITIVE
+"const API_SECRET = ""dummy-token"";",NON_SENSITIVE
+"# example only
+timestamp = 647884535761",NON_SENSITIVE
+"api_key := ""Falcon$314!""",SENSITIVE
+"# staging db login
+secret_key: ghp_yi7tIScL4h2ZDGWjF010hn48",SENSITIVE
+Phone: +44 7289 428766,SENSITIVE
+"# loaded from env
+client_secret := input_value",NON_SENSITIVE
+"# loaded from env
+class User:
+    pass",NON_SENSITIVE
+vault_token := getpass.getpass(),NON_SENSITIVE
+"# DO NOT SHARE
+pwd = ""river-blue-16575""",SENSITIVE
+"self.SECRET = ""dbeb4c29d9936dae96f9c23e2ed8f8c375d60fcac32c49d49aee9f4580d08fb6""",SENSITIVE
+"# staging db login
+postgres://nora:Tiger-3635!@db.lumenworks.org:5432/app",SENSITIVE
+x = [n * 2 for n in range(5)],NON_SENSITIVE
+"# DO NOT SHARE
+From: nora.rao75@northwind-labs.io",SENSITIVE
+"// sample configuration
+SECRET = secrets.SECRET",NON_SENSITIVE
+"var admin_pass = ""xxxxxxxx""",NON_SENSITIVE
+pwd: lQnSfyj6H0VtxejJuP,SENSITIVE
+Aadhaar: 8457 3427 2277,SENSITIVE
+The secret manager rotates credentials every 30 days.,NON_SENSITIVE
+export AUTH_TOKEN=DObb43VM/DCMAS9TWkbdXO/A3A+e8BP8,SENSITIVE
+export TOKEN=TODO,NON_SENSITIVE
+"SECRET = os.getenv(""SECRET"")",NON_SENSITIVE
+"password_label: ""basic""",NON_SENSITIVE
+vault_token: moon-stone-45137,SENSITIVE
+"SECRET = config.get(""SECRET"")",NON_SENSITIVE
+client_secret: hOxvhGlBqfL7CFtxHHX0UcvA6NY,SENSITIVE
+"// admin access
+ADMIN_PASS=Cobalt@4055",SENSITIVE
+export PRIVATE_KEY=Cobalt-3788Q,SENSITIVE
+"# placeholder values
+var access_token = ""fake-key-123""",NON_SENSITIVE
+"const apikey = ""/etc/ssl/private/server.pem"";",NON_SENSITIVE
+"secret_name: ""Your token has expired, please log in again""",NON_SENSITIVE
+"bearer_token: ""Your token has expired, please log in again""",NON_SENSITIVE
+"// admin access
+self.jwt_secret = ""Jungle$1290Q""",SENSITIVE
+"# staging db login
+tel: +91 86614 49472",SENSITIVE
+tel: 555-0100,NON_SENSITIVE
+set LICENSE_KEY=Please type your secret code,NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer fIr7AAFsdIq-0Ua31h.n_fZr_-wsZq.1JIkEo6Um""}",SENSITIVE
+"# replace with your own key
+const password = process.env.PASSWORD;",NON_SENSITIVE
+Card: 4736432897720585,SENSITIVE
+const db_password = process.env.DB_PASSWORD;,NON_SENSITIVE
+tel: 555-0100,NON_SENSITIVE
+total_tokens = len(tokens),NON_SENSITIVE
+"os.environ[""SESSION_SECRET""] = ""/etc/ssl/private/server.pem""",NON_SENSITIVE
+"apikey: ""pUeEbtgK7PhEE5G84XoDxUoS6""",SENSITIVE
+"Use a strong, unique passphrase for each account.",NON_SENSITIVE
+"class User:
+    pass",NON_SENSITIVE
+postgres://meera:Harbor$3571!@db.quartzmail.net:5432/app,SENSITIVE
+"// sample configuration
+secret_key = settings.SECRET_KEY",NON_SENSITIVE
+build_id: s0dghmni-lpvr-xiqa-rtvble9qfng0,NON_SENSITIVE
+"// admin access
+var db_password = ""Lotus-1869""",SENSITIVE
+"headers = {""Authorization"": ""Bearer yE-R6fNGpYTMmzPKJIlDfkWSx3RIFvLwowdEV""}",SENSITIVE
+"# example only
+owner: name@example.org",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer qMLn.u0tLOwr5v5ZxqMXrPEZVlQ6m""}",SENSITIVE
+"# loaded from env
+ADMIN_PASS=changeme",NON_SENSITIVE
+"self.client_secret = ""83bba4ee1a9a3a1bcbbe842926d1195d""",SENSITIVE
+version = '2.4.1',NON_SENSITIVE
+"access_token := os.getenv(""ACCESS_TOKEN"")",NON_SENSITIVE
+session_secret: fake-key-123,NON_SENSITIVE
+set PASSWD=sk-iKMZQHv9PaT5TTFJ2JjavET10zxKbPFc6h,SENSITIVE
+"# staging db login
+postgres://nora:12J7CLtHMIwF29Un0BeAhGwTiIB6Q1n9p@db.northwind-labs.io:5432/app",SENSITIVE
+"let smtp_pass = ""Falcon-9413x"";",SENSITIVE
+const auth_method = '/etc/ssl/private/server.pem';,NON_SENSITIVE
+Phone: (555) 555-0123,NON_SENSITIVE
+"var private_key = ""sample_secret""",NON_SENSITIVE
+Card: 4542209178538108,SENSITIVE
+const password = process.env.PASSWORD;,NON_SENSITIVE
+The secret manager rotates credentials every 30 days.,NON_SENSITIVE
+"# production credentials
+let client_secret = ""LdpJTHPDgM6veISqw"";",SENSITIVE
+"password_field = ""hidden""",NON_SENSITIVE
+"// see docs
+build_id: gclhubue-7kyz-esku-yycligrogcj6",NON_SENSITIVE
+"self.DB_PASSWORD = ""river-tiger-79972""",SENSITIVE
+"// see docs
+""SECRET"": ""insert_token_here"",",NON_SENSITIVE
+build_id: bx9yh1av-cw16-b6ov-nscjlck11rto,NON_SENSITIVE
+"""private_key"": ""e5C0YaHA2hYUEZ1YfY4hrayf41I1OH9pz2ohRuMa"",",SENSITIVE
+tokens = text.split(),NON_SENSITIVE
+"access_token: ""your-api-key-here""",NON_SENSITIVE
+API_SECRET=river-tiger-92098,SENSITIVE
+"// TODO: move this to the vault
+export BEARER_TOKEN=c7dc223393f1216147dc78b4ae5e8e1967f9b042",SENSITIVE
+"const password = ""<YOUR_SECRET>"";",NON_SENSITIVE
+export ADMIN_LOGIN=xuujbG1tVMFQaPof5EDQn10E,SENSITIVE
+"""api_key"": ""Cobalt-9878Q"",",SENSITIVE
+"checksum = ""sha256:el7hbbrg-kk9m-wfgx-xp7lah9vx8uz""",NON_SENSITIVE
+"while queue:
+    node = queue.pop()",NON_SENSITIVE
+SECRET = input_value,NON_SENSITIVE
+postgres://tomas:Pixel-4406!@db.lumenworks.org:5432/app,SENSITIVE
+Use pass: d8uNMn+9jjv44S9JRXr6clUKtTOP0/atqAVC,SENSITIVE
+"headers = {""Authorization"": ""Bearer EQesiNV1-KW.VzJDC-Iw-oA8j""}",SENSITIVE
+"private_key: ""fake-key-123""",NON_SENSITIVE
+"# replace with your own key
+secret_key := secrets.secret_key",NON_SENSITIVE
+"const total = items.reduce((a, b) => a + b, 0);",NON_SENSITIVE
+tel: (555) 555-0123,NON_SENSITIVE
+"for i in range(10):
+    print(i)",NON_SENSITIVE
+"@app.route('/login', methods=['POST'])",NON_SENSITIVE
+"# temp, delete before commit
+Reach me at li.novak8@lumenworks.org",SENSITIVE
+Aadhaar: 3238 3721 5752,SENSITIVE
+Order #674332138401,NON_SENSITIVE
+"# production credentials
+bearer_token = '22cb3143fea2a23c3a1781ab3f7f366404002588'",SENSITIVE
+PAN: AFTPG7903Y,SENSITIVE
+"# production credentials
+redis_password: ""cbf172e1bdecd51af0408afe2938407cf7ba849b""",SENSITIVE
+Reach us at support@example.net,NON_SENSITIVE
+"const vault_token = ""Tiger#3567!"";",SENSITIVE
+"self.DB_PASSWORD = ""scDd78Fzauw9mfNbGJEw7pWkfzb""",SENSITIVE
+"self.license_key = ""sfSplvylI70RsxTapi4n""",SENSITIVE
+Aadhaar: 2321 1986 5710,SENSITIVE
+Passwords must be at least 12 characters long.,NON_SENSITIVE
+"// TODO: move this to the vault
+TOKEN=7559fbc28f189323f4a1df652f4993ef4c0bc182b5f79e3589780dbb28fde21b",SENSITIVE
+passwd = settings.PASSWD,NON_SENSITIVE
+"db_password: ""basic""",NON_SENSITIVE
+"// see docs
+jwt_secret := os.getenv(""JWT_SECRET"")",NON_SENSITIVE
+const apiKey = process.env.API_KEY;,NON_SENSITIVE
+"# DO NOT SHARE
+owner: nora.dubois11@quartzmail.net",SENSITIVE
+"// admin access
+passwd: ""54b4b6e5a2af69f111ea25bcb26ee8f4642cd11d4148d3eddac8164b6b1bb59d""",SENSITIVE
+"# placeholder values
+const auth_method = 'db-credentials';",NON_SENSITIVE
+"key_path = ""refresh""",NON_SENSITIVE
+contact = kofi.chen25@northwind-labs.io,SENSITIVE
+set TOKEN=<YOUR_SECRET>,NON_SENSITIVE
+api_key = 'ghp_txGqbn3ieR4Gp9x993D8k1Bb2imx3sN',SENSITIVE
+postgres://tomas:8d981264a124f6c596176412fb3fac1d@db.ostrava-tech.cz:5432/app,SENSITIVE
+"# production credentials
+const apikey = ""blue-stone-87556"";",SENSITIVE
+"self.password = ""Cobalt-1855Q""",SENSITIVE
+Phone: +44 7912 178781,SENSITIVE
+postgres://diego:8KsDRczx5G0LWJMpqF6dh8jvH0aRF@db.ostrava-tech.cz:5432/app,SENSITIVE
+"response = requests.get(url, timeout=10)",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer qleClrV0dU.o17x0xo4l9TVmlxU7z9s8xAQE51M_""}",SENSITIVE
+postgres://sven:Harbor#3514!@db.brightcrest.co:5432/app,SENSITIVE
+"# staging db login
+""DB_PASS"": ""blue-stone-18917"",",SENSITIVE
+"# placeholder values
+export BEARER_TOKEN=changeme",NON_SENSITIVE
+admin_pass: MHlAlfTVZjeHAcsDW3GJ5VbWHreNZyqEeHTQjkE1,SENSITIVE
+"headers = {""Authorization"": ""Bearer qzjehuyHapBTOk.8qS4o_jv_i""}",SENSITIVE
+"const access_token = config.get(""access_token"");",NON_SENSITIVE
+Phone: +44 7812 525786,SENSITIVE
+"# placeholder values
+Set the API key in your environment before running the app.",NON_SENSITIVE
+"const DB_PASS = ""8f657eb08803ff9e25f4983c028716eca5cf68f5a8250e9d6be1298e419d48db"";",SENSITIVE
+"const password = ""****"";",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer OjfkFRDqP4wrlE8kbfo5rIqSOgXHLN""}",SENSITIVE
+"// see docs
+Never commit passwords to the repository.",NON_SENSITIVE
+"# loaded from env
+private_key = settings.PRIVATE_KEY",NON_SENSITIVE
+"DB_PASS := ""TODO""",NON_SENSITIVE
+Card: 4250854471338094,SENSITIVE
+"# example only
+private static final String PWD = ""REPLACE_ME"";",NON_SENSITIVE
+api_key = config['api_key'],NON_SENSITIVE
+"// see docs
+access_token = ""insert_token_here""",NON_SENSITIVE
+FTP_PW=6c51a6f8866e0c461ee001d38da9b6f9e79ba59c,SENSITIVE
+"let token = ""xoxb-WUA5z6GXxl5xiadmuv6lQEFiTPQAopuRau"";",SENSITIVE
+"// sample configuration
+This function returns the access token expiry in seconds.",NON_SENSITIVE
+"pwd = ""427557721266512942542c9309a11346c863441e""",SENSITIVE
+PASSWD=5buUq16+ey/0AQYdCNB6CqkBmX5v/lS,SENSITIVE
+"# production credentials
+const client_secret = ""Orbit_9379x"";",SENSITIVE
+"headers = {""Authorization"": ""Bearer MZlMhbOjK1kjoRAswC1sSxW2ak1hcoqxoMPEdoy""}",SENSITIVE
+"private_key = ""JJ9bXzhpIGw7qTbMDqTBtHJydKzf0Aigz0""",SENSITIVE
+const secret_name = 'oauth2';,NON_SENSITIVE
+"passwd: ""Tiger#5752""",SENSITIVE
+Reach me at sven.silva@quartzmail.net,SENSITIVE
+"if not password:
+    raise ValueError('password required')",NON_SENSITIVE
+"# example only
+token_expiry: ""Please type your secret code""",NON_SENSITIVE
+const token_expiry = 'Please type your secret code';,NON_SENSITIVE
+"password_min_length = ""hidden""",NON_SENSITIVE
+encryption_key := getpass.getpass(),NON_SENSITIVE
+"// sample configuration
+tel: +1 555 0100 000",NON_SENSITIVE
+"jwt_secret = ""e125c4db18767a03fda0bdfa6a57afbf3d70f3ecf23b51d68fb548aaa0729a36""",SENSITIVE
+"// sample configuration
+export TOKEN=example-placeholder",NON_SENSITIVE
+SECRET_KEY=ZEb9jCnSqmtODM8H2XmHdu7Q88ad4FgiNVlBb1dQ,SENSITIVE
+PAN: KLDPI6593C,SENSITIVE
+"db_password: ""Please type your secret code""",NON_SENSITIVE
+"jwt_secret = ""qv4wNRVW0JBqCTBowvXd4ytXTQnmal""",SENSITIVE
+See the README for installation instructions.,NON_SENSITIVE
+"# placeholder values
+APIKEY=AKIAIOSFODNN7EXAMPLE",NON_SENSITIVE
+postgres://arjun:bji8bpJrHko9HEaFcF9M4YezPJGvIo@db.northwind-labs.io:5432/app,SENSITIVE
+"encryption_key = System.getenv(""ENCRYPTION_KEY"")",NON_SENSITIVE
+"while queue:
+    node = queue.pop()",NON_SENSITIVE
+password := settings.PASSWORD,NON_SENSITIVE
+"# replace with your own key
+APIKEY = input_value",NON_SENSITIVE
+"self.redis_password = ""xxxxxxxx""",NON_SENSITIVE
+"// TODO: move this to the vault
+private static final String SECRET_KEY = ""ir6KuSuHjWrNQfAQTEIWt7ywP2boFPN"";",SENSITIVE
+"bearer_token: ""Jungle#4818!""",SENSITIVE
+"""apikey"": ""REPLACE_ME"",",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer jdco3N9rs3DU7j1q8tcKrvtfiLcnMPOaLlLUQCYU""}",SENSITIVE
+"const DB_PASSWORD = ""c8dbb4c50a9b0419e90b0af24f5dfaff"";",SENSITIVE
+"apikey = os.getenv(""APIKEY"")",NON_SENSITIVE
+DB_PASS: blue-stone-28164,SENSITIVE
+"secret_name = ""3600""",NON_SENSITIVE
+"# production credentials
+""DB_PASSWORD"": ""Pixel!3904x"",",SENSITIVE
+Reach me at diego.chen49@ostrava-tech.cz,SENSITIVE
+Email: name@example.org,NON_SENSITIVE
+const secret_name = 'basic';,NON_SENSITIVE
+api_key = 'stone-stone-84278',SENSITIVE
+"# placeholder values
+contact = support@example.net",NON_SENSITIVE
+"# placeholder values
+private_key = ""****""",NON_SENSITIVE
+"# production credentials
+PAN: XGXPU7153G",SENSITIVE
+"self.password = ""Password must be at least 8 characters""",NON_SENSITIVE
+contact = user@example.com,NON_SENSITIVE
+tel: (457) 309-1611,SENSITIVE
+const private_key = process.env.PRIVATE_KEY;,NON_SENSITIVE
+"# example only
+class User:
+    pass",NON_SENSITIVE
+"SECRET: ""ghp_3w44c67WODLuGGP7Fz71Yt""",SENSITIVE
+"apikey = config.get(""apikey"")",NON_SENSITIVE
+DB_PASSWORD = process.env.DB_PASSWORD,NON_SENSITIVE
+DB_PASS: moon-river-60028,SENSITIVE
+"// sample configuration
+uuid = ""9f16cf8f8917fb2233fed3a62e38e1076e523361""",NON_SENSITIVE
+SECRET: xxxxxxxx,NON_SENSITIVE
+total_tokens = len(tokens),NON_SENSITIVE
+"commit = ""2szwlmzg-zeti-1gu2-yanxu3bbl6b7""",NON_SENSITIVE
+postgres://nora:Orbit-4565x@db.ostrava-tech.cz:5432/app,SENSITIVE
+logger.info('user logged in'),NON_SENSITIVE
+"key_path = ""Your token has expired, please log in again""",NON_SENSITIVE
+"// sample configuration
+Email: name@example.org",NON_SENSITIVE
+"config[""pwd""] = ""okfoUz6ovrK82kV0qUjv6s8mQfB3nszzYx9YF""",SENSITIVE
+"self.password = ""stone-river-93582""",SENSITIVE
+"checksum = ""sha256:3mbuawlt-da3j-ww6s-rkkvm8dpusjz""",NON_SENSITIVE
+"""client_secret"": ""your_token_goes_here"",",NON_SENSITIVE
+"// admin access
+let API_SECRET: string = ""Orbit@4774"";",SENSITIVE
+version = '2.4.1',NON_SENSITIVE
+"var client_secret = ""ywRF351f9K9mzwFWyrXv""",SENSITIVE
+"class User:
+    pass",NON_SENSITIVE
+postgres://tomas:f8bv8tmj0ezfo0aoBnMdjaKsn45WXqDzlA@db.ostrava-tech.cz:5432/app,SENSITIVE
+"self.API_SECRET = ""Ember@925x""",SENSITIVE
+"// see docs
+x = [n * 2 for n in range(5)]",NON_SENSITIVE
+apikey: {{ SECRET }},NON_SENSITIVE
+admin_pass = 'Jungle!7612!',SENSITIVE
+const secret_file = 'Enter your password';,NON_SENSITIVE
+"# loaded from env
+key_path = ""Enter your password""",NON_SENSITIVE
+const password_label = 'basic';,NON_SENSITIVE
+"access_token = ""Dt4Z3IGJatzKICdc3jjgL4rHyVD2""",SENSITIVE
+"self.db_password = ""blue-moon-609""",SENSITIVE
+"SELECT id, name FROM users;",NON_SENSITIVE
+Never commit passwords to the repository.,NON_SENSITIVE
+"self.auth_token = ""iRThnAQ2uqcHwwRJAzxwp7NS3CvkDGxH3UxR""",SENSITIVE
+"# production credentials
+Card: 4582965381339698",SENSITIVE
+const access_token = getpass.getpass();,NON_SENSITIVE
+Set the API key in your environment before running the app.,NON_SENSITIVE
+const key_path = 'Bearer';,NON_SENSITIVE
+"const passwd = ""3TLZ0aoqb4974Ldna9g+P8hCME3l"";",SENSITIVE
+"// see docs
+checksum = ""sha256:soa08ych-dgt0-ju5x-vt4ojqhylcpm""",NON_SENSITIVE
+"# loaded from env
+db_password = ""xxxxxxxx""",NON_SENSITIVE
+"# placeholder values
+const apiKey = process.env.API_KEY;",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer o6SWfrM3t_w-XKG3BAK1DNJ0T8FPVLu4d4FHZEiY""}",SENSITIVE
+admin_pass = 'sk-ZGAHCW4it9CgtHIcPVviOwAv',SENSITIVE
+"# loaded from env
+password_input = document.getElementById('password')",NON_SENSITIVE
+owner: tomas.chen@quartzmail.net,SENSITIVE
+"// sample configuration
+auth_method: ""3600""",NON_SENSITIVE
+password: Ember$8813Q,SENSITIVE
+Phone: +44 7386 724473,SENSITIVE
+"// admin access
+JWT_SECRET=lAelo1OwzfWsUWxSLljBMoPtpXQpiaJJ",SENSITIVE
+"# placeholder values
+password_input = document.getElementById('password')",NON_SENSITIVE
+owner: user@example.com,NON_SENSITIVE
+ftp_pw := secrets.ftp_pw,NON_SENSITIVE
+"self.client_secret = ""SG.jbg3uxWs97BxzIoieAZ4S0r0A6""",SENSITIVE
+owner: sven.chen@northwind-labs.io,SENSITIVE
+"# placeholder values
+const pin_code = ""your_token_goes_here"";",NON_SENSITIVE
+"// admin access
+headers = {""Authorization"": ""Bearer I0up13tdtSDFu7qdx313QmvHBKJhr2wNIF.""}",SENSITIVE
+"checksum = ""sha256:51fad4f932c8e7d2b7e19313cd4f9ad33c89d5f3""",NON_SENSITIVE
+"# DO NOT SHARE
+self.passwd = ""sk-Ml7YmTcwIYwPzLz84wsLSLKxs66FqEtb""",SENSITIVE
+"// see docs
+conn_secret: <YOUR_SECRET>",NON_SENSITIVE
+Aadhaar: 3367 1471 0094,SENSITIVE
+"client_secret: ""68nzDXYKv6BvCrkxrL3rql51ZeKBtuaIhM1""",SENSITIVE
+Aadhaar: 7444 1521 4396,SENSITIVE
+"admin_pass = ""Password must be at least 8 characters""",NON_SENSITIVE
+"# production credentials
+jwt_secret = ""6uf8VkC0kvCO5yQQaXmBIPWs1ROU2yXj2TV""",SENSITIVE
+"const webhook_key = ""Zb9SmxBqliKef1loE5Lc3NpHrXVCUe5pGXg"";",SENSITIVE
+export ADMIN_LOGIN=Cobalt@5374,SENSITIVE
+SIGNING_SALT = input_value,NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer .aKKd0R-3BRlG6j9U9_ENT_DM""}",SENSITIVE
+"// see docs
+set JWT_SECRET=xxxxxxxx",NON_SENSITIVE
+"const DB_PASSWORD = ""<YOUR_API_KEY>"";",NON_SENSITIVE
+"API_SECRET = ""Jungle-9362Q""",SENSITIVE
+"headers = {""Authorization"": ""Bearer kQJC1aZEHXvdkAXDlZKY9RdfvWHxeChwNE""}",SENSITIVE
+"# temp, delete before commit
+Aadhaar: 6472 0131 4683",SENSITIVE
+PAN: RPQPV9206Z,SENSITIVE
+const password_field = 'oauth2';,NON_SENSITIVE
+PAN: KQFPX8230P,SENSITIVE
+"let DB_PASSWORD = ""3LYe7lXHmnF21hZeoEUL5aGpzVOQI"";",SENSITIVE
+"let DB_PASS: string = ""{{ SECRET }}"";",NON_SENSITIVE
+auth_token = 'river-stone-96707',SENSITIVE
+"ACCESS_TOKEN = System.getenv(""ACCESS_TOKEN"")",NON_SENSITIVE
+Passwords must be at least 12 characters long.,NON_SENSITIVE
+VAULT_TOKEN = getpass.getpass(),NON_SENSITIVE
+Authentication is handled by the identity provider.,NON_SENSITIVE
+const secret_file = 'oauth2';,NON_SENSITIVE
+"private static final String PIN_CODE = ""your_password_here"";",NON_SENSITIVE
+"""apikey"": ""Cobalt@9586Q"",",SENSITIVE
+"// sample configuration
+total_tokens = len(tokens)",NON_SENSITIVE
+owner: test@test.com,NON_SENSITIVE
+"// sample configuration
+api_key := os.environ[""API_KEY""]",NON_SENSITIVE
+version = '2.4.1',NON_SENSITIVE
+"# placeholder values
+SECRET_KEY = secrets.secret_key",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer HlZQWk5BRr04U2QU7-3Z5ob8YLvk_91BCbW""}",SENSITIVE
+"key_path = ""jwt""",NON_SENSITIVE
+"""smtp_pass"": ""hidden"",",NON_SENSITIVE
+"# DO NOT SHARE
+Mobile: +44 7988 418199",SENSITIVE
+"# placeholder values
+The secret manager rotates credentials every 30 days.",NON_SENSITIVE
+"self.admin_pass = ""Pixel-9194""",SENSITIVE
+Call: +1 555 0100 000,NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer hiSRRaslp_4j43CgFZcNDJrLL55X""}",SENSITIVE
+"# example only
+The secret manager rotates credentials every 30 days.",NON_SENSITIVE
+export PWD=TODO,NON_SENSITIVE
+"pin_code: ""7aZ73nyJqmHCaq7PoXh2KhD0JBwGs4GA8dH""",SENSITIVE
+postgres://tomas:tiger-river-85649@db.quartzmail.net:5432/app,SENSITIVE
+Card: 4009356996921853,SENSITIVE
+const token_type = 'Bearer';,NON_SENSITIVE
+"admin_pass: ""Lotus-9255!""",SENSITIVE
+"headers = {""Authorization"": ""Bearer DIu2Vgt7CDGRjlrUdsuRNLq3FFD1Es2FB2wV""}",SENSITIVE
+"# DO NOT SHARE
+DB_PASS=pfrAr/xbVVjkJqxL++N8",SENSITIVE
+"Use a strong, unique passphrase for each account.",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer bi1-EYXCrcF3u2GaRtUv4J9iQB36w.mvS7.NnQT""}",SENSITIVE
+"# production credentials
+FTP_PW=6atHAlwrOh85mjnRkZ6C",SENSITIVE
+"const DB_PASSWORD = ""SG.PPUZufddC86rJ8NzXjO08m9hVFZUjmqQT9LG"";",SENSITIVE
+"class User:
+    pass",NON_SENSITIVE
+"# example only
+Order #184040621224",NON_SENSITIVE
+"for i in range(10):
+    print(i)",NON_SENSITIVE
+"// sample configuration
+The secret manager rotates credentials every 30 days.",NON_SENSITIVE
+"# temp, delete before commit
+self.license_key = ""Falcon#6753!""",SENSITIVE
+"headers = {""Authorization"": ""Bearer W5eCJ1bCtbxA4yK9Y.RFuXsMxPn""}",SENSITIVE
+SECRET: ****,NON_SENSITIVE
+Mobile: +44 7228 884930,SENSITIVE
+"# DO NOT SHARE
+Card: 4580394087630056",SENSITIVE
+Wifi password: Falcon@4138!,SENSITIVE
+const password_min_length = 'Password must be at least 8 characters';,NON_SENSITIVE
+jwt_secret: blue-moon-40407,SENSITIVE
+export AUTH_TOKEN=Maple#9010x,SENSITIVE
+The secret manager rotates credentials every 30 days.,NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer 5huyU9tQjRwGcrK2nrwBlD_aTHQB""}",SENSITIVE
+"headers = {""Authorization"": ""Bearer nsppjKuPEkoYL3NIJybz7iJCA""}",SENSITIVE
+"# example only
+Never commit passwords to the repository.",NON_SENSITIVE
+"# example only
+Authentication is handled by the identity provider.",NON_SENSITIVE
+Card: 4023985407587416,SENSITIVE
+"# production credentials
+let private_key = ""YGqt5EGCH1uNMJ2Go5GwDiCl8"";",SENSITIVE
+const password_field = 'oauth2';,NON_SENSITIVE
+PAN: YAPPN9630N,SENSITIVE
+"let signing_salt = ""933520570a5e140885c8708a73ca3304f51b9766884a8987e45ceb530363ed85"";",SENSITIVE
+"// sample configuration
+let password = ""****"";",NON_SENSITIVE
+"# DO NOT SHARE
+const password = ""Pixel_6477!"";",SENSITIVE
+Contact the support team through the help portal.,NON_SENSITIVE
+"# replace with your own key
+Email: your.name@example.com",NON_SENSITIVE
+"# temp, delete before commit
+config[""vault_token""] = ""moon-moon-66704""",SENSITIVE
+Call: 1234567890,NON_SENSITIVE
+"checksum = ""sha256:p4inn9ls-th7n-9pij-onpo5acpcqjp""",NON_SENSITIVE
+"token = ""Maple$7866x""",SENSITIVE
+"api_key_header: ""Bearer""",NON_SENSITIVE
+"let api_key = ""ESWFRVLXrCunrckSxxTsqfmlM5qEo2c2"";",SENSITIVE
+export JWT_SECRET=SG.oSdybn7IIN4i9YpRzrYlMrpV89w1,SENSITIVE
+"api_key_header = ""Password must be at least 8 characters""",NON_SENSITIVE
+export REDIS_PASSWORD=basic,NON_SENSITIVE
+token = tokenizer.encode(text),NON_SENSITIVE
+"JWT_SECRET = config.get(""jwt_secret"")",NON_SENSITIVE
+secret_key = 'Falcon$3597',SENSITIVE
+Aadhaar: 6366 8834 4073,SENSITIVE
+"// admin access
+config[""ftp_pw""] = ""Orbit!2363!""",SENSITIVE
+"# replace with your own key
+build_id: a93a08971105d89cec587363a6990953b62092aa",NON_SENSITIVE
+DB_PASS = 'required',NON_SENSITIVE
+"# temp, delete before commit
+export SECRET_KEY=8v3tRlv+WLaMTj6qvQ5zQlmSzeSvznAObd2zzNv",SENSITIVE
+PAN: KGFPQ3403Q,SENSITIVE
+"let root_credential: string = ""Pixel@9488!"";",SENSITIVE
+"let api_key = ""yFZWx/0L1f3ZK6VCr/9b66bBtu/8MfgPl"";",SENSITIVE
+"const password = ""Jungle-6581x"";",SENSITIVE
+"// admin access
+auth_token = ""AKIA4FdaOcf9LoCBMh474GY2srFDh""",SENSITIVE
+const apiKey = process.env.API_KEY;,NON_SENSITIVE
+PAN: HKSPO5020U,SENSITIVE
+build_id: ivxyzzdp-8vqv-snec-wz6xu5scdmnl,NON_SENSITIVE
+Phone: (555) 555-0123,NON_SENSITIVE
+Never commit passwords to the repository.,NON_SENSITIVE
+SECRET=example-placeholder,NON_SENSITIVE
+"// TODO: move this to the vault
+license_key = 'Lotus@215Q'",SENSITIVE
+"// admin access
+var passwd = ""moon-blue-15274""",SENSITIVE
+"commit = ""ead7b5ccd7ff80168e832deac34bc436a4d189c0""",NON_SENSITIVE
+"password_min_length: ""Please type your secret code""",NON_SENSITIVE
+ADMIN_LOGIN=e05RVqq18bIpcbE8hIp13Mfo5BbySN,SENSITIVE
+"# production credentials
+BEARER_TOKEN=AIHpmCHkfXtuQbjOHG",SENSITIVE
+"# temp, delete before commit
+The admin password is Jungle#426",SENSITIVE
+"# DO NOT SHARE
+Reach me at rahul.silva3@ostrava-tech.cz",SENSITIVE
+"token_expiry: ""required""",NON_SENSITIVE
+"# example only
+secret_name = ""db-credentials""",NON_SENSITIVE
+token = 'REPLACE_ME',NON_SENSITIVE
+"os.environ[""ACCESS_TOKEN""] = ""1Sl82c95dyPF9b4JoMIG""",SENSITIVE
+JWT_SECRET=se1NBN1mCKZ7B5eN3HAVYDhTSxlJWUTL7M,SENSITIVE
+password_input = document.getElementById('password'),NON_SENSITIVE
+"""webhook_key"": ""AKIAIOSFODNN7EXAMPLE"",",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer Seq.G-b6_Hpi0RCDD-tL-UCUGr3vUzn""}",SENSITIVE
+postgres://ana:river-river-60898@db.quartzmail.net:5432/app,SENSITIVE
+SECRET := ${SECRET},NON_SENSITIVE
+"private static final String PASSWORD = ""5a6f156935464abc32f23ae55ecfde6a9a8026c83166a550e16243794a1a3c25"";",SENSITIVE
+"// TODO: move this to the vault
+private static final String API_SECRET = ""8j14GN1jUC/lWMh/9oQ2O4NegtPBqw"";",SENSITIVE
+"password_field: ""refresh""",NON_SENSITIVE
+"# DO NOT SHARE
+export PASSWD=Harbor_5529Q",SENSITIVE
+"// sample configuration
+tel: (555) 555-0123",NON_SENSITIVE
+"# DO NOT SHARE
+SECRET: stone-river-67502",SENSITIVE
+"""password"": ""TODO"",",NON_SENSITIVE
+"let secret_key: string = ""Maple!2753Q"";",SENSITIVE
+"// see docs
+const root_credential = ""jwt"";",NON_SENSITIVE
+"# temp, delete before commit
+""secret_key"": ""Orbit!7603x"",",SENSITIVE
+"# staging db login
+headers = {""Authorization"": ""Bearer _I7GgZ8BR-QOwpvnBmilmTCRTWVFt9D""}",SENSITIVE
+"while queue:
+    node = queue.pop()",NON_SENSITIVE
+"""pwd"": ""Pixel_8435"",",SENSITIVE
+"self.SECRET = ""Lxb4Gq3tPI2DOh9cJBImDW1sFQr""",SENSITIVE
+"// admin access
+auth_token = ""blue-blue-44656""",SENSITIVE
+"# replace with your own key
+Meeting notes: discuss the release schedule on Friday.",NON_SENSITIVE
+"password_label = ""Password must be at least 8 characters""",NON_SENSITIVE
+"uuid = ""pgs3yrbe-ljcb-vhem-oynywfxkcqkp""",NON_SENSITIVE
+Set the API key in your environment before running the app.,NON_SENSITIVE
+"# placeholder values
+SECRET = input_value",NON_SENSITIVE
+See the README for installation instructions.,NON_SENSITIVE
+ticket id 203806087824,NON_SENSITIVE
+Aadhaar: 2281 1200 9097,SENSITIVE
+"let db_password: string = ""<password>"";",NON_SENSITIVE
+secret_key = 'Ember$7399x',SENSITIVE
+version = '2.4.1',NON_SENSITIVE
+"conn_secret = config.get(""conn_secret"")",NON_SENSITIVE
+timestamp = 153360610922,NON_SENSITIVE
+"# example only
+const DB_PASS = ""TODO"";",NON_SENSITIVE
+const secret_name = 'hidden';,NON_SENSITIVE
+"# placeholder values
+<input type=""password"" name=""pwd"" placeholder=""Password"">",NON_SENSITIVE
+"// TODO: move this to the vault
+Card: 4309679875037039",SENSITIVE
+"let DB_PASS = ""xxxxxxxx"";",NON_SENSITIVE
+"secret_file = ""3600""",NON_SENSITIVE
+"# placeholder values
+passwd := os.environ[""PASSWD""]",NON_SENSITIVE
+const password_field = 'Bearer';,NON_SENSITIVE
+"vault_token: ""wCvMTUZ+UqqZEe75+H7XzNir2Ugc""",SENSITIVE
+"# DO NOT SHARE
+self.client_secret = ""Cobalt_3700Q""",SENSITIVE
+set SECRET_KEY=628f695ac9718806c08e0eb6c6e914f31f95465b,SENSITIVE
+"jwt_secret = ""your-api-key-here""",NON_SENSITIVE
+"db_password: ""Q3pt5l2F5UmMxeYd""",SENSITIVE
+"# DO NOT SHARE
+postgres://li:Cobalt#6924Q@db.ostrava-tech.cz:5432/app",SENSITIVE
+Login with username Lotus#3693!,SENSITIVE
+"const password = ""6d9baa5cd360eb5910dacdeefa6e157d2cb9226577a775c87c1aa8048f9b6d2f"";",SENSITIVE
+"""SECRET"": ""moon-river-31786"",",SENSITIVE
+postgres://sven:Yhgl9PKDO3nsbuTTPlZc@db.lumenworks.org:5432/app,SENSITIVE
+"headers = {""Authorization"": ""Bearer iv8uhPMhM3odgZGEhd1QWvlke1P""}",SENSITIVE
+api_key = config['api_key'],NON_SENSITIVE
+const private_key = process.env.PRIVATE_KEY;,NON_SENSITIVE
+"SELECT id, name FROM users;",NON_SENSITIVE
+const password_field = './keys/id_rsa.pem';,NON_SENSITIVE
+set PASSWD=Maple!7261!,SENSITIVE
+export PRIVATE_KEY=example-placeholder,NON_SENSITIVE
+"private static final String BEARER_TOKEN = ""your_password_here"";",NON_SENSITIVE
+"// admin access
+headers = {""Authorization"": ""Bearer JPOn6yOPbnhy0LDhL4-vHEWOhn5P""}",SENSITIVE
+"pwd = ""6a3976e89efd1f4994475052ad255bc4""",SENSITIVE
+"checksum = ""sha256:ade4e4a1b356827c235f4bb7e094f86d8cb419b0""",NON_SENSITIVE
+"def add(a, b):
+    return a + b",NON_SENSITIVE
+api_key = config['api_key'],NON_SENSITIVE
+"""passwd"": ""sk-s0rTWXYKdpVcaMBa0HvXSivBDI"",",SENSITIVE
+tel: (555) 555-0123,NON_SENSITIVE
+"// see docs
+var passwd = ""****""",NON_SENSITIVE
+ADMIN_PASS=xuZuiLG8xA7cixu2IBgdLpdoiwHukQt,SENSITIVE
+"# staging db login
+Aadhaar: 5215 3570 3696",SENSITIVE
+"# placeholder values
+pin_code = '{{ SECRET }}'",NON_SENSITIVE
+"# production credentials
+private_key: 959442a218ebb214eb95c6977fd42cec",SENSITIVE
+set DB_PASSWORD=sample_secret,NON_SENSITIVE
+"let apikey = ""xsDffgMVziPCXhPv3DXGjmjND3XEQ0EcKJKQpG"";",SENSITIVE
+The secret manager rotates credentials every 30 days.,NON_SENSITIVE
+pwd = getpass.getpass(),NON_SENSITIVE
+"""pwd"": ""PQCbN4MqMEnnzRtzALKAnGtfmsBWvl2es"",",SENSITIVE
+postgres://li:ffd894e627fa1ea00e4bcc5c0012a1b7@db.lumenworks.org:5432/app,SENSITIVE
+"// sample configuration
+Never commit passwords to the repository.",NON_SENSITIVE
+x = [n * 2 for n in range(5)],NON_SENSITIVE
+"password: ""Your token has expired, please log in again""",NON_SENSITIVE
+The admin password is 80978b1a46e24436359efd4c0254ac94de217e34,SENSITIVE
+"os.environ[""REDIS_PASSWORD""] = ""xxxxxxxx""",NON_SENSITIVE
+From: nora.kim@lumenworks.org,SENSITIVE
+"password_min_length = ""required""",NON_SENSITIVE
+postgres://meera:tyLhm1cN201GMhmz2f9gLZ5a@db.quartzmail.net:5432/app,SENSITIVE
+"""bearer_token"": ""moon-moon-85396"",",SENSITIVE
+"checksum = ""sha256:00b8edc1027007a421c76cfe6e0c97b9cc3242b6""",NON_SENSITIVE
+"password_min_length = ""Your token has expired, please log in again""",NON_SENSITIVE
+return render_template('index.html'),NON_SENSITIVE
+Aadhaar: 6273 3443 1683,SENSITIVE
+ADMIN_LOGIN=insert_token_here,NON_SENSITIVE
+tel: +44 7452 742974,SENSITIVE
+"headers = {""Authorization"": ""Bearer 8bDhcJaLCaplHvbC4.YOeUHm.ynS11zlN7T7""}",SENSITIVE
+secret_key = secrets.secret_key,NON_SENSITIVE
+"# example only
+import os, sys",NON_SENSITIVE
+"# replace with your own key
+x = [n * 2 for n in range(5)]",NON_SENSITIVE
+"# replace with your own key
+access_token: ""{{ SECRET }}""",NON_SENSITIVE
+"private static final String VAULT_TOKEN = ""Harbor!962"";",SENSITIVE
+api_key = config['api_key'],NON_SENSITIVE
+"token = ""Orbit!1569x""",SENSITIVE
+Phone: (555) 555-0123,NON_SENSITIVE
+"response = requests.get(url, timeout=10)",NON_SENSITIVE
+"// see docs
+owner: test@test.com",NON_SENSITIVE
+"# example only
+password_min_length: ""Please type your secret code""",NON_SENSITIVE
+auth_token := input_value,NON_SENSITIVE
+"for i in range(10):
+    print(i)",NON_SENSITIVE
+tel: (518) 309-4746,SENSITIVE
+"// sample configuration
+PRIVATE_KEY=dummy-token",NON_SENSITIVE
+"# placeholder values
+The secret manager rotates credentials every 30 days.",NON_SENSITIVE
+const password_field = 'db-credentials';,NON_SENSITIVE
+Set the API key in your environment before running the app.,NON_SENSITIVE
+"// admin access
+set ADMIN_PASS=xoxb-DNhvFU9U4RNH3SFyF0SfmeL6GAtaFolPphCI",SENSITIVE
+Card: 4435525534704195,SENSITIVE
+"// sample configuration
+Set the API key in your environment before running the app.",NON_SENSITIVE
+ADMIN_PASS=Falcon@9674!,SENSITIVE
+"""jwt_secret"": ""Orbit-5438!"",",SENSITIVE
+public static void main(String[] args) {,NON_SENSITIVE
+owner: support@example.net,NON_SENSITIVE
+"# temp, delete before commit
+Card: 4042557844162579",SENSITIVE
+"pin_code: ""KyZUyWzbzw7hI1akN7Kvbj1S1lEx""",SENSITIVE
+Email: test@test.com,NON_SENSITIVE
+"auth_token = ""Ember!7446Q""",SENSITIVE
+token: changeme,NON_SENSITIVE
+"# placeholder values
+redis_password: <YOUR_API_KEY>",NON_SENSITIVE
+const password_label = 'basic';,NON_SENSITIVE
+"def add(a, b):
+    return a + b",NON_SENSITIVE
+db_password = '<YOUR_SECRET>',NON_SENSITIVE
+"apikey = ""ZKQNJZTZ+wSgbzZZeuW8zlFGY2xIEhrRHZE""",SENSITIVE
+"# staging db login
+DB_PASS=weXoOuynRKZzmv3aHvOm33nTDcTXb",SENSITIVE
+"# loaded from env
+commit = ""sayd91r3-pw6j-l8vj-ehyl4sac7hcp""",NON_SENSITIVE
+"self.license_key = ""Maple$9389x""",SENSITIVE
+"headers = {""Authorization"": ""Bearer tuEUksBPVrbl7ECBjvjmsUfJxCuP""}",SENSITIVE
+const api_key_header = 'required';,NON_SENSITIVE
+"""token"": ""stone-stone-94093"",",SENSITIVE
+const token_type = 'required';,NON_SENSITIVE
+Card: 4610106227408613,SENSITIVE
+timestamp = 386769279265,NON_SENSITIVE
+Card: 4534137103642853,SENSITIVE
+Authentication is handled by the identity provider.,NON_SENSITIVE
+"auth_token: ""Gd/er4cC6CBs8RcKULeJ""",SENSITIVE
+Contact the support team through the help portal.,NON_SENSITIVE
+"self.auth_token = ""E61TqhMyVovrMfKONAumWuKuQhhL""",SENSITIVE
+"uuid = ""cba6be2bee3303f186403529e6abfa6472b073e5""",NON_SENSITIVE
+"let admin_pass = ""insert_token_here"";",NON_SENSITIVE
+version = '2.4.1',NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer IjRrt3aPVjOodCeJVj4dxC.cZp9DscD1.Chft""}",SENSITIVE
+Authentication is handled by the identity provider.,NON_SENSITIVE
+"// sample configuration
+FTP_PW = secrets.ftp_pw",NON_SENSITIVE
+"// admin access
+DB_PASSWORD=1m60AeGwJVn1ezB8O4LKLvsmdSZd5PboB",SENSITIVE
+Login with username AKIAqvJMPpUiVGuhQiCoyouc,SENSITIVE
+"config[""DB_PASSWORD""] = ""Enter your password""",NON_SENSITIVE
+PASSWD=7PjwGZ6cxAd72dPjTEywDew1PY8LKAOJeGrKqu,SENSITIVE
+tel: (757) 382-3989,SENSITIVE
+set API_KEY=0iGmyxw5qNOrYO2GqawCtSsZt9abM,SENSITIVE
+"# temp, delete before commit
+access_token: Lotus_8650x",SENSITIVE
+"# DO NOT SHARE
+headers = {""Authorization"": ""Bearer WWUc1aAdn6UHHZiAHxkmYt64ZrKnBjHTvDXY_aPx""}",SENSITIVE
+version = '2.4.1',NON_SENSITIVE
+contact = support@example.net,NON_SENSITIVE
+build_id: e5aba970ab8a255fa24fd9179996cfffa544a1cc,NON_SENSITIVE
+PWD = secrets.pwd,NON_SENSITIVE
+"checksum = ""sha256:2ee72ffbc91afda83003863a158abbe281b45c87""",NON_SENSITIVE
+Wifi password: 4545b8f4ce9dc798e196efe0c86ef39384304698,SENSITIVE
+"private_key: ""changeme""",NON_SENSITIVE
+"""pwd"": ""blue-stone-43426"",",SENSITIVE
+Authentication is handled by the identity provider.,NON_SENSITIVE
+Phone: (626) 625-4634,SENSITIVE
+From: tomas.okafor27@lumenworks.org,SENSITIVE
+Card: 4910141187517159,SENSITIVE
+ticket id 25264219533,NON_SENSITIVE
+Call: 555-0100,NON_SENSITIVE
+"uuid = ""hd6pir7i-xpyp-5atb-g2nlortqmozj""",NON_SENSITIVE
+"admin_pass := os.environ[""ADMIN_PASS""]",NON_SENSITIVE
+Authentication is handled by the identity provider.,NON_SENSITIVE
+Phone: 1234567890,NON_SENSITIVE
+"# production credentials
+var bearer_token = ""CoLTvPo3id0Etv9vlql18DfJ1hJSOohQvwrlJ""",SENSITIVE
+export LICENSE_KEY=insert_token_here,NON_SENSITIVE
+set BEARER_TOKEN=SG.sVt3AcdfAhhRQivluBnOqZo,SENSITIVE
+build_id: 5a00a6d95b5654210a34f97d5b193d197b7daabc,NON_SENSITIVE
+The admin password is NGKAcitDB6cxgQ0Ch0JLp1HtzFrSD,SENSITIVE
+api_key: AKIAIOSFODNN7EXAMPLE,NON_SENSITIVE
+The secret manager rotates credentials every 30 days.,NON_SENSITIVE
+"# replace with your own key
+key_path: ""3600""",NON_SENSITIVE
+postgres://sven:96e87c4f62510c26bfe01350c4d80dd3f7ce9a6d@db.quartzmail.net:5432/app,SENSITIVE
+"<input type=""password"" name=""pwd"" placeholder=""Password"">",NON_SENSITIVE
+"let access_token: string = ""3a4e642450765bd34a85f0c63c837099"";",SENSITIVE
+"# placeholder values
+private static final String ACCESS_TOKEN = ""REPLACE_ME"";",NON_SENSITIVE
+"uuid = ""4d27ca3bc0e719fac22f4d9d8405578cb6045a9c""",NON_SENSITIVE
+"api_key_header: ""oauth2""",NON_SENSITIVE
+"pwd = ""changeme""",NON_SENSITIVE
+"uuid = ""mm2xvrjg-yskl-tmar-4hdsklvrbrtn""",NON_SENSITIVE
+"apikey: ""Maple@8710!""",SENSITIVE
+webhook_key: Vt8MjGAx6G7W0244qWTSgqD0aIBAmZ,SENSITIVE
+Call: +1 555 0100 000,NON_SENSITIVE
+"let jwt_secret = ""fake-key-123"";",NON_SENSITIVE
+access_token: GGhuIxoqP7OU176Q3cRpUM3j1iFc8F91mWnh,SENSITIVE
+token := input_value,NON_SENSITIVE
+"token_type: ""required""",NON_SENSITIVE
+"root_credential = ""<YOUR_SECRET>""",NON_SENSITIVE
+"const encryption_key = System.getenv(""ENCRYPTION_KEY"");",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer gQtQMv5pCKyx27DWGch78LebaYNKl1KXyCCe-3""}",SENSITIVE
+Aadhaar: 3305 2224 4727,SENSITIVE
+"# loaded from env
+commit = ""clbdopsc-hhyd-eapk-fzqsjahx9j6e""",NON_SENSITIVE
+postgres://kofi:river-stone-68893@db.quartzmail.net:5432/app,SENSITIVE
+"import os, sys",NON_SENSITIVE
+"# loaded from env
+const secret_name = '/etc/ssl/private/server.pem';",NON_SENSITIVE
+ticket id 663782069255,NON_SENSITIVE
+"// see docs
+def add(a, b):
+    return a + b",NON_SENSITIVE
+"secret_name: ""3600""",NON_SENSITIVE
+db_password: AKIAU6TPuHjKTQcmsxfTwnV2W,SENSITIVE
+"uuid = ""wqjikzja-wo3a-fdie-ypubtpvmdwln""",NON_SENSITIVE
+"def add(a, b):
+    return a + b",NON_SENSITIVE
+BEARER_TOKEN=6ba16db03bb85076e7a35872bf84054d,SENSITIVE
+tel: +1 555 0100 000,NON_SENSITIVE
+DB_PASSWORD = '6zvvwr0PQ+pT/xeKO7evV',SENSITIVE
+"token_expiry: ""Bearer""",NON_SENSITIVE
+const jwt_secret = getpass.getpass();,NON_SENSITIVE
+set AUTH_TOKEN=47218a08da5096d2f0fd63dfd97ef6120028e09f52ef549ac74ab01ef40198c9,SENSITIVE
+"while queue:
+    node = queue.pop()",NON_SENSITIVE
+"# replace with your own key
+export API_SECRET=example-placeholder",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer dV6uj_HN9BJD1IjXoM.rMH8T1YfX0InKQXire1iO""}",SENSITIVE
+"self.API_SECRET = ""Orbit#4538!""",SENSITIVE
+Card: 4506825667517545,SENSITIVE
+"secret_file = ""3600""",NON_SENSITIVE
+"admin_pass: ""your_password_here""",NON_SENSITIVE
+export CLIENT_SECRET=myFodf3V3GBxYRjZMZ2UecotuQ,SENSITIVE
+DB_PASS = 'iPLRuF5SXDUmfWMHAWWlSGnNB6K',SENSITIVE
+"// TODO: move this to the vault
+private_key: xKk18mZ4Q004e1HEjHXtR2osn5",SENSITIVE
+postgres://sven:a51bbcdf64fc562abfef4c6121aba106e7329f35@db.ostrava-tech.cz:5432/app,SENSITIVE
+REDIS_PASSWORD=AKIARg1qkQr78eLvSGFAUqLkAtdCsiem4vP4FVuT,SENSITIVE
+private_key: Falcon@980,SENSITIVE
+"password := System.getenv(""PASSWORD"")",NON_SENSITIVE
+Email: your.name@example.com,NON_SENSITIVE
+Card: 4156494386241920,SENSITIVE
+"ftp_pw = ""uezCtXpR4/ZF2fMWz0pBOyw+wv/mh5K""",SENSITIVE
+PAN: CDWPB5692P,SENSITIVE
+"# temp, delete before commit
+PAN: ZFRPN7191I",SENSITIVE
+Phone: (609) 329-9858,SENSITIVE
+"# loaded from env
+Order #722473565190",NON_SENSITIVE
+"// sample configuration
+try:
+    run()
+except Exception as e:
+    log(e)",NON_SENSITIVE
+Mobile: +91 63777 18942,SENSITIVE
+"let db_password: string = ""51def21b9209c886df2ea0f71d0e1818"";",SENSITIVE
+"# replace with your own key
+const secret_key = ""<password>"";",NON_SENSITIVE
+"while queue:
+    node = queue.pop()",NON_SENSITIVE
+"let conn_secret: string = ""<YOUR_SECRET>"";",NON_SENSITIVE
+"# example only
+owner: test@test.com",NON_SENSITIVE
+"# replace with your own key
+export SECRET=your-api-key-here",NON_SENSITIVE
+"# loaded from env
+TOKEN = secrets.token",NON_SENSITIVE
+"# replace with your own key
+Email: name@example.org",NON_SENSITIVE
+"ADMIN_LOGIN = config.get(""admin_login"")",NON_SENSITIVE
+"# replace with your own key
+API_KEY = getpass.getpass()",NON_SENSITIVE
+owner: aisha.rao@brightcrest.co,SENSITIVE
+"// see docs
+This function returns the access token expiry in seconds.",NON_SENSITIVE
+"let access_token = ""edd5606bc2e93f8cbbb28172b7b696a74797d33f2225dad171a8b5cea4898e99"";",SENSITIVE
+password: sample_secret,NON_SENSITIVE
+"# staging db login
+Aadhaar: 8054 3149 3623",SENSITIVE
+"# staging db login
+Card: 4088960306866858",SENSITIVE
+"self.apikey = ""your-api-key-here""",NON_SENSITIVE
+"# loaded from env
+let admin_pass: string = ""{{ SECRET }}"";",NON_SENSITIVE
+"""jwt_secret"": ""AKIAIOSFODNN7EXAMPLE"",",NON_SENSITIVE
+"API_SECRET = ""bnmmO3PHy2RvC0uDumBMgrT""",SENSITIVE
+"const api_key = ""078366ff9095e38edb4f7ee3b02ced1f906d528126c90f41dac3e8750ceabc25"";",SENSITIVE
+Mobile: (808) 636-4990,SENSITIVE
+private_key: FFF6CgbBWwqODCJukE5IjcVu1qt,SENSITIVE
+"// admin access
+postgres://kofi:xoxb-LsuUzPYtGs4TgyWZ86ojSR@db.northwind-labs.io:5432/app",SENSITIVE
+"private static final String DB_PASS = ""your_password_here"";",NON_SENSITIVE
+"// TODO: move this to the vault
+API_SECRET: ""5b825e6abb4457fa77c98a7ed2ceb149""",SENSITIVE
+"headers = {""Authorization"": ""Bearer HqhszztiFpuv2IKyI8.OZHyqW3Yz9S64uH""}",SENSITIVE
+Reach me at diego.okafor74@ostrava-tech.cz,SENSITIVE
+"# example only
+const password_field = 'Your token has expired, please log in again';",NON_SENSITIVE
+"# replace with your own key
+smtp_pass := ${SMTP_PASS}",NON_SENSITIVE
+Card: 4240754408094898,SENSITIVE
+const token_expiry = 'basic';,NON_SENSITIVE
+api_key := process.env.API_KEY,NON_SENSITIVE
+API_SECRET = secrets.API_SECRET,NON_SENSITIVE
+DB_PASS = 'Harbor$4234',SENSITIVE
+"# replace with your own key
+if not password:
+    raise ValueError('password required')",NON_SENSITIVE
+"# placeholder values
+version = '2.4.1'",NON_SENSITIVE
+secret_key = 'PbXLcSq0cTHMgxq7SrSCqhR',SENSITIVE
+set PASSWD=<password>,NON_SENSITIVE
+This function returns the access token expiry in seconds.,NON_SENSITIVE
+"pwd := ""lGzBTKb3ARNi9ZJM9bu4SowVmznHM+bttAP3BeF""",SENSITIVE
+"# loaded from env
+secret_name = ""3600""",NON_SENSITIVE
+"admin_login := ""Harbor!4335x""",SENSITIVE
+"// see docs
+const SECRET = ""insert_token_here"";",NON_SENSITIVE
+"const total = items.reduce((a, b) => a + b, 0);",NON_SENSITIVE
+postgres://sven:moon-river-40511@db.brightcrest.co:5432/app,SENSITIVE
+"secret_name = ""hidden""",NON_SENSITIVE
+From: tomas.rao@quartzmail.net,SENSITIVE
+admin_pass: uSPG51e5dlTcJbdzbVUpl8FX8imXvn4,SENSITIVE
+postgres://meera:Jungle!2407x@db.lumenworks.org:5432/app,SENSITIVE
+const ftp_pw = secrets.ftp_pw;,NON_SENSITIVE
+export PRIVATE_KEY=sample_secret,NON_SENSITIVE
+Reach me at arjun.dubois@ostrava-tech.cz,SENSITIVE
+PAN: DODPT4747L,SENSITIVE
+timestamp = 28169072566,NON_SENSITIVE
+tel: +91 98690 59082,SENSITIVE
+api_key = config['api_key'],NON_SENSITIVE
+ticket id 473220251038,NON_SENSITIVE
+const api_key_header = 'basic';,NON_SENSITIVE
+"let password = ""dRXhHt9p4lzEAPgoMpnJZuGuaPf9"";",SENSITIVE
+"# production credentials
+passwd: 2YU4hlWEy9s5bOqhOFaJII1sloqtPpr9zkUnqc",SENSITIVE
+"commit = ""nmi1nj2a-i4xl-e04v-r8syqfrjxpry""",NON_SENSITIVE
+pwd := getpass.getpass(),NON_SENSITIVE
+return render_template('index.html'),NON_SENSITIVE
+"// admin access
+""pwd"": ""moon-river-21016"",",SENSITIVE
+postgres://tomas:Maple_1641Q@db.ostrava-tech.cz:5432/app,SENSITIVE
+From: sven.mehta@brightcrest.co,SENSITIVE
+"config[""redis_password""] = ""Jungle!3956""",SENSITIVE
+"try:
+    run()
+except Exception as e:
+    log(e)",NON_SENSITIVE
+Passwords must be at least 12 characters long.,NON_SENSITIVE
+"let DB_PASSWORD = ""{{ SECRET }}"";",NON_SENSITIVE
+"// sample configuration
+api_key = config['api_key']",NON_SENSITIVE
+postgres://aisha:Harbor$7981!@db.lumenworks.org:5432/app,SENSITIVE
+"password_min_length = ""./keys/id_rsa.pem""",NON_SENSITIVE
+postgres://ana:0365589d48fb6b308f29c3298036ce69a3183ceece24b02bd28874bdfc0115f2@db.lumenworks.org:5432/app,SENSITIVE
+"<input type=""password"" name=""pwd"" placeholder=""Password"">",NON_SENSITIVE
+"# placeholder values
+token = 'AKIAIOSFODNN7EXAMPLE'",NON_SENSITIVE
+"# loaded from env
+export REDIS_PASSWORD=3600",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer NuYHcfvZTa-fND60QtwdcvsyApjeOVUqGV40kg""}",SENSITIVE
+owner: test@test.com,NON_SENSITIVE
+"self.db_password = ""OpTU64UMNrwKxBvRo9""",SENSITIVE
+timestamp = 938811596233,NON_SENSITIVE
+"# staging db login
+DB_PASSWORD=Pixel!9893x",SENSITIVE
+"commit = ""rhi6iwjl-hwn9-ryer-w8cqqkkyjfep""",NON_SENSITIVE
+"const DB_PASS = ""REPLACE_ME"";",NON_SENSITIVE
+Mobile: (937) 333-1239,SENSITIVE
+const api_key_header = 'Bearer';,NON_SENSITIVE
+"// admin access
+Phone: +91 94913 73408",SENSITIVE
+const secret_file = './keys/id_rsa.pem';,NON_SENSITIVE
+ACCESS_TOKEN=Falcon!6683!,SENSITIVE
+contact = user@example.com,NON_SENSITIVE
+license_key: xoxb-nqKeMxdyHhMql65Ay1J0uqBuEykDiqz,SENSITIVE
+AUTH_TOKEN=ec5202943d225363765b83d9646c22b92df992c5,SENSITIVE
+"const secret_key = ""your_token_goes_here"";",NON_SENSITIVE
+Call me on +44 7387 717722,SENSITIVE
+build_id: h5mivqtx-rcyl-swvb-iebkqdynsnm1,NON_SENSITIVE
+"# DO NOT SHARE
+owner: aisha.mehta@northwind-labs.io",SENSITIVE
+See the README for installation instructions.,NON_SENSITIVE
+"self.access_token = ""fake-key-123""",NON_SENSITIVE
+"token_expiry: ""Enter your password""",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer T9MK9MwN2gRL6RgKPnF7Ta.rRHnDYB0vG.3qN0c""}",SENSITIVE
+"# staging db login
+token = '4e5d7ec7ceae3fbd3a5a040a671d241b00ce437b852f92b46001325f3a71f124'",SENSITIVE
+tel: 1234567890,NON_SENSITIVE
+"// sample configuration
+See the README for installation instructions.",NON_SENSITIVE
+"# DO NOT SHARE
+headers = {""Authorization"": ""Bearer kSz3CqKoixmn28eYSj8wVji2Is4""}",SENSITIVE
+PAN: EBZPW8530X,SENSITIVE
+Authentication is handled by the identity provider.,NON_SENSITIVE
+"// TODO: move this to the vault
+SECRET: Orbit!41",SENSITIVE
+"# example only
+const password_field = 'jwt';",NON_SENSITIVE
+postgres://diego:Jungle-1745Q@db.quartzmail.net:5432/app,SENSITIVE
+"# loaded from env
+def add(a, b):
+    return a + b",NON_SENSITIVE
+"# DO NOT SHARE
+""access_token"": ""Orbit-7377x"",",SENSITIVE
+"admin_pass = ""Falcon-3375Q""",SENSITIVE
+"token_expiry: ""db-credentials""",NON_SENSITIVE
+"API_SECRET := config.get(""API_SECRET"")",NON_SENSITIVE
+"// TODO: move this to the vault
+headers = {""Authorization"": ""Bearer .hHBqKLPSVxY_ds6z4_Lw_EmYLX.HoWci9jJ4k2h""}",SENSITIVE
+Email: test@test.com,NON_SENSITIVE
+"# staging db login
+PAN: ZRIPC1452A",SENSITIVE
+"# temp, delete before commit
+Card: 4709795905782992",SENSITIVE
+ADMIN_PASS = process.env.ADMIN_PASS,NON_SENSITIVE
+"# temp, delete before commit
+passwd = ""blue-tiger-54121""",SENSITIVE
+"# temp, delete before commit
+Login with username Obla3C2ZvYrhw0gMitmIY4TUS3XomHXIQq3ZOpFb",SENSITIVE
+"""redis_password"": ""h5uNcsMtYtNvW76KsOlV5e4Mu"",",SENSITIVE
+token = 'Orbit_561!',SENSITIVE
+postgres://priya:Orbit_7007Q@db.quartzmail.net:5432/app,SENSITIVE
+"# temp, delete before commit
+password = ""LUU5JRRv3uLjyn6v60e2Wx5pC4""",SENSITIVE
+private_key = 'oauth2',NON_SENSITIVE
+"password_field = ""./keys/id_rsa.pem""",NON_SENSITIVE
+tel: (501) 857-3580,SENSITIVE
+"""bearer_token"": ""AKIAIOSFODNN7EXAMPLE"",",NON_SENSITIVE
+Aadhaar: 2716 1160 2201,SENSITIVE
+build_id: q9uxgsvo-semz-zpl9-hu0ozkdpmbn4,NON_SENSITIVE
+contact = priya.novak@ostrava-tech.cz,SENSITIVE
+"// see docs
+auth_method = ""Your token has expired, please log in again""",NON_SENSITIVE
+"config[""access_token""] = ""d7e4a44f5170c9ef829617b4c0d9f5f3""",SENSITIVE
+"# placeholder values
+response = requests.get(url, timeout=10)",NON_SENSITIVE
+"# example only
+uuid = ""85df03ab4362283afcf62b13bee6d3f93addc9f5""",NON_SENSITIVE
+"const session_secret = ""2L98iiSqfl3tuoOu63C4uRdzQdRARffIvfr"";",SENSITIVE
+"def add(a, b):
+    return a + b",NON_SENSITIVE
+jwt_secret = 'moon-tiger-94298',SENSITIVE
+Mobile: +44 7236 714176,SENSITIVE
+api_key = 'Tiger-6335!',SENSITIVE
+const access_token = input_value;,NON_SENSITIVE
+"// TODO: move this to the vault
+export TOKEN=Jungle@9384Q",SENSITIVE
+"headers = {""Authorization"": ""Bearer -.aCM_GCL1KpHqcu3bPNV2a4Dj9OR""}",SENSITIVE
+"let db_password = ""your_password_here"";",NON_SENSITIVE
+API_SECRET := getpass.getpass(),NON_SENSITIVE
+"# temp, delete before commit
+config[""SECRET""] = ""Cobalt_6588x""",SENSITIVE
+DB_PASS={{ SECRET }},NON_SENSITIVE
+"secret_key = ""8DOmK8TxY0sBhTtsOtnYwIDWvAPB8LIXZao""",SENSITIVE
+"# replace with your own key
+export ACCESS_TOKEN=your-api-key-here",NON_SENSITIVE
+PAN: DMLPC8322M,SENSITIVE
+Order #463053956671,NON_SENSITIVE
+"pwd = ""Falcon-3878x""",SENSITIVE
+"# production credentials
+PIN_CODE=AKIAqHWsLz7N01PUk82KvhLLS4",SENSITIVE
+"headers = {""Authorization"": ""Bearer yUvApsgGp_wxerjyJPd2_xhQuMaEIpm""}",SENSITIVE
+"password_prompt: ""basic""",NON_SENSITIVE
+"uuid = ""ae50b3da40cb3281803442c1237c4ae1732ca0df""",NON_SENSITIVE
+"apikey = ""/etc/ssl/private/server.pem""",NON_SENSITIVE
+"# temp, delete before commit
+export CLIENT_SECRET=AKIAavBotbQ21TXW5o7ZJQbT",SENSITIVE
+"key_path = ""db-credentials""",NON_SENSITIVE
+"self.redis_password = ""river-river-63417""",SENSITIVE
+"# production credentials
+""passwd"": ""Falcon#6231Q"",",SENSITIVE
+Meeting notes: discuss the release schedule on Friday.,NON_SENSITIVE
+"# replace with your own key
+self.smtp_pass = ""<YOUR_API_KEY>""",NON_SENSITIVE
+"self.vault_token = ""Maple#9292Q""",SENSITIVE
+Phone: +91 94085 13321,SENSITIVE
+"""webhook_key"": ""Harbor_9267"",",SENSITIVE
+"// sample configuration
+Email: your.name@example.com",NON_SENSITIVE
+"db_password: ""NyW6FW9AnL73TsjH6Lsew""",SENSITIVE
+"let api_key: string = ""Jungle#3637x"";",SENSITIVE
+Phone: +1 555 0100 000,NON_SENSITIVE
+"uuid = ""nymetb2l-ttfy-rnva-tbrf6adfngm5""",NON_SENSITIVE
+"passwd := ""Orbit!3954Q""",SENSITIVE
+"headers = {""Authorization"": ""Bearer 5aXqP0.ylA9gJn1lOdIUqbG42syI3uxz9oPSfuB""}",SENSITIVE
+"# loaded from env
+Order #52559736696",NON_SENSITIVE
+return render_template('index.html'),NON_SENSITIVE
+"pwd = ""SG.Xgv6UIGL6UdoL7DKtNw5Kc8EkknRSrTfFX""",SENSITIVE
+WEBHOOK_KEY = ${WEBHOOK_KEY},NON_SENSITIVE
+export VAULT_TOKEN=wilpT94dMGL0kWPjetzKiUs65IixcXK,SENSITIVE
+"// sample configuration
+Never commit passwords to the repository.",NON_SENSITIVE
+export ADMIN_PASS=blue-blue-32500,SENSITIVE
+"// admin access
+private static final String DB_PASS = ""BGk6r3x3m/4sbW1AitzmkA"";",SENSITIVE
+export API_KEY=Cobalt$556,SENSITIVE
+"const admin_pass = ""xxxxxxxx"";",NON_SENSITIVE
+"const pwd = ""8ZCCVHQMnsrENMz8A"";",SENSITIVE
+"# loaded from env
+ticket id 311528797608",NON_SENSITIVE
+const api_key_header = 'Password must be at least 8 characters';,NON_SENSITIVE
+contact = nora.okafor58@northwind-labs.io,SENSITIVE
+"uuid = ""yswcb8sy-rfy6-esv9-zqewogyzg4ir""",NON_SENSITIVE
+"uuid = ""yhzoqwpc-o20g-jwco-hdjuoycvtzxx""",NON_SENSITIVE
+"password_label = ""3600""",NON_SENSITIVE
+"# staging db login
+Aadhaar: 8003 0575 5206",SENSITIVE
+const password_prompt = 'jwt';,NON_SENSITIVE
+"password_label = ""oauth2""",NON_SENSITIVE
+"key_path: ""db-credentials""",NON_SENSITIVE
+postgres://priya:Orbit_2020x@db.brightcrest.co:5432/app,SENSITIVE
+"token_type = ""hidden""",NON_SENSITIVE
+"// see docs
+db_password = ""{{ SECRET }}""",NON_SENSITIVE
+"self.client_secret = ""insert_token_here""",NON_SENSITIVE
+const token_type = 'required';,NON_SENSITIVE
+"# staging db login
+postgres://diego:river-moon-89869@db.quartzmail.net:5432/app",SENSITIVE
+"# replace with your own key
+SELECT id, name FROM users;",NON_SENSITIVE
+build_id: f7a0382bf7c4922c2da12c91872444e4304b8109,NON_SENSITIVE
+Card: 4767850647599706,SENSITIVE
+"// TODO: move this to the vault
+redis_password = ""92886e082f425c1a4ce61be4a967a112""",SENSITIVE
+"// see docs
+const jwt_secret = ""sample_secret"";",NON_SENSITIVE
+"self.pwd = ""Cobalt#6727Q""",SENSITIVE
+"def add(a, b):
+    return a + b",NON_SENSITIVE
+"const total = items.reduce((a, b) => a + b, 0);",NON_SENSITIVE
+bearer_token: cJ6q0pLuRXTILj5P0kpa,SENSITIVE
+"""auth_token"": ""b988572495e1f3a6992e7175e0b3f0c7"",",SENSITIVE
+"let password = ""****"";",NON_SENSITIVE
+Call: 1234567890,NON_SENSITIVE
+"# placeholder values
+passwd: REPLACE_ME",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer EdIVcUJ03Bl8bRdZr9VMm6d5""}",SENSITIVE
+"commit = ""xmrnyfep-qfh8-6eog-5hnmvfewyt8q""",NON_SENSITIVE
+Mobile: +91 89048 63482,SENSITIVE
+"// TODO: move this to the vault
+Card: 4081106851211333",SENSITIVE
+"# staging db login
+Aadhaar: 9319 9931 0090",SENSITIVE
+"# replace with your own key
+access_token := input_value",NON_SENSITIVE
+Aadhaar: 4075 6936 7894,SENSITIVE
+This function returns the access token expiry in seconds.,NON_SENSITIVE
+"""DB_PASS"": ""Lp06bxnQy5fkrkvmiV7cnzrZp"",",SENSITIVE
+"// admin access
+""api_key"": ""WlaaHusEPYp8EUPF72"",",SENSITIVE
+"# replace with your own key
+timestamp = 754391243379",NON_SENSITIVE
+"# example only
+x = [n * 2 for n in range(5)]",NON_SENSITIVE
+Card: 4917775597955880,SENSITIVE
+api_key = 'sk-TWbZ1dLYgNUtzeMFsIjbvCLuQVG',SENSITIVE
+"# loaded from env
+os.environ[""SECRET_KEY""] = ""fake-key-123""",NON_SENSITIVE
+auth_token = 'Maple-8133x',SENSITIVE
+Login with username Harbor$585x,SENSITIVE
+"// sample configuration
+import os, sys",NON_SENSITIVE
+jwt_secret: fWA/otXpc3IccQVIE7BqocJtHOrG4,SENSITIVE
+LICENSE_KEY=276f035137e9c6a28ac2f9ef3aed1104bd7ff836c0bc0e5a2809ccda4f0db98e,SENSITIVE
+"// sample configuration
+auth_method = ""Enter your password""",NON_SENSITIVE
+private_key = settings.PRIVATE_KEY,NON_SENSITIVE
+password = 'river-stone-92295',SENSITIVE
+"# example only
+self.jwt_secret = ""changeme""",NON_SENSITIVE
+redis_password: /etc/ssl/private/server.pem,NON_SENSITIVE
+Order #141354610505,NON_SENSITIVE
+"// sample configuration
+uuid = ""bf3cdb385c3d5a46af22ffb71fcd49097212bd61""",NON_SENSITIVE
+password_input = document.getElementById('password'),NON_SENSITIVE
+"# production credentials
+const db_password = ""Cobalt!3835x"";",SENSITIVE
+"redis_password := ""REPLACE_ME""",NON_SENSITIVE
+owner: your.name@example.com,NON_SENSITIVE
+"// sample configuration
+Authentication is handled by the identity provider.",NON_SENSITIVE
+"// see docs
+checksum = ""sha256:394081f119ec0c78603f655d0ee3e624afc38b30""",NON_SENSITIVE
+ticket id 744707456666,NON_SENSITIVE
+vault_token: Rt4fhP086M6gm15HvRwnsHY7O,SENSITIVE
+postgres://kofi:Falcon@6308@db.ostrava-tech.cz:5432/app,SENSITIVE
+Call: 1234567890,NON_SENSITIVE
+From: arjun.ivanov75@lumenworks.org,SENSITIVE
+SECRET_KEY = settings.SECRET_KEY,NON_SENSITIVE
+"var DB_PASS = ""z4I2MZ7F899LK9UYsKcMFt""",SENSITIVE
+"# placeholder values
+response = requests.get(url, timeout=10)",NON_SENSITIVE
+"// TODO: move this to the vault
+DB_PASS: Ember@1573Q",SENSITIVE
+Order #518598451396,NON_SENSITIVE
+const secret_name = '/etc/ssl/private/server.pem';,NON_SENSITIVE
+"CLIENT_SECRET = os.getenv(""CLIENT_SECRET"")",NON_SENSITIVE
+export ACCESS_TOKEN=ailOPk7zwq0aO13YcRbO,SENSITIVE
+"// sample configuration
+const vault_token = os.getenv(""VAULT_TOKEN"");",NON_SENSITIVE
+"let DB_PASS = ""Gsk63HeATw25rikXQQMFK1Trzo0BVlXm1NIeu"";",SENSITIVE
+"// TODO: move this to the vault
+Aadhaar: 2644 9933 0093",SENSITIVE
+"""passwd"": ""/etc/ssl/private/server.pem"",",NON_SENSITIVE
+tel: +1 555 0100 000,NON_SENSITIVE
+const apiKey = process.env.API_KEY;,NON_SENSITIVE
+"var API_SECRET = ""example-placeholder""",NON_SENSITIVE
+"let DB_PASS: string = ""IgAAsDHPrOurLw84SBnNyRIgDrxK93XBYZKb1B7o"";",SENSITIVE
+passwd = 'JgyAk4xV3PjN1ZiTit5MlcGeec',SENSITIVE
+"""password"": ""Harbor_5230Q"",",SENSITIVE
+"# replace with your own key
+self.DB_PASSWORD = ""sample_secret""",NON_SENSITIVE
+"# temp, delete before commit
+postgres://diego:river-tiger-51440@db.brightcrest.co:5432/app",SENSITIVE
+Call: 1234567890,NON_SENSITIVE
+"let passwd = ""2b82e825ce993e1641510284018bbc18599fd498"";",SENSITIVE
+"secret_file = ""Enter your password""",NON_SENSITIVE
+"// sample configuration
+smtp_pass = 'fake-key-123'",NON_SENSITIVE
+"# placeholder values
+See the README for installation instructions.",NON_SENSITIVE
+"secret_key = config.get(""secret_key"")",NON_SENSITIVE
+"# staging db login
+Aadhaar: 8381 0322 2065",SENSITIVE
+DB_PASSWORD=Password must be at least 8 characters,NON_SENSITIVE
+"# staging db login
+owner: diego.silva15@ostrava-tech.cz",SENSITIVE
+"token_expiry: ""refresh""",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer CeiNApjUVnWe9kRttr_uXkwlcJ22ZR""}",SENSITIVE
+"# temp, delete before commit
+root_credential: gEcq0RrVUXztXd3jeBj3CugI",SENSITIVE
+Call: (555) 555-0123,NON_SENSITIVE
+Email: meera.silva40@ostrava-tech.cz,SENSITIVE
+"# production credentials
+apikey = 'Jungle-5532x'",SENSITIVE
+"# DO NOT SHARE
+contact = nora.mehta@brightcrest.co",SENSITIVE
+"# loaded from env
+secret_name = ""3600""",NON_SENSITIVE
+"password_prompt: ""required""",NON_SENSITIVE
+This function returns the access token expiry in seconds.,NON_SENSITIVE
+"key_path: ""basic""",NON_SENSITIVE
+"self.bearer_token = ""tiger-river-45250""",SENSITIVE
+"api_key = ""mlTWGRtJKnKf4uheIqEk""",SENSITIVE
+"# temp, delete before commit
+tel: (768) 225-7804",SENSITIVE
+"auth_method = ""hidden""",NON_SENSITIVE
+token = tokenizer.encode(text),NON_SENSITIVE
+"SECRET := ""4c8e019f35786ed2a38a827caf6631a7fb8f5cff""",SENSITIVE
+"headers = {""Authorization"": ""Bearer cLSlNrNBW5ANPEHt3aqQzg.pglG91mE""}",SENSITIVE
+export PRIVATE_KEY=3600,NON_SENSITIVE
+api_key = 'changeme',NON_SENSITIVE
+jwt_secret: river-tiger-47740,SENSITIVE
+"# example only
+const password_min_length = 'Please type your secret code';",NON_SENSITIVE
+tel: 555-0100,NON_SENSITIVE
+"# DO NOT SHARE
+Aadhaar: 6989 1734 3498",SENSITIVE
+export FTP_PW=dded5c1cd597a1f23dfbba2bdbae727a,SENSITIVE
+"def add(a, b):
+    return a + b",NON_SENSITIVE
+owner: aisha.mehta@brightcrest.co,SENSITIVE
+Card: 4866167017263064,SENSITIVE
+Card: 4599334428833430,SENSITIVE
+Card: 4430438284568676,SENSITIVE
+"// see docs
+build_id: d0b37b8b3547a78dfb59fa22e2d59bb6d467e7c7",NON_SENSITIVE
+Wifi password: Lotus_9982x,SENSITIVE
+api_key = config['api_key'],NON_SENSITIVE
+"# replace with your own key
+token_type: ""./keys/id_rsa.pem""",NON_SENSITIVE
+PWD=Tiger_9405Q,SENSITIVE
+export SECRET=Orbit!1726x,SENSITIVE
+Aadhaar: 6263 7974 3724,SENSITIVE
+jwt_secret = 'db-credentials',NON_SENSITIVE
+"# temp, delete before commit
+""auth_token"": ""qbXWvxzdDlUWRpOmWMQsf0t5WxRKc5"",",SENSITIVE
+"SELECT id, name FROM users;",NON_SENSITIVE
+"# replace with your own key
+def add(a, b):
+    return a + b",NON_SENSITIVE
+Mobile: +44 7354 765274,SENSITIVE
+token = tokenizer.encode(text),NON_SENSITIVE
+"if not password:
+    raise ValueError('password required')",NON_SENSITIVE
+Card: 4342126735927172,SENSITIVE
+tel: +91 86619 24574,SENSITIVE
+DB_PASSWORD = 'AKIAfZE4kub0NiHuhXATLkzKQqZnp1UM',SENSITIVE
+"""admin_login"": ""Your token has expired, please log in again"",",NON_SENSITIVE
+"""bearer_token"": ""****"",",NON_SENSITIVE
+const password = secrets.password;,NON_SENSITIVE
+Meeting notes: discuss the release schedule on Friday.,NON_SENSITIVE
+"access_token: ""blue-river-98551""",SENSITIVE
+Aadhaar: 4564 6547 7632,SENSITIVE
+timestamp = 500264609480,NON_SENSITIVE
+"uuid = ""551ba8d928d7887c131a24e51bb35bbcd49a6e71""",NON_SENSITIVE
+"DB_PASS: ""your_password_here""",NON_SENSITIVE
+"// admin access
+DB_PASS: cBMseuT8PhUCuU1651Reqk4FTsYuFwgEA2xoiFch",SENSITIVE
+"# placeholder values
+commit = ""ral5ytvw-rwa1-0to3-slrtkrs8oa7l""",NON_SENSITIVE
+"// admin access
+postgres://rahul:FLZozIM/H2ycIwhEICefjp8ab2ns10Et0r5r@db.ostrava-tech.cz:5432/app",SENSITIVE
+const token_type = './keys/id_rsa.pem';,NON_SENSITIVE
+"# production credentials
+export DB_PASS=tiger-tiger-33534",SENSITIVE
+"Use a strong, unique passphrase for each account.",NON_SENSITIVE
+"password_min_length = ""Please type your secret code""",NON_SENSITIVE
+Card: 4558959544705531,SENSITIVE
+"jwt_secret = ""69d2tKmdK6ixfZdRH9d0Lv""",SENSITIVE
+ticket id 27123718375,NON_SENSITIVE
+Wifi password: c178af32bf1a888c53d3a6aa5ea1b05e,SENSITIVE
+"# example only
+let secret_key = ""required"";",NON_SENSITIVE
+api_key := ${API_KEY},NON_SENSITIVE
+ACCESS_TOKEN = input_value,NON_SENSITIVE
+"const DB_PASSWORD = ""Pixel!4587Q"";",SENSITIVE
+build_id: f7600e26cbaf59db9320cd97c220582f7e93ad05,NON_SENSITIVE
+"self.auth_token = ""Lotus$6457Q""",SENSITIVE
+const auth_method = '3600';,NON_SENSITIVE
+"""passwd"": ""required"",",NON_SENSITIVE
+export TOKEN=607e08035c1330e2713c7ea9e277d265fbd8fa3126dc0610df9e27f2a28d0561,SENSITIVE
+"headers = {""Authorization"": ""Bearer ghjLO6yU6ruxBxbQFzmdgfU0k96MSAX_A-JH2b""}",SENSITIVE
+"# production credentials
+headers = {""Authorization"": ""Bearer gF1DFpK3vhP1K2R1rvhnM3ru""}",SENSITIVE
+"const auth_method = 'Your token has expired, please log in again';",NON_SENSITIVE
+SECRET=09434735f178f70bf9fbc8bf4ea9401e547f1585fad5b37a7e0521a980c1f0ad,SENSITIVE
+"""api_key"": ""REPLACE_ME"",",NON_SENSITIVE
+"config[""db_password""] = ""Lotus_4206x""",SENSITIVE
+export PASSWD=your_password_here,NON_SENSITIVE
+Aadhaar: 3939 7086 7710,SENSITIVE
+owner: arjun.novak45@quartzmail.net,SENSITIVE
+"# example only
+uuid = ""uypzohzz-oc84-bnqm-tl5olojuzsj8""",NON_SENSITIVE
+APIKEY=your-api-key-here,NON_SENSITIVE
+"const root_credential = ""a95cPkzXwXrAzTGBFpL074RO55cOi3nhyAu"";",SENSITIVE
+"api_key_header: ""Please type your secret code""",NON_SENSITIVE
+"# production credentials
+postgres://kofi:Tiger_2405x@db.brightcrest.co:5432/app",SENSITIVE
+"// TODO: move this to the vault
+self.redis_password = ""ghp_uYmGe85TVIxFntM9ZJcAY0lKJwKm7SqpM2""",SENSITIVE
+"# replace with your own key
+const db_password = ""****"";",NON_SENSITIVE
+"let api_key = ""cbb84223d4ca0ffb46e61754075c5368"";",SENSITIVE
+"# DO NOT SHARE
+Use pass: oR8foRR65TO8g63YgRNNGdgtSvIosZ",SENSITIVE
+Aadhaar: 2044 2793 1468,SENSITIVE
+"""passwd"": ""Pixel-780Q"",",SENSITIVE
+"// see docs
+secret_file: ""jwt""",NON_SENSITIVE
+Aadhaar: 2520 5933 2960,SENSITIVE
+"# staging db login
+const jwt_secret = ""5a61b338a5506e79734a2f2bf0092f7f"";",SENSITIVE
+set PWD=Ember_2411Q,SENSITIVE
+"class User:
+    pass",NON_SENSITIVE
+"while queue:
+    node = queue.pop()",NON_SENSITIVE
+"self.pwd = ""Ember!7199Q""",SENSITIVE
+"// see docs
+const access_token = config.get(""access_token"");",NON_SENSITIVE
+"# example only
+apikey: ""example-placeholder""",NON_SENSITIVE
+db_password: REPLACE_ME,NON_SENSITIVE
+From: meera.rao40@lumenworks.org,SENSITIVE
+"headers = {""Authorization"": ""Bearer 6M26Gtptbu5AWEWZz4Ntm167G6TsZ""}",SENSITIVE
+"// sample configuration
+config[""DB_PASS""] = ""TODO""",NON_SENSITIVE
+postgres://aisha:stone-stone-18565@db.quartzmail.net:5432/app,SENSITIVE
+"// admin access
+export API_KEY=river-moon-1390",SENSITIVE
+From: tomas.kim@northwind-labs.io,SENSITIVE
+"# production credentials
+Login with username xuwVd2QHkgSOssSKJjCWELgynRgknnlYLERuU3",SENSITIVE
+const token_type = 'Enter your password';,NON_SENSITIVE
+"// TODO: move this to the vault
+export FTP_PW=cUbnZZjZjPk1Ae7Lr2CdIU2Vn2vJj58DVFG4w4L",SENSITIVE
+"""api_key"": ""08VA3QchWWscIEA8Tejfil5rnou1"",",SENSITIVE
+"# production credentials
+DB_PASS: Jungle-1873x",SENSITIVE
+"api_key_header = ""Password must be at least 8 characters""",NON_SENSITIVE
+"config[""redis_password""] = ""Pi8DRqb+HVCHY2Ij5JTweSi3R49m""",SENSITIVE
+"// TODO: move this to the vault
+""api_key"": ""Lotus!144!"",",SENSITIVE
+"# DO NOT SHARE
+PAN: SNEPN4617B",SENSITIVE
+API_KEY=Jungle@1007x,SENSITIVE
+"headers = {""Authorization"": ""Bearer Ork3dqCwlSSNwrvG7ie71EJlZmY""}",SENSITIVE
+"@app.route('/login', methods=['POST'])",NON_SENSITIVE
+owner: arjun.haddad73@brightcrest.co,SENSITIVE
+const token_type = 'basic';,NON_SENSITIVE
+"const client_secret = ""moon-tiger-28713"";",SENSITIVE
+Reach us at test@test.com,NON_SENSITIVE
+"license_key: ""ayMErs8PajBr6fHPohQ5""",SENSITIVE
+contact = meera.dubois@brightcrest.co,SENSITIVE
+"// sample configuration
+PASSWD = process.env.PASSWD",NON_SENSITIVE
+"# temp, delete before commit
+Card: 4447873057678529",SENSITIVE
+postgres://li:AKIAxXfQe4X54inLlCUb8r2FWkptFlL4RvMiQA@db.northwind-labs.io:5432/app,SENSITIVE
+"<input type=""password"" name=""pwd"" placeholder=""Password"">",NON_SENSITIVE
+"SELECT id, name FROM users;",NON_SENSITIVE
+"// sample configuration
+key_path = ""Bearer""",NON_SENSITIVE
+DB_PASSWORD = ${DB_PASSWORD},NON_SENSITIVE
+From: aisha.novak@lumenworks.org,SENSITIVE
+Card: 4681847901736043,SENSITIVE
+"import os, sys",NON_SENSITIVE
+"// admin access
+var token = ""Orbit_3023Q""",SENSITIVE
+API_SECRET=Cobalt@1953!,SENSITIVE
+"password_min_length: ""3600""",NON_SENSITIVE
+SECRET=Ember_9095Q,SENSITIVE
+"# temp, delete before commit
+postgres://sven:Orbit$4120Q@db.lumenworks.org:5432/app",SENSITIVE
+return render_template('index.html'),NON_SENSITIVE
+"// see docs
+ticket id 979679926687",NON_SENSITIVE
+"// see docs
+API_KEY = getpass.getpass()",NON_SENSITIVE
+timestamp = 109433137736,NON_SENSITIVE
+"DB_PASSWORD: ""Jungle@1883""",SENSITIVE
+Reach us at name@example.org,NON_SENSITIVE
+"let private_key: string = ""****"";",NON_SENSITIVE
+"commit = ""dcc9a1620b31c74c4fe3825f253400b1605e72a9""",NON_SENSITIVE
+"checksum = ""sha256:0b7ea15ebfb4bbefb10d4ee9e2932a2c08093cd8""",NON_SENSITIVE
+"# loaded from env
+SECRET = ${SECRET}",NON_SENSITIVE
+contact = user@example.com,NON_SENSITIVE
+ticket id 12104043606,NON_SENSITIVE
+"class User:
+    pass",NON_SENSITIVE
+DB_PASSWORD=ghp_tUxBhs6A7MMnS2V5sc1xYZrTmdBr,SENSITIVE
+"response = requests.get(url, timeout=10)",NON_SENSITIVE
+"# example only
+let token = ""<password>"";",NON_SENSITIVE
+"# staging db login
+postgres://kofi:SG.iS7eJ1E4cSp2Um7WRs3x0H@db.ostrava-tech.cz:5432/app",SENSITIVE
+"# loaded from env
+API_SECRET = config.get(""API_SECRET"")",NON_SENSITIVE
+"// see docs
+const password_label = 'required';",NON_SENSITIVE
+"SELECT id, name FROM users;",NON_SENSITIVE
+"""bearer_token"": ""SG.BhRqNTf5LIpvhMwZXhcdeuBLcFIYxDbFiHA"",",SENSITIVE
+"// admin access
+Aadhaar: 5543 0121 1161",SENSITIVE
+auth_token := getpass.getpass(),NON_SENSITIVE
+PAN: GMZPA1352T,SENSITIVE
+"headers = {""Authorization"": ""Bearer TyTFlwbYIa8j9YhOCadcapt7ag""}",SENSITIVE
+TOKEN=n36H7jswHU3mH8dSLMkaYKjYIpsvPH9oV0,SENSITIVE
+"os.environ[""SECRET_KEY""] = ""3600""",NON_SENSITIVE
+"# production credentials
+headers = {""Authorization"": ""Bearer 40V9RZg4LwrqMjayqdT60.C5rAzlYIq""}",SENSITIVE
+"headers = {""Authorization"": ""Bearer JXxJZE0sVIPz1wcZ3A_3uzBQGEz-i""}",SENSITIVE
+"uuid = ""2emha2gq-oynl-nbyr-z2qfhcw7udyg""",NON_SENSITIVE
+postgres://ana:Ember@648!@db.ostrava-tech.cz:5432/app,SENSITIVE
+"let ftp_pw = ""moon-stone-73512"";",SENSITIVE
+token = tokenizer.encode(text),NON_SENSITIVE
+"// TODO: move this to the vault
+DB_PASS: Tiger@9449!",SENSITIVE
+"os.environ[""CLIENT_SECRET""] = ""Lotus!7230""",SENSITIVE
+"# staging db login
+PAN: XFXPQ8677U",SENSITIVE
+Reach us at user@example.com,NON_SENSITIVE
+Use pass: Pixel!3349!,SENSITIVE
+"self.encryption_key = ""{{ SECRET }}""",NON_SENSITIVE
+private_key = 'changeme',NON_SENSITIVE
+"// see docs
+API_KEY = settings.API_KEY",NON_SENSITIVE
+"# DO NOT SHARE
+const secret_key = ""c3800ed4ab091f3b7de00715d17243de3fa437f16d1a041cdd7ce73f94c647bd"";",SENSITIVE
+"ftp_pw = ""stone-stone-64292""",SENSITIVE
+"// sample configuration
+export API_SECRET=your_token_goes_here",NON_SENSITIVE
+"jwt_secret := ""ghp_Gc6M664RYWUYDeq2Ake00rtqnH0QDSW5j""",SENSITIVE
+"// see docs
+timestamp = 88889093197",NON_SENSITIVE
+"# loaded from env
+import os, sys",NON_SENSITIVE
+access_token = '/bmqpfNPXbZMD/IqWqIos0ZroTV0TBLAu',SENSITIVE
+"self.redis_password = ""Tiger-7965""",SENSITIVE
+x = [n * 2 for n in range(5)],NON_SENSITIVE
+contact = user@example.com,NON_SENSITIVE
+"const secret_key = ""Jungle!5203x"";",SENSITIVE
+Email: li.silva2@lumenworks.org,SENSITIVE
+"// sample configuration
+secret_name = ""jwt""",NON_SENSITIVE
+"// sample configuration
+api_key = config['api_key']",NON_SENSITIVE
+"password_label: ""refresh""",NON_SENSITIVE
+"# production credentials
+self.redis_password = ""AKIAFch2NyxKEoQNUHx8Ork7bne1m""",SENSITIVE
+tel: 1234567890,NON_SENSITIVE
+Meeting notes: discuss the release schedule on Friday.,NON_SENSITIVE
+"// TODO: move this to the vault
+jwt_secret: ""AKIAqOYxGt30ue2wycsQ2ru6CTiXZDMKnJ0""",SENSITIVE
+"// see docs
+password_label: ""Your token has expired, please log in again""",NON_SENSITIVE
+version = '2.4.1',NON_SENSITIVE
+"self.api_key = ""REPLACE_ME""",NON_SENSITIVE
+PAN: YYVPO9278J,SENSITIVE
+admin_pass: 5dd3eb7207d7d840bbde1273ba0103448a0056f2,SENSITIVE
+ticket id 792826318293,NON_SENSITIVE
+"const secret_key = ""Please type your secret code"";",NON_SENSITIVE
+"password_label = ""db-credentials""",NON_SENSITIVE
+"if not password:
+    raise ValueError('password required')",NON_SENSITIVE
+"# production credentials
+DB_PASS = '8bf057583b036ff57c60a6320eb39ac3'",SENSITIVE
+"# loaded from env
+db_password = 'changeme'",NON_SENSITIVE
+"headers = {""Authorization"": ""Bearer OasZweFBPou04iA6f66kjh8.""}",SENSITIVE
+"@app.route('/login', methods=['POST'])",NON_SENSITIVE
+postgres://diego:bTbTItleuNGXI5rRhn3qSv1s763rFOdC6O@db.brightcrest.co:5432/app,SENSITIVE
+"password_label: ""jwt""",NON_SENSITIVE

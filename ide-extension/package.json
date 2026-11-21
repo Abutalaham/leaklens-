@@ -1,0 +1,75 @@
+{
+  "name": "leaklens-ide-guard",
+  "displayName": "LeakLens IDE Guard",
+  "description": "Real-time privacy leak and secret detection for VS Code. Runs 100% locally.",
+  "version": "1.0.0",
+  "publisher": "leaklens-security",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Linters",
+    "Security"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "leaklens.scanCurrentFile",
+        "title": "LeakLens: Scan Current File for Secrets"
+      },
+      {
+        "command": "leaklens.scanWorkspace",
+        "title": "LeakLens: Scan Entire Workspace for Secrets"
+      },
+      {
+        "command": "leaklens.clearDiagnostics",
+        "title": "LeakLens: Clear Security Diagnostics"
+      }
+    ],
+    "configuration": {
+      "title": "LeakLens IDE Guard",
+      "properties": {
+        "leaklens.backendUrl": {
+          "type": "string",
+          "default": "http://127.0.0.1:5000",
+          "description": "URL of the local LeakLens backend service"
+        },
+        "leaklens.scanOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically scan files for secrets and PII when saved"
+        },
+        "leaklens.ignoreFolders": {
+          "type": "array",
+          "default": [
+            "**/node_modules/**",
+            "**/.git/**",
+            "**/.venv/**",
+            "**/venv/**",
+            "**/__pycache__/**",
+            "**/dist/**",
+            "**/build/**"
+          ],
+          "description": "Glob patterns of folders to exclude from secret scanning"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "npm run compile && vsce package --no-dependencies --out leaklens-ide-guard.vsix",
+    "package-no-vsce": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "@vscode/vsce": "^3.0.0",
+    "typescript": "^5.3.0"
+  }
+}

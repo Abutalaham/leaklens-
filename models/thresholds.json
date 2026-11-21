@@ -1,0 +1,5 @@
+{
+  "discover": 0.5,
+  "benign": 0.05,
+  "boost": 0.8
+}

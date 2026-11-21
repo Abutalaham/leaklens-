@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LeakLens — Privacy Leak Detection & Developer Security</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="logo" aria-hidden="true"></span>
+    <span class="brand-text">LeakLens</span>
+    <span class="badge pro">SECURE</span>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button class="tab" data-view="home" role="tab">Home</button>
+    <button class="tab active" data-view="scan" role="tab">Scan Files</button>
+    <button class="tab" data-view="dashboard" role="tab" id="nav-dashboard">Dashboard</button>
+    <button class="tab" data-view="history" role="tab">History</button>
+    <button class="tab" data-view="team" role="tab">Team Setup</button>
+    <button class="tab" data-view="ide" role="tab">IDE Guard</button>
+    <button class="tab" data-view="eval" role="tab">Model Metrics</button>
+    <button class="tab admin-only" data-view="admin" role="tab" id="nav-admin" hidden>Admin</button>
+  </nav>
+  <div class="top-actions">
+    <div id="chips" class="chips"></div>
+    <button class="btn icon-btn" id="theme-toggle" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">🌓</button>
+    <div id="auth-nav" class="auth-nav">
+      <button class="btn sm" id="btn-show-login">Log In</button>
+      <button class="btn sm primary" id="btn-show-register">Register</button>
+    </div>
+    <div id="user-menu" class="user-menu" hidden>
+      <span class="user-label" id="user-display-name"></span>
+      <button class="btn sm" id="btn-show-profile">Settings</button>
+      <button class="btn sm outline" id="btn-logout">Logout</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ================================= HOME / LANDING ================================= -->
+<section id="view-home" class="view" hidden>
+  <div class="hero">
+    <div class="hero-badge">🛡️ LOCAL PRIVACY FIRST • ZERO CLOUD APIS • ZERO COST</div>
+    <h1>Detect, Explain & Redact Secrets <br><span class="accent-text">Before You Share or Commit</span></h1>
+    <p class="hero-sub">
+      A hybrid cybersecurity platform pairing deterministic rules and checksum validators with a local char n-gram ML classifier.
+      Sanitise files, configure safe team handoffs, and guard your IDE in real time.
+    </p>
+    <div class="hero-cta">
+      <button class="btn primary lg" onclick="document.querySelector('[data-view=scan]').click()">Scan a File Now</button>
+      <button class="btn lg" onclick="document.querySelector('[data-view=team]').click()">Safe Team Setup (.env)</button>
+    </div>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="f-icon">🧠</div>
+      <h3>Hybrid Detection</h3>
+      <p>Blends regex patterns, checksums (Luhn, Verhoeff), entropy checks, and Logistic Regression without sending data off your machine.</p>
+    </div>
+    <div class="feature-card">
+      <div class="f-icon">🎯</div>
+      <h3>Context-Aware Scoring</h3>
+      <p>Recognises placeholders (`example.com`, `<TOKEN>`), environment reads, and test fixtures to eliminate false positives.</p>
+    </div>
+    <div class="feature-card">
+      <div class="f-icon">🔒</div>
+      <h3>In-Place Redaction & Audit</h3>
+      <p>Generates sanitised text, code, PDFs, and images with automatic rescan verification and exportable compliance reports.</p>
+    </div>
+    <div class="feature-card">
+      <div class="f-icon">🤝</div>
+      <h3>Safe Team Handoff</h3>
+      <p>Converts project findings into safe `.env.example` templates and setup packages with zero real secret leakage.</p>
+    </div>
+    <div class="feature-card">
+      <div class="f-icon">💻</div>
+      <h3>IDE Guard & Pre-Commit</h3>
+      <p>VS Code extension diagnostics and Git pre-commit hooks to block secrets before they enter version control.</p>
+    </div>
+    <div class="feature-card">
+      <div class="f-icon">📊</div>
+      <h3>User & Admin Dashboards</h3>
+      <p>Track your privacy posture over time with isolated user scan history and privacy-preserving administrative controls.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================= SCAN VIEW ================================= -->
+<section id="view-scan" class="view">
+  <div id="drop" class="drop" tabindex="0">
+    <input id="file" type="file" hidden>
+    <div class="drop-icon">📁</div>
+    <strong>Drop a file here, or click to choose</strong>
+    <span id="drop-hint" class="muted">Code, text, PDF or screenshot. Processed locally; temp copies deleted automatically.</span>
+    <div class="supported-tags">
+      <span>.py</span><span>.js</span><span>.ts</span><span>.env</span><span>.json</span><span>.pdf</span><span>.png / .jpg</span>
+    </div>
+  </div>
+  <div id="busy" class="busy" hidden><span class="spinner"></span> Scanning &amp; analysing with hybrid detector&hellip;</div>
+  <div id="error" class="error" role="alert" hidden></div>
+
+  <div id="results" hidden>
+    <div class="summary" id="summary"></div>
+    <div id="warnings"></div>
+    <div class="toolbar">
+      <div class="grp">
+        <button class="btn sm" id="sel-hm">Select high + medium</button>
+        <button class="btn sm" id="sel-all">Select all active</button>
+        <button class="btn sm" id="sel-none">Clear</button>
+      </div>
+      <label class="chk"><input type="checkbox" id="show-all"> Show placeholders &amp; likely-benign</label>
+      <div class="grp right">
+        <label>Style
+          <select id="style"><option value="label">[REDACTED:TYPE]</option><option value="block">████</option></select>
+        </label>
+        <button class="btn primary" id="redact">Redact selected &amp; create sanitised copy</button>
+      </div>
+    </div>
+    <div id="done" class="done" hidden></div>
+    <div class="cols">
+      <div class="col">
+        <div class="row">
+          <h3>Findings <span id="count" class="muted"></span></h3>
+          <button type="button" class="btn sm outline" id="report-missed">Report a missed secret</button>
+        </div>
+        <div id="findings"></div>
+      </div>
+      <div class="col"><h3 id="viewer-title">Document</h3><div id="viewer" class="viewer"></div></div>
+    </div>
+    <div class="scan-foot">
+      <button class="btn sm outline" id="btn-create-env-from-scan">Generate .env.example from this scan</button>
+      <button class="link text-danger" id="discard">Delete this scan's temporary files now</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================================= USER DASHBOARD ================================= -->
+<section id="view-dashboard" class="view" hidden>
+  <div class="section-head">
+    <h2>Privacy & Security Dashboard</h2>
+    <p class="muted">Overview of your scanned files, detected vulnerabilities, and sanitisation metrics.</p>
+  </div>
+  <div class="dashboard-cards" id="dash-cards">
+    <div class="d-card"><div class="num" id="stat-files">-</div><div class="lbl">Files Scanned</div></div>
+    <div class="d-card"><div class="num" id="stat-findings">-</div><div class="lbl">Total Findings</div></div>
+    <div class="d-card danger"><div class="num" id="stat-high">-</div><div class="lbl">High Risk</div></div>
+    <div class="d-card warning"><div class="num" id="stat-med">-</div><div class="lbl">Medium Risk</div></div>
+    <div class="d-card success"><div class="num" id="stat-low">-</div><div class="lbl">Low Risk</div></div>
+    <div class="d-card accent"><div class="num" id="stat-sanitised">-</div><div class="lbl">Files Sanitised</div></div>
+  </div>
+
+  <div class="dash-grid">
+    <div class="panel">
+      <h3>Scan Volume & Risk Trends</h3>
+      <div id="chart-trends" class="chart-container">
+        <p class="muted center">No scan data recorded yet. Upload files to see trends.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Findings by provider</h3>
+      <div id="chart-providers" class="chart-container">
+        <p class="muted center">Log in and scan files to see which providers show up in your findings.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Security Advice & Policies</h3>
+      <ul class="clean-list">
+        <li><strong>Rule 1:</strong> Always rotate keys once exposed in shared repositories or chats.</li>
+        <li><strong>Rule 2:</strong> Store credentials in `.env` and load them via environment variables.</li>
+        <li><strong>Rule 3:</strong> Redacting a copy creates a safe distribution, but doesn't revoke leaked keys.</li>
+        <li><strong>Rule 4:</strong> Use our pre-commit hook to catch secrets before staging.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================================= SCAN HISTORY ================================= -->
+<section id="view-history" class="view" hidden>
+  <div class="row">
+    <div>
+      <h2>Scan History</h2>
+      <p class="muted">Only metadata and masked summaries are stored. Raw files are never kept in history.</p>
+    </div>
+    <button class="btn sm text-danger" id="clear-history">Clear history</button>
+  </div>
+  <div class="filter-bar">
+    <input type="text" id="history-search" class="input sm" placeholder="Search by filename...">
+    <select id="history-filter-risk" class="input sm">
+      <option value="">All Risk Levels</option>
+      <option value="high">High Risk</option>
+      <option value="medium">Medium Risk</option>
+      <option value="low">Low Risk</option>
+    </select>
+    <select id="history-filter-kind" class="input sm">
+      <option value="">All Formats</option>
+      <option value="text">Text / Code</option>
+      <option value="pdf">PDF Document</option>
+      <option value="image">Image / OCR</option>
+    </select>
+  </div>
+  <div id="history"></div>
+</section>
+
+<!-- ================================= SAFE TEAM SETUP ================================= -->
+<section id="view-team" class="view" hidden>
+  <div class="section-head">
+    <h2>Safe Team Developer Handoff</h2>
+    <p class="muted">Configure projects collaboratively without pasting real API keys into team chats or public repositories.</p>
+  </div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="panel">
+        <h3>1. Environment Template (.env.example)</h3>
+        <p class="muted small">Template containing variable names and placeholder assignments only. <strong>Zero real secret values.</strong></p>
+        <textarea id="env-preview" class="code-box" rows="12" spellcheck="false"></textarea>
+        <div class="grp foot-grp">
+          <button class="btn sm" id="btn-copy-env">Copy .env.example</button>
+          <button class="btn sm primary" id="btn-download-team-zip">Download Team Setup Package (.zip)</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="panel">
+        <h3>2. Local Encrypted Vault (Owner-Controlled)</h3>
+        <p class="muted small">Safely store and label local environment keys on your machine. Values are encrypted with authenticated Scrypt + AES-256-GCM. Admins cannot view private secrets.</p>
+        <div class="grp foot-grp" style="margin-bottom: .8rem; justify-content: flex-start;">
+          <button class="btn sm" id="btn-show-export-vault">Export .leaklens Vault</button>
+          <button class="btn sm outline" id="btn-show-import-vault">Import .leaklens Vault</button>
+        </div>
+        <form id="vault-form" class="vault-form">
+          <div class="form-row">
+            <input type="text" id="vault-key" placeholder="Variable Name (e.g. GITHUB_TOKEN)" required class="input">
+            <select id="vault-provider" class="input">
+              <option value="Generic">Generic</option>
+              <option value="AWS">AWS</option>
+              <option value="GitHub">GitHub</option>
+              <option value="Stripe">Stripe</option>
+              <option value="Google Cloud">Google Cloud</option>
+              <option value="OpenAI">OpenAI</option>
+              <option value="Twilio">Twilio</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <input type="password" id="vault-val" placeholder="Secret Value (stored encrypted)" required class="input">
+            <button type="submit" class="btn primary sm">Save to Local Vault</button>
+          </div>
+        </form>
+        <div id="vault-items" class="vault-list"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================= IDE GUARD ================================= -->
+<section id="view-ide" class="view" hidden>
+  <div class="section-head">
+    <h2>LeakLens IDE Guard &amp; Git Pre-Commit Hook</h2>
+    <p class="muted">Detect and prevent leaks right inside your developer workflow.</p>
+  </div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="panel">
+        <h3>VS Code Extension</h3>
+        <p class="muted">Get in-editor highlighting, line/column diagnostics, and automated QuickFix recommendations to move secret literals into environment variables.</p>
+        <ol class="step-list">
+          <li>Ensure LeakLens is running: <code>python app.py</code></li>
+          <li>Open <code>ide-extension/</code> in VS Code.</li>
+          <li>Run <code>npm install &amp;&amp; npm run compile</code></li>
+          <li>Press <code>F5</code> to test or package the extension.</li>
+        </ol>
+        <div class="callout-box">
+          <strong>Backend Endpoint:</strong> <code>http://127.0.0.1:5000/api/ide/scan</code><br>
+          Operates in-memory with zero disk persistence.
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Git Pre-Commit Hook</h3>
+        <p class="muted">Block accidental commits containing high or medium risk credentials automatically.</p>
+        <p>Run the install command in your terminal:</p>
+        <pre class="code-box">python scripts/install-hook.py</pre>
+        <p class="small muted">Tests staged files using <code>git diff --cached</code> before allowing commits.</p>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="panel">
+        <h3>Interactive IDE Simulator</h3>
+        <p class="muted">Test how LeakLens IDE Guard inspects code and offers instant QuickFix remediation:</p>
+        <textarea id="ide-sim-code" class="code-box" rows="8" spellcheck="false"># Sample script
+DB_PASSWORD = "SuperSecretPassword123!"
+AWS_KEY = "AKIAU2GCFJIBS14Q4CTV"
+        </textarea>
+        <div class="grp foot-grp">
+          <button class="btn primary sm" id="btn-ide-sim-run">Run IDE In-Memory Scan</button>
+        </div>
+        <div id="ide-sim-results" class="sim-output"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================= EVALUATION ================================= -->
+<section id="view-eval" class="view" hidden>
+  <div class="section-head">
+    <h2>Model &amp; System Evaluation</h2>
+    <p class="muted">Evaluated on held-out synthetic test dataset with 1,500 snippets across held-out variable and syntax families.</p>
+  </div>
+  <div id="eval"></div>
+</section>
+
+<!-- ================================= ADMIN DASHBOARD ================================= -->
+<section id="view-admin" class="view" hidden>
+  <div class="section-head">
+    <h2>Administrator Control Center</h2>
+    <p class="muted">System telemetry, user management, and privacy-preserving audit logs. <strong>Admins never see raw passwords or secrets.</strong></p>
+  </div>
+
+  <div class="dashboard-cards" id="admin-cards">
+    <div class="d-card"><div class="num" id="adm-users">-</div><div class="lbl">Total Users</div></div>
+    <div class="d-card success"><div class="num" id="adm-active">-</div><div class="lbl">Active Accounts</div></div>
+    <div class="d-card warning"><div class="num" id="adm-disabled">-</div><div class="lbl">Disabled Accounts</div></div>
+    <div class="d-card"><div class="num" id="adm-scans">-</div><div class="lbl">System Scans</div></div>
+    <div class="d-card accent"><div class="num" id="adm-storage">-</div><div class="lbl">Storage (MB)</div></div>
+  </div>
+
+  <div class="panel">
+    <h3>User Account Management</h3>
+    <table class="t" id="admin-users-table">
+      <thead>
+        <tr><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Registered</th><th>Actions</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="panel">
+        <h3>Audit Activity Logs</h3>
+        <div id="admin-audit-logs" class="audit-list"></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="panel">
+        <h3>Scoring Policy Configuration</h3>
+        <p class="muted small">Customize base risk weights (clamped 0–100). Changes persist across restarts.</p>
+        <div id="admin-policy-list" class="policy-grid"></div>
+        <button class="btn sm primary" id="btn-save-policies">Save Policies</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================= MODALS ================================= -->
+<div id="modal-login" class="modal" hidden>
+  <div class="modal-card">
+    <div class="modal-head"><h3>Log In to LeakLens</h3><button class="modal-close">&times;</button></div>
+    <form id="form-login">
+      <div id="login-error" class="error sm" hidden></div>
+      <label>Username or Email<input type="text" id="login-ident" required class="input"></label>
+      <label>Password<input type="password" id="login-pw" required class="input"></label>
+      <div class="row">
+        <button type="button" class="link small" id="btn-show-forgot">Forgot Password?</button>
+        <button type="submit" class="btn primary">Sign In</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="modal-register" class="modal" hidden>
+  <div class="modal-card">
+    <div class="modal-head"><h3>Create an Account</h3><button class="modal-close">&times;</button></div>
+    <form id="form-register">
+      <div id="register-error" class="error sm" hidden></div>
+      <label>Username<input type="text" id="reg-username" required class="input"></label>
+      <label>Email<input type="email" id="reg-email" required class="input"></label>
+      <label>Password (min. 8 characters)<input type="password" id="reg-pw" required minlength="8" class="input"></label>
+      <button type="submit" class="btn primary full">Register</button>
+    </form>
+  </div>
+</div>
+
+<div id="modal-forgot" class="modal" hidden>
+  <div class="modal-card">
+    <div class="modal-head"><h3>Reset Password</h3><button class="modal-close">&times;</button></div>
+    <form id="form-forgot">
+      <div id="forgot-info" class="warn-box small" hidden></div>
+      <label>Enter your Username or Email<input type="text" id="forgot-ident" required class="input"></label>
+      <button type="submit" class="btn primary">Generate Reset Token</button>
+    </form>
+    <div id="reset-token-box" hidden class="reset-box">
+      <p class="muted small">Use this token to set a new password:</p>
+      <input type="text" id="reset-token-val" class="input" readonly>
+      <form id="form-reset-pw" class="mt-2">
+        <label>New Password<input type="password" id="reset-new-pw" required minlength="8" class="input"></label>
+        <button type="submit" class="btn primary sm">Set New Password</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="modal-profile" class="modal" hidden>
+  <div class="modal-card">
+    <div class="modal-head"><h3>Account Settings</h3><button class="modal-close">&times;</button></div>
+    <form id="form-profile">
+      <h4>Profile Information</h4>
+      <div id="profile-msg" class="warn-box small" hidden></div>
+      <label>Username<input type="text" id="prof-user" class="input"></label>
+      <label>Email<input type="email" id="prof-email" class="input"></label>
+      <button type="submit" class="btn sm">Update Profile</button>
+    </form>
+    <hr class="divider">
+    <form id="form-change-pw">
+      <h4>Change Password</h4>
+      <div id="pw-msg" class="warn-box small" hidden></div>
+      <label>Current Password<input type="password" id="chg-old-pw" required class="input"></label>
+      <label>New Password (min 8 chars)<input type="password" id="chg-new-pw" required minlength="8" class="input"></label>
+      <button type="submit" class="btn sm primary">Change Password</button>
+    </form>
+    <hr class="divider">
+    <div id="profile-2fa-section">
+      <h4>Two-Factor Authentication (TOTP)</h4>
+      <div id="profile-2fa-status" class="muted small">Checking 2FA status...</div>
+      <div id="profile-2fa-controls" style="margin-top: .6rem;">
+        <button type="button" class="btn sm" id="btn-setup-2fa">Configure 2FA</button>
+        <button type="button" class="btn sm text-danger" id="btn-disable-2fa" hidden>Disable 2FA</button>
+      </div>
+      <div id="profile-2fa-box" hidden style="margin-top: .8rem; background: var(--bg); padding: .8rem; border-radius: 8px; border: 1px solid var(--line);">
+        <p class="small">Scan with Authenticator app or copy manual secret key:</p>
+        <div id="profile-2fa-key" class="code-box small" style="margin-bottom: .6rem; word-break: break-all;"></div>
+        <form id="form-confirm-2fa">
+          <label>Enter 6-digit Code to Confirm<input type="text" id="confirm-2fa-code" required maxlength="6" class="input sm" placeholder="123456"></label>
+          <button type="submit" class="btn sm primary">Enable 2FA</button>
+        </form>
+        <div id="profile-2fa-recovery" hidden style="margin-top: .8rem;">
+          <p class="small text-danger"><strong>Save these single-use recovery codes in a safe place:</strong></p>
+          <pre id="profile-recovery-list" class="code-box small" style="max-height: 120px; overflow-y: auto;"></pre>
+        </div>
+      </div>
+    </div>
+    <hr class="divider">
+    <div id="profile-tokens-section">
+      <h4>Personal Access Tokens (PATs)</h4>
+      <p class="muted small">Authenticate the Standalone CLI, Git pre-commit hooks, and CI/CD pipelines without exposing passwords.</p>
+      <form id="form-create-token" class="form-row" style="margin-bottom: .8rem;">
+        <input type="text" id="token-name" placeholder="Token Name (e.g. CLI Laptop)" required class="input sm">
+        <select id="token-expiry" class="input sm">
+          <option value="30">Expires in 30 Days</option>
+          <option value="90">Expires in 90 Days</option>
+          <option value="365">Expires in 1 Year</option>
+          <option value="0">Never Expires</option>
+        </select>
+        <button type="submit" class="btn sm primary">Generate Token</button>
+      </form>
+      <div id="new-token-alert" class="warn-box small" hidden style="margin-bottom: .8rem;">
+        <p><strong>Make sure to copy your personal access token now. You won't be able to see it again!</strong></p>
+        <div class="row" style="margin-top: .4rem; gap: .5rem;">
+          <input type="text" id="new-token-raw" class="input sm" readonly style="font-family: monospace;">
+          <button type="button" class="btn sm" id="btn-copy-token">Copy</button>
+        </div>
+      </div>
+      <div id="pat-list" class="vault-list"></div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-2fa-verify" class="modal" hidden>
+  <div class="modal-card">
+    <div class="modal-head"><h3>Two-Factor Authentication</h3><button class="modal-close">&times;</button></div>
+    <form id="form-2fa-verify">
+      <div id="twofa-login-error" class="error sm" hidden></div>
+      <p class="muted small">Enter the 6-digit code from your authenticator app, or an 8-character recovery code.</p>
+      <input type="hidden" id="twofa-temp-token">
+      <label>Authentication Code / Recovery Code<input type="text" id="twofa-code" required class="input" autocomplete="one-time-code" placeholder="123456 or XXXX-XXXX"></label>
+      <button type="submit" class="btn primary full">Verify &amp; Sign In</button>
+    </form>
+  </div>
+</div>
+
+<div id="modal-vault-export" class="modal" hidden>
+  <div class="modal-card">
+    <div class="modal-head"><h3>Export .leaklens Vault</h3><button class="modal-close">&times;</button></div>
+    <form id="form-vault-export">
+      <div id="vault-export-error" class="error sm" hidden></div>
+      <p class="muted small">Create an encrypted portable <code>.leaklens</code> file protected by a custom password using Scrypt + AES-256-GCM.</p>
+      <label>Vault Export Password (min 8 chars)<input type="password" id="vault-export-pw" required minlength="8" class="input"></label>
+      <button type="submit" class="btn primary full">Download .leaklens File</button>
+    </form>
+  </div>
+</div>
+
+<div id="modal-vault-import" class="modal" hidden>
+  <div class="modal-card">
+    <div class="modal-head"><h3>Import .leaklens Vault</h3><button class="modal-close">&times;</button></div>
+    <form id="form-vault-import">
+      <div id="vault-import-error" class="error sm" hidden></div>
+      <label>Choose .leaklens file<input type="file" id="vault-import-file" required accept=".leaklens" class="input"></label>
+      <label>Vault Password<input type="password" id="vault-import-pw" required class="input"></label>
+      <button type="submit" class="btn primary full">Decrypt &amp; Import</button>
+    </form>
+  </div>
+</div>
+
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>

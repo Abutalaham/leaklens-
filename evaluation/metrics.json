@@ -1,0 +1,93 @@
+{
+  "created": "2026-11-21T01:21:13+00:00",
+  "dataset": {
+    "train": 4000,
+    "validation": 1200,
+    "test": 1500,
+    "test_sensitive": 704,
+    "test_non_sensitive": 796,
+    "seeds": {
+      "train": 42,
+      "val": 99,
+      "test": 7
+    },
+    "synthetic": true
+  },
+  "thresholds": {
+    "discover": 0.5,
+    "benign": 0.05,
+    "boost": 0.8
+  },
+  "systems": {
+    "baseline_regex": {
+      "precision": 0.611,
+      "recall": 0.9034,
+      "f1": 0.7289,
+      "fpr": 0.5088,
+      "tp": 636,
+      "fp": 405,
+      "tn": 391,
+      "fn": 68
+    },
+    "rules_context": {
+      "precision": 0.9905,
+      "recall": 0.8878,
+      "f1": 0.9363,
+      "fpr": 0.0075,
+      "tp": 625,
+      "fp": 6,
+      "tn": 790,
+      "fn": 79
+    },
+    "ml_only": {
+      "precision": 0.9928,
+      "recall": 0.983,
+      "f1": 0.9879,
+      "fpr": 0.0063,
+      "tp": 692,
+      "fp": 5,
+      "tn": 791,
+      "fn": 12
+    },
+    "hybrid": {
+      "precision": 0.9913,
+      "recall": 0.9716,
+      "f1": 0.9813,
+      "fpr": 0.0075,
+      "tp": 684,
+      "fp": 6,
+      "tn": 790,
+      "fn": 20
+    }
+  },
+  "hybrid_errors_sample": {
+    "false_negatives": [
+      "PASSWD=Maple#251",
+      "# temp, delete before commit\nCLIENT_SECRET=Jungle#5325Q",
+      "// TODO: move this to the vault\napi_key: \"SG.xh5pDJhfq8V85U5yEo9lMZsWDzTmUY\"",
+      "Login with username t2k1L2alrnWJo34Gk5Vme",
+      "ftp_pw: 3Ino4yw2vMNJKrsWfN9Tx1hxQ",
+      "export ACCESS_TOKEN=SG.gsOWMNdvtIp70Kz64KZQbBD4JOUL9jNU",
+      "self.client_secret = \"SG.jbg3uxWs97BxzIoieAZ4S0r0A6\"",
+      "pin_code: \"7aZ73nyJqmHCaq7PoXh2KhD0JBwGs4GA8dH\"",
+      "const DB_PASSWORD = \"SG.PPUZufddC86rJ8NzXjO08m9hVFZUjmqQT9LG\";",
+      "export AUTH_TOKEN=Maple#9010x"
+    ],
+    "false_positives": [
+      "os.environ[\"REDIS_PASSWORD\"] = \"3600\"",
+      "password: \"db-credentials\"",
+      "# loaded from env\nexport REDIS_PASSWORD=3600",
+      "export PRIVATE_KEY=3600",
+      "jwt_secret = 'db-credentials'",
+      "os.environ[\"SECRET_KEY\"] = \"3600\""
+    ]
+  },
+  "notes": [
+    "All data are synthetic (randomly generated values). Real-world performance will differ.",
+    "The test split uses variable names and syntax templates never seen in training (held-out families).",
+    "Thresholds were tuned on a separate validation split, not on the test split.",
+    "A snippet counts as 'flagged' if any ACTIVE finding exists (placeholders/likely-benign are not flagged).",
+    "baseline_regex = rules without placeholder/context/ML filtering; rules_context adds placeholder and context checks; ml_only = classifier alone at p>=0.5; hybrid = rules + context + ML.",
+    "Class balance is ~45% sensitive, far higher than in real files, so precision here is optimistic."
+  ]
+}

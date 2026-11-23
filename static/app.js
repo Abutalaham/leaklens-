@@ -21,7 +21,12 @@ const S = {
   showAll: false,
   user: null,
   csrfToken: null,
-  activeView: "scan"
+  activeView: "home",
+  uploadExtensions: [],
+  maxUploadBytes: 0,
+  maxUploadMB: 0,
+  uploadConfigLoaded: false,
+  scanning: false
 };
 
 const LEVEL_COLOR = { high: "var(--high)", medium: "var(--med)", low: "var(--low)" };
@@ -42,27 +47,112 @@ async function api(path, opts = {}) {
 }
 
 /* ---------------------------------------------------------------- Theme Toggle */
-const savedTheme = localStorage.getItem("leaklens_theme") || "dark";
+const storedTheme = localStorage.getItem("leaklens_theme");
+const savedTheme = storedTheme === "light" || storedTheme === "dark" ? storedTheme : "dark";
 document.documentElement.dataset.theme = savedTheme;
 
-$("#theme-toggle").addEventListener("click", () => {
+const themeToggle = $("#theme-toggle");
+function updateThemeToggle(theme) {
+  themeToggle.textContent = theme === "dark" ? "☼" : "☾";
+  themeToggle.setAttribute("aria-label", `Switch to ${theme === "dark" ? "light" : "dark"} theme`);
+  themeToggle.title = `Switch to ${theme === "dark" ? "light" : "dark"} theme`;
+}
+updateThemeToggle(savedTheme);
+
+themeToggle.addEventListener("click", () => {
   const cur = document.documentElement.dataset.theme;
   const next = cur === "dark" ? "light" : "dark";
   document.documentElement.dataset.theme = next;
   localStorage.setItem("leaklens_theme", next);
+  updateThemeToggle(next);
+});
+
+const ribbonStage = $(".ribbon-stage");
+for (let index = 0; index < 36; index += 1) {
+  const slice = document.createElement("span");
+  slice.className = "ribbon-slice";
+  slice.style.setProperty("--index", index);
+  ribbonStage.append(slice);
+}
+
+$(".hero").addEventListener("pointermove", (event) => {
+  const bounds = event.currentTarget.getBoundingClientRect();
+  const x = ((event.clientX - bounds.left) / bounds.width - .5) * 2;
+  const y = ((event.clientY - bounds.top) / bounds.height - .5) * 2;
+  ribbonStage.style.setProperty("--mouse-x", x.toFixed(3));
+  ribbonStage.style.setProperty("--mouse-y", y.toFixed(3));
+});
+$(".hero").addEventListener("pointerleave", () => {
+  ribbonStage.style.setProperty("--mouse-x", "0");
+  ribbonStage.style.setProperty("--mouse-y", "0");
 });
 
 /* ---------------------------------------------------------------- Navigation */
+const mobileNavQuery = window.matchMedia("(max-width: 1080px)");
+const primaryMenu = $("#primary-menu");
+const mobileNavToggle = $("#mobile-nav-toggle");
+
+function syncNavigationMode() {
+  const isMobile = mobileNavQuery.matches;
+  mobileNavToggle.setAttribute("aria-hidden", String(!isMobile));
+  mobileNavToggle.tabIndex = isMobile ? 0 : -1;
+  if (!isMobile) primaryMenu.classList.remove("is-open");
+  primaryMenu.setAttribute("aria-hidden", String(isMobile && !primaryMenu.classList.contains("is-open")));
+  mobileNavToggle.setAttribute("aria-expanded", String(isMobile && primaryMenu.classList.contains("is-open")));
+  mobileNavToggle.setAttribute("aria-label", primaryMenu.classList.contains("is-open")
+    ? "Close primary navigation"
+    : "Open primary navigation");
+}
+
+function closeMobileNavigation(returnFocus = false) {
+  primaryMenu.classList.remove("is-open");
+  syncNavigationMode();
+  if (returnFocus && mobileNavQuery.matches) mobileNavToggle.focus();
+}
+
+mobileNavToggle.addEventListener("click", () => {
+  const isOpen = primaryMenu.classList.toggle("is-open");
+  syncNavigationMode();
+  if (isOpen) {
+    const firstLink = primaryMenu.querySelector(".tab:not([hidden])");
+    if (firstLink) firstLink.focus();
+  }
+});
+mobileNavQuery.addEventListener("change", () => syncNavigationMode());
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && primaryMenu.classList.contains("is-open")) {
+    event.preventDefault();
+    closeMobileNavigation(true);
+  }
+});
+document.addEventListener("click", (event) => {
+  if (mobileNavQuery.matches && primaryMenu.classList.contains("is-open")
+      && !primaryMenu.contains(event.target) && !mobileNavToggle.contains(event.target)) {
+    closeMobileNavigation();
+  }
+});
+syncNavigationMode();
+
 $$(".tab").forEach((t) => t.addEventListener("click", () => {
   const view = t.dataset.view;
   if (!view) return;
   switchView(view);
 }));
+$$("[data-go-view]").forEach((button) => button.addEventListener("click", () => {
+  switchView(button.dataset.goView);
+}));
 
 function switchView(viewName) {
   S.activeView = viewName;
-  $$(".tab").forEach((x) => x.classList.toggle("active", x.dataset.view === viewName));
+  document.body.classList.toggle("home-active", viewName === "home");
+  $$(".tab").forEach((x) => {
+    const active = x.dataset.view === viewName;
+    x.classList.toggle("active", active);
+    if (active) x.setAttribute("aria-current", "page");
+    else x.removeAttribute("aria-current");
+  });
   $$(".view").forEach((v) => (v.hidden = v.id !== "view-" + viewName));
+  if (mobileNavQuery.matches && primaryMenu.classList.contains("is-open")) closeMobileNavigation(true);
 
   if (viewName === "dashboard") loadDashboard();
   if (viewName === "history") loadHistory();
@@ -71,21 +161,50 @@ function switchView(viewName) {
   if (viewName === "admin") loadAdminDashboard();
 }
 
+switchView("home");
+
 /* ---------------------------------------------------------------- Status & Auth Initialization */
 async function initApp() {
   try {
     const s = await api("/api/status");
     S.csrfToken = s.csrf_token;
-    
+
+    S.uploadExtensions = s.extensions;
+    S.maxUploadMB = Number(s.max_mb);
+    S.maxUploadBytes = Number(s.max_mb) * 1024 * 1024;
+    if (!Number.isFinite(S.maxUploadMB) || !S.maxUploadBytes || !Array.isArray(S.uploadExtensions)) {
+      throw new Error("Scanner upload configuration is invalid.");
+    }
+    S.uploadConfigLoaded = true;
+
     // Status chips
     $("#chips").replaceChildren(
       h("span", { class: "chip " + (s.ml ? "ok" : "warn") }, s.ml ? "ML on" : "ML off"),
       h("span", { class: "chip " + (s.ocr ? "ok" : "warn") }, s.ocr ? "OCR on" : "OCR off")
     );
     $("#file").accept = s.extensions.join(",");
-    $("#drop-hint").textContent = `Up to ${s.max_mb} MB. Supported: ${s.extensions.join(" ")}. Temp copies deleted after ${s.ttl_minutes} min.`;
+    $("#file").disabled = false;
+    $("#scan-browse").disabled = false;
+    $$("[data-sample]").forEach((button) => { button.disabled = false; });
+    $("#drop-hint").textContent = `Maximum file size: ${s.max_mb} MB. Temporary upload copies are deleted after ${s.ttl_minutes} minutes.`;
+    $("#supported-tags").replaceChildren(...s.extensions.map((extension) => h("span", null, extension)));
+    $("#scan-status-title").textContent = "Status from this installation";
+    $("#scan-ml-state").textContent = s.ml ? "ON" : "OFF";
+    $("#scan-ocr-state").textContent = s.ocr ? "ON" : "OFF";
+    $("#scan-ml-state").classList.toggle("is-on", s.ml);
+    $("#scan-ml-state").classList.toggle("is-off", !s.ml);
+    $("#scan-ocr-state").classList.toggle("is-on", s.ocr);
+    $("#scan-ocr-state").classList.toggle("is-off", !s.ocr);
+    $("#scan-max-size").textContent = `${s.max_mb} MB`;
+    $("#scan-ttl").textContent = `${s.ttl_minutes} min`;
+  } catch (err) {
+    console.warn("Status init error:", err);
+    $("#scan-status-title").textContent = "Scanner status unavailable";
+    $("#drop-hint").textContent = "Supported formats and upload limits could not be loaded.";
+    showError("Scanner configuration could not be loaded. Refresh the page before uploading a file.");
+  }
 
-    // Auth check
+  try {
     const me = await api("/api/auth/me");
     if (me.authenticated) {
       setAuthUser(me.user);
@@ -93,7 +212,7 @@ async function initApp() {
       setAuthUser(null);
     }
   } catch (err) {
-    console.warn("Init error:", err);
+    console.warn("Auth init error:", err);
   }
 }
 initApp();
@@ -114,6 +233,9 @@ function setAuthUser(user) {
     $("#user-menu").hidden = true;
     $("#nav-admin").hidden = true;
   }
+  if (S.activeView === "dashboard") loadDashboard();
+  if (S.activeView === "history") loadHistory();
+  if (S.activeView === "team") loadTeamSetup();
 }
 
 /* ---------------------------------------------------------------- Auth Modals */
@@ -287,7 +409,12 @@ $("#form-register").addEventListener("submit", async (e) => {
 
 // Logout
 $("#btn-logout").addEventListener("click", async () => {
-  try { await api("/api/auth/logout", { method: "POST" }); } catch (_) {}
+  try {
+    const res = await api("/api/auth/logout", { method: "POST" });
+    if (res.csrf_token) S.csrfToken = res.csrf_token;
+  } catch (err) {
+    console.warn("Logout error:", err);
+  }
   setAuthUser(null);
   switchView("home");
 });
@@ -456,26 +583,136 @@ $("#btn-copy-token").addEventListener("click", () => {
 
 /* ---------------------------------------------------------------- File Upload & Scanning */
 const drop = $("#drop"), fileIn = $("#file");
-drop.addEventListener("click", () => fileIn.click());
-drop.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") fileIn.click(); });
-["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); }));
-["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
-drop.addEventListener("drop", (e) => { if (e.dataTransfer.files[0]) scan(e.dataTransfer.files[0]); });
-fileIn.addEventListener("change", () => { if (fileIn.files[0]) scan(fileIn.files[0]); fileIn.value = ""; });
+let dragDepth = 0;
+drop.addEventListener("click", (event) => {
+  if (event.target !== fileIn && !event.target.closest("button")) fileIn.click();
+});
+drop.addEventListener("keydown", (event) => {
+  if (event.target !== drop) return;
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    fileIn.click();
+  }
+});
+$("#scan-browse").addEventListener("click", (event) => {
+  event.stopPropagation();
+  if (!S.scanning && S.uploadConfigLoaded) fileIn.click();
+});
+drop.addEventListener("dragenter", (event) => {
+  event.preventDefault();
+  dragDepth += 1;
+  drop.classList.add("over");
+});
+drop.addEventListener("dragover", (event) => {
+  event.preventDefault();
+  if (event.dataTransfer) event.dataTransfer.dropEffect = "copy";
+  drop.classList.add("over");
+});
+drop.addEventListener("dragleave", (event) => {
+  event.preventDefault();
+  dragDepth = Math.max(0, dragDepth - 1);
+  if (!dragDepth) drop.classList.remove("over");
+});
+drop.addEventListener("drop", (event) => {
+  event.preventDefault();
+  dragDepth = 0;
+  drop.classList.remove("over");
+  const file = event.dataTransfer && event.dataTransfer.files[0];
+  if (file) scan(file);
+});
+fileIn.addEventListener("change", () => {
+  const file = fileIn.files[0];
+  fileIn.value = "";
+  if (file) scan(file);
+});
 
 function showError(msg) { const e = $("#error"); e.textContent = msg || ""; e.hidden = !msg; }
 
+function formatUploadSize(bytes) {
+  if (bytes < 1024) return `${bytes} bytes`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+}
+
+function isSupportedUpload(file) {
+  if (!S.uploadConfigLoaded || !S.maxUploadBytes) {
+    showError("Scanner configuration is unavailable. Refresh the page before uploading a file.");
+    return false;
+  }
+  const match = file.name.toLowerCase().match(/(\.[^./\\]+)$/);
+  const extension = match ? match[1] : "";
+  if (!S.uploadExtensions.includes(extension)) {
+    showError(`Unsupported file type. This instance supports: ${S.uploadExtensions.join(" ")}`);
+    return false;
+  }
+  if (file.size > S.maxUploadBytes) {
+    showError(`File is larger than ${S.maxUploadMB} MB. Choose a smaller file.`);
+    return false;
+  }
+  return true;
+}
+
 async function scan(file) {
-  showError(""); $("#results").hidden = true; $("#busy").hidden = false;
+  if (S.scanning || !file) return;
+  showError("");
+  const supported = isSupportedUpload(file);
+  $("#results").hidden = true;
+  drop.classList.add("has-file");
+  $("#scan-selected-file").hidden = false;
+  $("#scan-selected-file").classList.toggle("is-invalid", !supported);
+  $("#scan-selected-mark").textContent = supported ? "✓" : "!";
+  $("#scan-selected-name").textContent = file.name;
+  $("#scan-selected-size").textContent = formatUploadSize(file.size);
+  if (!supported) return;
+
+  S.scanning = true;
+  $("#scan-busy-label").textContent = `Scanning ${file.name} with this instance's configured detectors…`;
+  $("#busy").hidden = false;
+  $("#scan-browse").disabled = true;
+  $$("[data-sample]").forEach((button) => { button.disabled = true; });
   const fd = new FormData(); fd.append("file", file);
   try {
     const res = await api("/api/scan", { method: "POST", body: fd });
     S.scan = res; S.showAll = false; $("#show-all").checked = false;
     S.selected = new Set(res.findings.filter((f) => f.status === "active" && !f.metadata && f.level !== "low").map((f) => f.id));
     render();
-  } catch (e) { showError(e.message); }
-  $("#busy").hidden = true;
+    $("#results").scrollIntoView({ block: "start" });
+  } catch (e) {
+    showError(e.message);
+  } finally {
+    $("#busy").hidden = true;
+    S.scanning = false;
+    $("#scan-browse").disabled = !S.uploadConfigLoaded;
+    $$("[data-sample]").forEach((button) => { button.disabled = !S.uploadConfigLoaded; });
+  }
 }
+
+const sampleFiles = {
+  python: "demo_app.py",
+  pdf: "demo_report.pdf",
+  screenshot: "demo_screenshot.jpg",
+  notes: "demo_notes.txt"
+};
+$$("[data-sample]").forEach((button) => {
+  button.addEventListener("click", async () => {
+    if (S.scanning) return;
+    const sampleId = button.dataset.sample;
+    const filename = sampleFiles[sampleId];
+    if (!filename) return;
+    button.disabled = true;
+    showError("");
+    try {
+      const response = await fetch(`/api/samples/${encodeURIComponent(sampleId)}`, { credentials: "same-origin" });
+      if (!response.ok) throw new Error(`Synthetic sample unavailable (${response.status}).`);
+      const blob = await response.blob();
+      await scan(new File([blob], filename, { type: blob.type }));
+    } catch (error) {
+      showError(error.message);
+    } finally {
+      button.disabled = !S.uploadConfigLoaded;
+    }
+  });
+});
 
 function render() {
   const r = S.scan;
@@ -705,211 +942,673 @@ $("#btn-create-env-from-scan").addEventListener("click", () => {
 });
 
 /* ---------------------------------------------------------------- User Dashboard */
+let dashboardDays = 30;
+
 async function loadDashboard() {
   if (!S.user) {
-    $("#dash-cards").innerHTML = `<div class="warn-box">Please <button class="link" onclick="openModal('#modal-login')">log in</button> to view your personal dashboard metrics.</div>`;
-    $("#chart-trends").innerHTML = `<p class="muted center">Login required to view personal scan trends.</p>`;
-    $("#chart-providers").replaceChildren(h("p", { class: "muted center" }, "Log in to see findings by provider."));
+    $("#dashboard-guest").hidden = false;
+    $("#dashboard-authenticated").hidden = true;
     return;
   }
+  $("#dashboard-guest").hidden = true;
+  $("#dashboard-authenticated").hidden = false;
+  $("#dashboard-auth-welcome").textContent = `Welcome back, ${S.user.username}!`;
+  $("#dashboard-status").replaceChildren(h("span", { class: "dashboard-loading" }, "Loading dashboard…"));
   try {
-    const stats = await api("/api/user/stats");
-    $("#stat-files").textContent = stats.total_files;
-    $("#stat-findings").textContent = stats.total_findings;
-    $("#stat-high").textContent = stats.high;
-    $("#stat-med").textContent = stats.medium;
-    $("#stat-low").textContent = stats.low;
+    const [stats, recent] = await Promise.all([
+      api(`/api/user/stats?days=${dashboardDays}`),
+      api("/api/user/history?limit=5")
+    ]);
+    $("#dashboard-status").replaceChildren(h("small", { class: "dashboard-updated" }, `Updated ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`));
+    const high = stats.period_high ?? stats.high ?? 0;
+    const medium = stats.period_medium ?? stats.medium ?? 0;
+    const low = stats.period_low ?? stats.low ?? 0;
+    const periodFiles = stats.period_files ?? stats.total_files ?? 0;
+    const activeFindings = stats.active_findings ?? stats.total_findings ?? 0;
+    $("#stat-files").textContent = periodFiles;
+    $("#stat-files-detail").textContent = `${dashboardDays}-day period`;
+    $("#stat-findings").textContent = activeFindings;
+    $("#stat-findings-detail").textContent = activeFindings === 1 ? "Active finding" : "Active findings";
     $("#stat-sanitised").textContent = stats.sanitised;
-
+    $("#stat-sanitised-detail").textContent = stats.sanitised ? "Sanitised outputs available" : "No sanitised files";
     renderTrendsChart(stats.trends || []);
-    renderProviderChart(stats.providers || []);
+    renderRiskDistribution(high, medium, low);
+    renderDashboardRecent(recent);
+    renderSecurityInsights(stats, recent);
+    renderSparkline(stats.trends || []);
   } catch (e) {
     console.error("Dashboard error:", e);
+    $("#dashboard-status").replaceChildren(h("div", { class: "dashboard-error" },
+      h("span", null, e.message.includes("Unauthorized") ? "Your session has expired." : "Dashboard analytics could not be loaded."),
+      h("button", { class: "btn sm", type: "button", id: "dashboard-retry" }, "Retry")
+    ));
+    $("#dashboard-retry").addEventListener("click", () => loadDashboard());
   }
 }
 
 function renderTrendsChart(trends) {
   const container = $("#chart-trends");
   if (!trends.length) {
-    container.innerHTML = `<p class="muted center">No scan data recorded yet. Upload files to see trends.</p>`;
+    container.replaceChildren(h("p", { class: "chart-empty" }, "No scan activity recorded for this period."));
     return;
   }
-  // Lightweight responsive SVG chart
-  const maxFindings = Math.max(...trends.map((t) => t.h + t.m + t.l), 5);
-  const bars = trends.map((t, idx) => {
-    const tot = t.h + t.m + t.l;
-    const hPct = (t.h / maxFindings) * 100;
-    const mPct = (t.m / maxFindings) * 100;
-    const lPct = (t.l / maxFindings) * 100;
-    return `
-      <div style="flex:1; display:flex; flex-direction:column; align-items:center; height:180px; justify-content:flex-end;">
-        <div style="font-size:.7rem; color:var(--muted); margin-bottom:4px;">${tot}</div>
-        <div style="width:100%; max-width:28px; display:flex; flex-direction:column; justify-content:flex-end;">
-          <div style="height:${hPct}px; background:var(--high); border-radius:3px 3px 0 0;" title="High: ${t.h}"></div>
-          <div style="height:${mPct}px; background:var(--med);" title="Medium: ${t.m}"></div>
-          <div style="height:${lPct}px; background:var(--low);" title="Low: ${t.l}"></div>
-        </div>
-        <div style="font-size:.65rem; color:var(--muted); margin-top:6px; transform:rotate(-45deg);">${t.day.slice(5)}</div>
-      </div>
-    `;
-  }).join("");
-
-  container.innerHTML = `
-    <div style="display:flex; gap:10px; align-items:flex-end; padding:10px 0; border-bottom:1px solid var(--line);">
-      ${bars}
-    </div>
-    <div style="display:flex; gap:15px; justify-content:center; margin-top:10px; font-size:.8rem;">
-      <span><i style="display:inline-block; width:10px; height:10px; background:var(--high); border-radius:2px;"></i> High</span>
-      <span><i style="display:inline-block; width:10px; height:10px; background:var(--med); border-radius:2px;"></i> Medium</span>
-      <span><i style="display:inline-block; width:10px; height:10px; background:var(--low); border-radius:2px;"></i> Low</span>
-    </div>
-  `;
+  const width = 720, height = 220, left = 38, right = 12, top = 16, bottom = 34;
+  const maxValue = Math.max(...trends.map((t) => Math.max(t.files, t.h + t.m + t.l)), 4);
+  const step = (width - left - right) / Math.max(trends.length - 1, 1);
+  const y = (value) => top + (height - top - bottom) * (1 - value / maxValue);
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.setAttribute("class", "trend-svg");
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", "Files scanned and findings detected over time");
+  for (let i = 0; i <= 4; i += 1) {
+    const yy = y((maxValue / 4) * i);
+    const grid = document.createElementNS(svg.namespaceURI, "line");
+    grid.setAttribute("x1", left); grid.setAttribute("x2", width - right);
+    grid.setAttribute("y1", yy); grid.setAttribute("y2", yy); grid.setAttribute("class", "chart-grid");
+    svg.append(grid);
+  }
+  [["files", "files", (t) => t.files], ["findings", "findings", (t) => t.h + t.m + t.l]].forEach(([kind, cls, getValue]) => {
+    const line = document.createElementNS(svg.namespaceURI, "polyline");
+    line.setAttribute("points", trends.map((t, i) => `${left + i * step},${y(getValue(t))}`).join(" "));
+    line.setAttribute("class", `chart-line ${cls}`);
+    svg.append(line);
+    trends.forEach((t, i) => {
+      const value = getValue(t);
+      const dot = document.createElementNS(svg.namespaceURI, "circle");
+      dot.setAttribute("cx", left + i * step); dot.setAttribute("cy", y(value));
+      dot.setAttribute("r", "4"); dot.setAttribute("class", `chart-dot ${cls}`);
+      const title = document.createElementNS(svg.namespaceURI, "title");
+      title.textContent = `${t.day}: ${value} ${kind === "files" ? "files scanned" : "findings"}`;
+      dot.append(title); svg.append(dot);
+    });
+  });
+  container.replaceChildren(svg, h("div", { class: "chart-legend" },
+    h("span", null, h("i", { class: "legend-files" }), "Files Scanned"),
+    h("span", null, h("i", { class: "legend-findings" }), "Findings")
+  ));
 }
+
+function renderRiskDistribution(high, medium, low) {
+  const total = high + medium + low;
+  const pct = (value) => total ? Math.round((value / total) * 100) : 0;
+  $("#risk-total").textContent = total;
+  $("#risk-high").textContent = high;
+  $("#risk-medium").textContent = medium;
+  $("#risk-low").textContent = low;
+  $("#risk-high-pct").textContent = `${pct(high)}%`;
+  $("#risk-medium-pct").textContent = `${pct(medium)}%`;
+  $("#risk-low-pct").textContent = `${pct(low)}%`;
+  const highEnd = pct(high) * 3.6;
+  const mediumEnd = highEnd + pct(medium) * 3.6;
+  $("#risk-donut").style.background = total
+    ? `conic-gradient(var(--high) 0deg ${highEnd}deg, var(--med) ${highEnd}deg ${mediumEnd}deg, var(--low) ${mediumEnd}deg 360deg)`
+    : "conic-gradient(var(--line) 0deg 360deg)";
+  $("#risk-donut").setAttribute("aria-label", `Risk distribution: ${high} high, ${medium} medium, ${low} low`);
+}
+
+function renderSparkline(trends) {
+  const svg = $("#files-spark");
+  svg.replaceChildren();
+  if (!trends.length) return;
+  const values = trends.map((t) => t.files);
+  const max = Math.max(...values, 1);
+  const step = 120 / Math.max(values.length - 1, 1);
+  const points = values.map((value, index) => `${index * step},${34 - (value / max) * 28}`).join(" ");
+  const polyline = document.createElementNS(svg.namespaceURI, "polyline");
+  polyline.setAttribute("points", points);
+  polyline.setAttribute("class", "spark-line");
+  svg.append(polyline);
+}
+
+function renderDashboardRecent(rows) {
+  const box = $("#dashboard-recent");
+  if (!rows.length) {
+    box.replaceChildren(h("p", { class: "recent-empty" }, "No scans yet. Scan a file to build your security history."));
+    return;
+  }
+  const table = h("table", { class: "dashboard-table" },
+    h("thead", null, h("tr", null,
+      ["File Name", "Scan Date", "Risk Level", "Status", "Actions"].map((x) => h("th", null, x))
+    )),
+    h("tbody", null, rows.slice(0, 5).map((row) => {
+      const level = (row.level || "low").toLowerCase();
+      const status = row.redacted ? "Sanitised" : "Scanned";
+      return h("tr", null,
+        h("td", null, h("span", { class: "file-name" }, h("b", null, "▤"), row.filename)),
+        h("td", { class: "muted" }, new Date(row.created * 1000).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })),
+        h("td", null, h("span", { class: `risk-badge ${level}` }, level.charAt(0).toUpperCase() + level.slice(1))),
+        h("td", null, h("span", { class: "status-badge" }, status)),
+        h("td", null, h("div", { class: "scan-actions" },
+          h("a", { class: "action-link", href: `/report/${row.id}`, title: "View report", "aria-label": "View report" }, "◉"),
+          h("a", { class: "action-link", href: `/report/${row.id}`, title: "View findings", "aria-label": "View findings" }, "≡"),
+          row.redacted ? h("a", { class: "action-link", href: `/api/download/${row.id}/sanitised`, title: "Download sanitised file", "aria-label": "Download sanitised file" }, "↓") : null
+        ))
+      );
+    }))
+  );
+  box.replaceChildren(table);
+}
+
+function renderSecurityInsights(stats, recent) {
+  const items = [];
+  if (stats.active_findings > 0) {
+    items.push("Active findings need review. Rotate exposed credentials and move secrets into environment variables.");
+  }
+  if (stats.sanitised > 0) {
+    items.push("Sanitised files are available. Re-open the latest report and verify the sanitised output.");
+  }
+  if (!recent.length) {
+    items.push("No recent scans: scan a project file before sharing or committing it.");
+  } else if (stats.active_findings === 0) {
+    items.push("No active findings are recorded in the latest available scan data.");
+  }
+  const list = $("#dashboard-insights");
+  list.replaceChildren(...items.map((text) => h("li", null,
+    h("span", { class: "insight-check", "aria-hidden": "true" }, "✓"),
+    h("span", null, text)
+  )));
+}
+
+$$("[data-days]").forEach((button) => button.addEventListener("click", () => {
+  $$("[data-days]").forEach((item) => item.classList.toggle("active", item === button));
+  dashboardDays = Number(button.dataset.days);
+  loadDashboard();
+}));
+$("#dashboard-refresh").addEventListener("click", () => loadDashboard());
+$("#guest-login").addEventListener("click", () => openModal("#modal-login"));
+$("#guest-insights-login").addEventListener("click", () => openModal("#modal-login"));
+$("#guest-register").addEventListener("click", () => openModal("#modal-register"));
 
 /* ---------------------------------------------------------------- Scan History */
-async function loadHistory() {
-  const box = $("#history");
-  const risk = $("#history-filter-risk").value;
-  const kind = $("#history-filter-kind").value;
-  const q = $("#history-search").value;
+const historyState = { page: 1, total: 0, pages: 1, requestId: 0, selectedId: null };
 
-  const params = new URLSearchParams();
-  if (risk) params.set("risk", risk);
-  if (kind) params.set("kind", kind);
-  if (q) params.set("q", q);
-
-  try {
-    const rows = await api(`/api/history?${params.toString()}`);
-    if (!rows.length) {
-      box.replaceChildren(h("p", { class: "muted" }, "No scans match your criteria."));
-      return;
-    }
-    box.replaceChildren(h("table", { class: "t" },
-      h("thead", null, h("tr", null,
-        ["Date", "File", "Format", "Score", "High", "Med", "Low", "Redacted", "Actions"].map((x) => h("th", null, x)))),
-      h("tbody", null, rows.map((r) => {
-        const dt = new Date(r.created * 1000).toLocaleString();
-        return h("tr", null,
-          h("td", { class: "small muted" }, dt),
-          h("td", null, h("strong", null, r.filename)),
-          h("td", { class: "small" }, r.kind),
-          h("td", null, h("span", { class: "badge " + r.level }, `${r.level} (${r.score})`)),
-          h("td", { class: r.high ? "text-danger" : "muted" }, r.high),
-          h("td", { class: r.medium ? "warning" : "muted" }, r.medium),
-          h("td", { class: r.low ? "success" : "muted" }, r.low),
-          h("td", null, r.redacted ? `✔ ${r.redacted}` : "—"),
-          h("td", null,
-            h("div", { class: "grp" },
-              r.redacted ? h("a", { class: "link small", href: `/api/download/${r.id}/sanitised` }, "Sanitised") : null,
-              h("a", { class: "link small", href: `/report/${r.id}`, target: "_blank" }, "Report"),
-              h("button", {
-                class: "link text-danger small",
-                onclick: async () => {
-                  if (confirm(`Delete scan ${r.filename}?`)) {
-                    await api(`/api/scan/${r.id}`, { method: "DELETE" });
-                    loadHistory();
-                  }
-                }
-              }, "Delete")
-            )
-          )
-        );
-      }))
-    ));
-  } catch (e) { box.textContent = e.message; }
+function historyDate(timestamp) {
+  const date = new Date(Number(timestamp) * 1000);
+  return Number.isNaN(date.getTime()) ? "Date unavailable" : date.toLocaleString();
 }
 
-$("#history-search").addEventListener("input", () => loadHistory());
-$("#history-filter-risk").addEventListener("change", () => loadHistory());
-$("#history-filter-kind").addEventListener("change", () => loadHistory());
-$("#clear-history").addEventListener("click", async () => {
-  if (confirm("Are you sure you want to clear your scan history?")) {
-    await api("/api/history", { method: "DELETE" });
-    loadHistory();
+function setHistoryFormats() {
+  const select = $("#history-filter-format");
+  if (!select) return;
+  const selected = select.value;
+  select.replaceChildren(
+    h("option", { value: "" }, "All formats"),
+    ...S.uploadExtensions.map((ext) => {
+      const value = ext.replace(/^\./, "").toLowerCase();
+      return h("option", { value }, ext.toUpperCase());
+    })
+  );
+  if ([...select.options].some((option) => option.value === selected)) select.value = selected;
+}
+
+function renderHistorySummary(summary) {
+  const cards = [
+    ["Scans saved", summary.total, "history-summary-total"],
+    ["High-risk files", summary.high_risk, "history-summary-high"],
+    ["Sanitised files", summary.sanitised, "history-summary-safe"]
+  ];
+  $("#history-summary").replaceChildren(...cards.map(([label, value, className]) =>
+    h("article", { class: `history-summary-card ${className}` },
+      h("span", { class: "history-summary-label" }, label),
+      h("strong", { class: "history-summary-value" }, String(value)),
+      h("span", { class: "history-summary-note" }, "Across your saved scans")
+    )
+  ));
+  $("#history-clear").hidden = !summary.total;
+}
+
+function renderHistoryFinding(finding, statusAvailable) {
+  const level = String(finding.level || "low").toLowerCase();
+  const status = statusAvailable ? String(finding.status || "unclassified").replace(/_/g, " ") : "status unavailable";
+  return h("article", { class: "history-finding" },
+    h("div", { class: "history-finding-head" },
+      h("strong", null, finding.label || finding.type || "Finding"),
+      h("span", { class: `history-risk-chip risk-${level}` }, level),
+      h("span", { class: "history-finding-status" }, status),
+      finding.line != null ? h("span", { class: "muted small" }, `Line ${finding.line}`) : null
+    ),
+    h("p", { class: "small muted" }, finding.category || "Uncategorized",
+      finding.provider ? ` · ${finding.provider}` : ""),
+    h("code", { class: "history-masked-preview" }, finding.preview || "Masked preview unavailable")
+  );
+}
+
+async function showHistoryDetail(scanId) {
+  const ownerId = S.user && S.user.id;
+  const preview = $("#history-preview");
+  preview.hidden = false;
+  preview.replaceChildren(h("p", { class: "muted" }, "Loading masked scan details…"));
+  historyState.selectedId = scanId;
+  try {
+    const item = await api(`/api/user/history/${encodeURIComponent(scanId)}`);
+    if (!S.user || S.user.id !== ownerId || historyState.selectedId !== scanId) return;
+    const findings = Array.isArray(item.findings) ? item.findings : [];
+    const counts = item.finding_counts || {};
+    const statusAvailable = counts.status_available === true;
+    const totalLabel = counts.total == null ? "Total count unavailable" : `${counts.total} total findings`;
+    const findingSummary = statusAvailable
+      ? [
+        totalLabel,
+        `${counts.active_high} active high`,
+        `${counts.active_medium} active medium`,
+        `${counts.active_low} active low`,
+        `${counts.redacted} redacted`
+      ]
+      : [
+        totalLabel,
+        "Active status unavailable",
+        `${counts.redacted} redactions recorded`
+      ];
+    const detailList = h("div", { class: "history-findings" });
+    const disclosure = findings.length
+      ? h("details", { class: "history-findings-disclosure" },
+        h("summary", null, `View all findings (${findings.length})`),
+        detailList)
+      : null;
+    let findingsRendered = false;
+    if (disclosure) disclosure.addEventListener("toggle", () => {
+      if (!disclosure.open || findingsRendered) return;
+      detailList.replaceChildren(...findings.map((finding) => renderHistoryFinding(finding, statusAvailable)));
+      findingsRendered = true;
+    });
+    const previewContent = [
+      h("div", { class: "history-preview-heading" },
+        h("div", null,
+          h("p", { class: "history-eyebrow" }, "MASKED SCAN PREVIEW"),
+          h("h3", null, item.filename),
+          h("p", { class: "muted small" }, `${historyDate(item.created)} · ${String(item.kind || "file").toUpperCase()}`)
+        ),
+        h("button", { class: "btn icon-btn", type: "button", "aria-label": "Close scan details", onclick: () => {
+          historyState.selectedId = null;
+          preview.hidden = true;
+          preview.replaceChildren();
+        } }, "×")
+      ),
+      h("div", { class: "history-detail-stats" },
+        h("span", { class: `history-risk-chip risk-${String(item.level || "low").toLowerCase()}` },
+          `${String(item.level || "low").toUpperCase()} RISK · ${item.score}`),
+        ...findingSummary.map((text) => h("span", null, text))
+      )
+    ];
+    if (!statusAvailable) {
+      previewContent.push(h("p", { class: "history-count-status-note" },
+        "Per-finding status is unavailable for this scan. The known redaction count is shown without guessing which findings remain active."
+      ));
+    }
+    previewContent.push(disclosure || h("p", { class: "muted" }, counts.total
+        ? "Detailed finding data is unavailable for this scan."
+        : counts.total === 0 ? "No findings were recorded for this scan."
+          : "Finding data is unavailable for this scan."));
+    preview.replaceChildren(...previewContent);
+  } catch (error) {
+    if (S.user && S.user.id === ownerId && historyState.selectedId === scanId) {
+      preview.replaceChildren(h("p", { class: "text-danger", role: "alert" }, error.message));
+    }
+  }
+}
+
+function renderHistoryRecord(item) {
+  const level = String(item.level || "low").toLowerCase();
+  const filename = item.filename || "Unnamed file";
+  const counts = item.finding_counts || {};
+  const totalLabel = counts.total == null ? "Total unavailable" : `${counts.total} total`;
+  const countSummary = counts.status_available
+    ? [
+      h("span", null, totalLabel),
+      h("span", { class: "risk-count-high" }, `${counts.active_high} active high`),
+      h("span", { class: "risk-count-medium" }, `${counts.active_medium} active medium`),
+      h("span", { class: "risk-count-low" }, `${counts.active_low} active low`),
+      h("span", null, `${counts.redacted} redacted`)
+    ]
+    : [
+      h("span", null, counts.total == null ? totalLabel : `${counts.total} findings at scan`),
+      h("span", null, `${counts.redacted} redactions recorded`),
+      h("span", { class: "muted" }, "Status unavailable")
+    ];
+  const actions = [
+    h("button", { class: "btn sm outline", type: "button", onclick: () => showHistoryDetail(item.id) }, "View masked details")
+  ];
+  if (item.report_available) {
+    actions.push(h("a", {
+      class: "btn sm outline", href: `/report/${encodeURIComponent(item.id)}`,
+      target: "_blank", rel: "noopener noreferrer"
+    }, "View report"));
+  }
+  if (item.sanitised_available) {
+    actions.push(h("a", {
+      class: "btn sm outline", href: `/api/download/${encodeURIComponent(item.id)}/sanitised`
+    }, "Sanitised copy"));
+  }
+  actions.push(h("button", {
+    class: "btn sm history-delete", type: "button",
+    onclick: async () => {
+      if (!confirm(`Delete the saved scan for ${filename}?`)) return;
+      try {
+        await api(`/api/scan/${encodeURIComponent(item.id)}`, { method: "DELETE" });
+        if (historyState.selectedId === item.id) {
+          historyState.selectedId = null;
+          $("#history-preview").hidden = true;
+        }
+        await loadHistory();
+      } catch (error) {
+        $("#history-status").textContent = error.message;
+      }
+    }
+  }, "Delete"));
+
+  return h("article", { class: "history-record" },
+    h("div", { class: "history-record-main" },
+      h("div", { class: "history-file-mark", "aria-hidden": "true" }, (filename.split(".").pop() || "FILE").slice(0, 3).toUpperCase()),
+      h("div", { class: "history-file-meta" },
+        h("h3", null, filename),
+        h("p", { class: "muted small" }, `${historyDate(item.created)} · ${String(item.kind || "file").toUpperCase()}`)
+      ),
+      h("span", { class: `history-risk-chip risk-${level}` }, `${level} · ${item.score}`)
+    ),
+    h("div", { class: "history-record-counts" },
+      ...countSummary
+    ),
+    h("div", { class: "history-record-actions" }, actions)
+  );
+}
+
+function renderHistoryPagination(result) {
+  const nav = $("#history-pagination");
+  const previous = h("button", {
+    class: "btn sm outline", type: "button", disabled: result.page <= 1,
+    onclick: () => { historyState.page -= 1; loadHistory(); }
+  }, "Previous");
+  const next = h("button", {
+    class: "btn sm outline", type: "button", disabled: result.page >= result.pages,
+    onclick: () => { historyState.page += 1; loadHistory(); }
+  }, "Next");
+  nav.replaceChildren(previous, h("span", { class: "small muted", "aria-live": "polite" },
+    `Page ${result.page} of ${result.pages}`), next);
+}
+
+async function loadHistory() {
+  const requestId = ++historyState.requestId;
+  const guest = $("#history-guest");
+  const authenticated = $("#history-authenticated");
+  if (!S.user) {
+    guest.hidden = false;
+    authenticated.hidden = true;
+    $("#history-clear").hidden = true;
+    return;
+  }
+  guest.hidden = true;
+  authenticated.hidden = false;
+  setHistoryFormats();
+  const params = new URLSearchParams({
+    page: String(historyState.page),
+    per_page: $("#history-page-size").value,
+    days: $("#history-filter-days").value,
+    sort: $("#history-sort").value
+  });
+  const risk = $("#history-filter-risk").value;
+  const fileFormat = $("#history-filter-format").value;
+  const query = $("#history-search").value.trim();
+  if (risk) params.set("risk", risk);
+  if (fileFormat) params.set("format", fileFormat);
+  if (query) params.set("q", query);
+  $("#history-status").textContent = "Loading your scan history…";
+
+  try {
+    const result = await api(`/api/user/history?${params.toString()}`);
+    if (requestId !== historyState.requestId || !S.user) return;
+    historyState.page = result.page;
+    historyState.pages = result.pages;
+    historyState.total = result.total;
+    historyState.selectedId = null;
+    $("#history-preview").hidden = true;
+    renderHistorySummary(result.summary);
+    const start = result.total ? ((result.page - 1) * result.per_page) + 1 : 0;
+    const end = Math.min(result.page * result.per_page, result.total);
+    $("#history-status").textContent = result.total
+      ? `Showing ${start}–${end} of ${result.total} scans`
+      : query || risk || fileFormat || Number(params.get("days"))
+        ? "No scans match these filters."
+        : "No scans saved yet. Your completed scans will appear here.";
+    $("#history-list").replaceChildren(...result.items.map(renderHistoryRecord));
+    renderHistoryPagination(result);
+  } catch (error) {
+    if (requestId !== historyState.requestId) return;
+    $("#history-status").textContent = "Could not load scan history.";
+    $("#history-list").replaceChildren(h("p", { class: "text-danger", role: "alert" }, error.message));
+  }
+}
+
+let historySearchTimer;
+$("#history-search").addEventListener("input", () => {
+  clearTimeout(historySearchTimer);
+  historySearchTimer = setTimeout(() => { historyState.page = 1; loadHistory(); }, 250);
+});
+["history-filter-risk", "history-filter-format", "history-filter-days", "history-sort", "history-page-size"]
+  .forEach((id) => $(`#${id}`).addEventListener("change", () => { historyState.page = 1; loadHistory(); }));
+$("#history-reset").addEventListener("click", () => {
+  $("#history-search").value = "";
+  $("#history-filter-risk").value = "";
+  $("#history-filter-format").value = "";
+  $("#history-filter-days").value = "0";
+  $("#history-sort").value = "newest";
+  $("#history-page-size").value = "10";
+  historyState.page = 1;
+  loadHistory();
+});
+$("#history-guest-login").addEventListener("click", () => openModal("#modal-login"));
+$("#history-guest-register").addEventListener("click", () => openModal("#modal-register"));
+$("#history-clear").addEventListener("click", async () => {
+  if (!confirm("Clear all of your saved scan history? This cannot be undone.")) return;
+  try {
+    await api("/api/user/history", { method: "DELETE" });
+    historyState.page = 1;
+    await loadHistory();
+  } catch (error) {
+    $("#history-status").textContent = error.message;
   }
 });
 
 /* ---------------------------------------------------------------- Safe Team Setup */
 async function loadTeamSetup() {
-  if (!$("#env-preview").value.trim()) {
-    generateEnvTemplate();
+  if (!$("#env-preview-code").textContent.trim()) {
+    await generateEnvTemplate();
   }
-  loadVaultItems();
+  await loadVaultItems();
 }
 
 async function generateEnvTemplate(scanId) {
+  const feedback = $("#team-template-feedback");
+  feedback.textContent = "Preparing a safe placeholder-only template…";
+  feedback.classList.remove("is-error");
+  $("#btn-copy-env").disabled = true;
+  $("#btn-download-env").disabled = true;
+  $("#btn-download-team-zip").disabled = true;
   try {
+    const findings = S.scan && Array.isArray(S.scan.findings)
+      ? S.scan.findings.map((finding) => ({
+          key: typeof finding.key === "string" ? finding.key : null,
+          type: typeof finding.type === "string" ? finding.type : null,
+          status: typeof finding.status === "string" ? finding.status : null
+        }))
+      : [];
+    const requestBody = scanId && S.user ? { scan_id: scanId } : { findings };
     const res = await api("/api/team/env-example", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ scan_id: scanId || (S.scan ? S.scan.scan_id : null) })
+      body: JSON.stringify(requestBody)
     });
-    $("#env-preview").value = res.env_example;
+    renderTeamTemplate(res.env_example);
+    $("#btn-copy-env").disabled = false;
+    $("#btn-download-env").disabled = false;
+    $("#btn-download-team-zip").disabled = false;
+    setTeamIndicator("#team-indicator-safe", "Safe template generated", "is-good");
+    setTeamIndicator("#team-indicator-secrets", "Placeholders only", "is-good");
+    setTeamIndicator("#team-indicator-ready", res.variables.length
+      ? `${res.variables.length} variable${res.variables.length === 1 ? "" : "s"}`
+      : "Ready to configure", "is-good");
+    feedback.textContent = "Template generated. It contains variable names and placeholders, not submitted secret values.";
   } catch (err) {
-    console.warn("Env gen error:", err);
+    feedback.textContent = `Template could not be generated: ${err.message}`;
+    feedback.classList.add("is-error");
+    setTeamIndicator("#team-indicator-safe", "Template unavailable", "is-pending");
+    setTeamIndicator("#team-indicator-secrets", "No template generated", "is-pending");
+    setTeamIndicator("#team-indicator-ready", "Reopen this page to retry", "is-pending");
   }
 }
 
-$("#btn-copy-env").addEventListener("click", () => {
-  const txt = $("#env-preview").value;
-  navigator.clipboard.writeText(txt).then(() => {
-    alert("Copied .env.example to clipboard!");
-  });
+function renderTeamTemplate(template) {
+  const code = $("#env-preview-code");
+  const lines = String(template || "").replace(/\n$/, "").split("\n");
+  code.replaceChildren(...lines.map((line) => {
+    const assignment = line.match(/^([A-Za-z_][A-Za-z0-9_]{0,127})(=)(.*)$/);
+    if (line.startsWith("#")) {
+      return h("span", { class: "team-code-comment" }, line, document.createTextNode("\n"));
+    }
+    if (assignment) {
+      return h("span", { class: "team-code-line" },
+        h("span", { class: "team-code-key" }, assignment[1]),
+        h("span", { class: "team-code-operator" }, assignment[2]),
+        h("span", { class: "team-code-placeholder" }, assignment[3]),
+        document.createTextNode("\n")
+      );
+    }
+    return h("span", { class: "team-code-line" }, line, document.createTextNode("\n"));
+  }));
+}
+
+function setTeamIndicator(selector, text, state) {
+  const indicator = $(selector);
+  indicator.classList.remove("is-pending", "is-good", "is-error");
+  indicator.classList.add(state);
+  indicator.lastChild.textContent = text;
+}
+
+function showTeamFeedback(selector, message, isError = false) {
+  const feedback = $(selector);
+  feedback.textContent = message;
+  feedback.classList.toggle("is-error", isError);
+}
+
+function downloadTeamFile(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+$("#btn-copy-env").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText($("#env-preview-code").textContent);
+    showTeamFeedback("#team-template-feedback", "Safe environment template copied to the clipboard.");
+  } catch (err) {
+    showTeamFeedback("#team-template-feedback", `Could not copy the template: ${err.message}`, true);
+  }
 });
 
-$("#btn-download-team-zip").addEventListener("click", async () => {
-  const envContent = $("#env-preview").value;
+$("#btn-download-env").addEventListener("click", () => {
+  const content = $("#env-preview-code").textContent;
+  if (!content) return;
+  downloadTeamFile(new Blob([content], { type: "text/plain;charset=utf-8" }), ".env.example");
+  showTeamFeedback("#team-template-feedback", "Downloaded the placeholder-only .env.example template.");
+});
+
+$("#btn-download-team-zip").addEventListener("click", async (event) => {
+  const button = event.currentTarget;
+  button.disabled = true;
+  showTeamFeedback("#team-template-feedback", "Preparing the safe team package…");
   try {
     const res = await fetch("/api/team/package", {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-CSRF-Token": S.csrfToken },
-      body: JSON.stringify({ project_name: "LeakLensProject", env_example: envContent })
+      body: JSON.stringify({ project_name: "LeakLensProject", env_example: $("#env-preview-code").textContent })
     });
-    if (!res.ok) throw new Error("Failed to generate team package");
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      throw new Error(error.error || `Package download failed (${res.status})`);
+    }
     const blob = await res.blob();
-    const u = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = u; a.download = "leaklens_team_setup.zip";
-    a.click();
-    URL.revokeObjectURL(u);
+    downloadTeamFile(blob, "leaklens_team_setup.zip");
+    showTeamFeedback("#team-template-feedback", "Downloaded a team package with a sanitized .env.example template.");
   } catch (err) {
-    alert(err.message);
+    showTeamFeedback("#team-template-feedback", `Team package could not be created: ${err.message}`, true);
+  } finally {
+    button.disabled = false;
   }
 });
 
 // Vault Controller
 async function loadVaultItems() {
   const box = $("#vault-items");
+  const saveButton = $("#vault-save-button");
+  const loginButton = $("#team-login");
   if (!S.user) {
-    box.innerHTML = `<p class="muted small">Please log in to manage your local encrypted secrets vault.</p>`;
+    $("#vault-availability").textContent = "Sign in required";
+    $(".team-vault-badge").classList.add("is-locked");
+    $("#vault-encryption-status").textContent = "Sign in to access your private vault";
+    $("#team-vault-status").classList.add("is-locked");
+    $("#vault-item-count").textContent = "Private";
+    box.replaceChildren(h("p", { class: "team-vault-empty" }, "Your account-scoped vault is available after you sign in."));
+    loginButton.hidden = false;
+    saveButton.disabled = true;
     return;
   }
+  $("#vault-availability").textContent = "Loading vault";
+  $(".team-vault-badge").classList.remove("is-locked");
+  $("#team-vault-status").classList.remove("is-locked");
+  loginButton.hidden = true;
+  saveButton.disabled = true;
+  box.replaceChildren(h("p", { class: "team-vault-empty" }, "Loading your private vault…"));
   try {
     const items = await api("/api/vault");
+    $("#vault-availability").textContent = "Account protected";
+    $(".team-vault-badge").classList.remove("is-locked");
+    $("#vault-encryption-status").textContent = "New entries use AES-256-GCM";
+    $("#team-vault-status").classList.remove("is-locked");
+    $("#vault-item-count").textContent = `${items.length} ${items.length === 1 ? "entry" : "entries"}`;
+    saveButton.disabled = false;
     if (!items.length) {
-      box.innerHTML = `<p class="muted small">Your local encrypted vault is empty.</p>`;
+      box.replaceChildren(h("div", { class: "team-vault-empty" },
+        h("span", { class: "team-empty-icon", "aria-hidden": "true" }, "⌑"),
+        h("strong", null, "Your vault is ready"),
+        h("p", null, "Add your first credential above. Secret values are encrypted before storage.")
+      ));
       return;
     }
     box.replaceChildren(...items.map((it) => {
-      return h("div", { class: "vault-item" },
-        h("div", null,
-          h("code", null, it.key_name),
-          h("span", { class: "badge pro", style: "margin: 0 .4rem" }, it.provider || "Generic"),
-          h("span", { class: "small muted" }, it.masked_preview)
+      return h("div", { class: "vault-item team-vault-item" },
+        h("div", { class: "team-vault-item-main" },
+          h("div", { class: "team-vault-item-title" },
+            h("code", null, it.key_name),
+            h("span", { class: "team-category-badge" }, it.provider || "Generic")
+          ),
+          h("span", { class: "team-vault-preview", "aria-label": "Masked secret preview" }, it.masked_preview)
         ),
         h("button", {
-          class: "link text-danger small",
+          class: "team-remove-button",
+          type: "button",
+          "aria-label": `Remove ${it.key_name} from your vault`,
           onclick: async () => {
-            if (confirm(`Remove ${it.key_name} from local vault?`)) {
-              await api(`/api/vault/${it.id}`, { method: "DELETE" });
-              loadVaultItems();
+            if (!confirm(`Remove ${it.key_name} from your vault?`)) return;
+            try {
+              await api(`/api/vault/${encodeURIComponent(it.id)}`, { method: "DELETE" });
+              showTeamFeedback("#vault-form-feedback", `${it.key_name} was removed from your vault.`);
+              await loadVaultItems();
+            } catch (err) {
+              showTeamFeedback("#vault-form-feedback", `Could not remove this entry: ${err.message}`, true);
             }
           }
         }, "Remove")
       );
     }));
   } catch (e) {
-    box.innerHTML = `<p class="text-danger small">${e.message}</p>`;
+    $("#vault-availability").textContent = "Vault unavailable";
+    $(".team-vault-badge").classList.add("is-locked");
+    $("#vault-item-count").textContent = "Unavailable";
+    saveButton.disabled = true;
+    box.replaceChildren(h("p", { class: "team-vault-error", role: "alert" }, `Your vault could not be loaded: ${e.message}`));
   }
 }
 
@@ -919,6 +1618,13 @@ $("#vault-form").addEventListener("submit", async (e) => {
     openModal("#modal-login");
     return;
   }
+  if (!e.currentTarget.checkValidity()) {
+    e.currentTarget.reportValidity();
+    return;
+  }
+  const saveButton = $("#vault-save-button");
+  saveButton.disabled = true;
+  showTeamFeedback("#vault-form-feedback", "Encrypting and saving the entry…");
   try {
     await api("/api/vault", {
       method: "POST",
@@ -930,10 +1636,24 @@ $("#vault-form").addEventListener("submit", async (e) => {
       })
     });
     $("#vault-form").reset();
-    loadVaultItems();
+    showTeamFeedback("#vault-form-feedback", "Credential saved. Only its masked preview is shown.");
+    await loadVaultItems();
   } catch (err) {
-    alert("Vault error: " + err.message);
+    showTeamFeedback("#vault-form-feedback", `Vault entry was not saved: ${err.message}`, true);
+  } finally {
+    saveButton.disabled = !S.user;
   }
+});
+
+$("#team-login").addEventListener("click", () => openModal("#modal-login"));
+$("#vault-secret-toggle").addEventListener("click", (event) => {
+  const button = event.currentTarget;
+  const input = $("#vault-val");
+  const reveal = input.type === "password";
+  input.type = reveal ? "text" : "password";
+  button.textContent = reveal ? "Hide" : "Show";
+  button.setAttribute("aria-label", reveal ? "Hide secret value" : "Show secret value");
+  button.setAttribute("aria-pressed", String(reveal));
 });
 
 // Vault Portable Export / Import
@@ -948,6 +1668,8 @@ $("#form-vault-export").addEventListener("submit", async (e) => {
   const pw = $("#vault-export-pw").value;
   const errBox = $("#vault-export-error");
   errBox.hidden = true;
+  const submitButton = $("#vault-export-submit");
+  submitButton.disabled = true;
   try {
     const res = await fetch("/api/vault/export", {
       method: "POST",
@@ -959,17 +1681,14 @@ $("#form-vault-export").addEventListener("submit", async (e) => {
       throw new Error(errData.error || `Export failed (${res.status})`);
     }
     const blob = await res.blob();
-    const u = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = u;
-    a.download = `leaklens_vault_${S.user.username}.leaklens`;
-    a.click();
-    URL.revokeObjectURL(u);
+    downloadTeamFile(blob, `leaklens_vault_${S.user.username}.leaklens`);
     closeModal("#modal-vault-export");
     $("#form-vault-export").reset();
   } catch (err) {
     errBox.textContent = err.message;
     errBox.hidden = false;
+  } finally {
+    submitButton.disabled = false;
   }
 });
 
@@ -984,10 +1703,17 @@ $("#form-vault-import").addEventListener("submit", async (e) => {
   const fileInput = $("#vault-import-file");
   const pwInput = $("#vault-import-pw");
   const errBox = $("#vault-import-error");
+  const submitButton = $("#vault-import-submit");
   errBox.hidden = true;
 
   if (!fileInput.files[0]) {
     errBox.textContent = "Please select a file to import.";
+    errBox.hidden = false;
+    return;
+  }
+  const maxBytes = S.maxUploadBytes || 10 * 1024 * 1024;
+  if (fileInput.files[0].size > maxBytes) {
+    errBox.textContent = `Vault file exceeds the ${Math.floor(maxBytes / (1024 * 1024))} MB limit.`;
     errBox.hidden = false;
     return;
   }
@@ -996,18 +1722,21 @@ $("#form-vault-import").addEventListener("submit", async (e) => {
   fd.append("file", fileInput.files[0]);
   fd.append("password", pwInput.value);
 
+  submitButton.disabled = true;
   try {
     const res = await api("/api/vault/import", {
       method: "POST",
       body: fd
     });
-    alert(`Vault imported successfully! ${res.imported_count} secret(s) added.`);
+    showTeamFeedback("#vault-form-feedback", `${res.imported_count} vault ${res.imported_count === 1 ? "entry was" : "entries were"} imported and encrypted for your account.`);
     closeModal("#modal-vault-import");
     $("#form-vault-import").reset();
-    loadVaultItems();
+    await loadVaultItems();
   } catch (err) {
     errBox.textContent = err.message;
     errBox.hidden = false;
+  } finally {
+    submitButton.disabled = false;
   }
 });
 

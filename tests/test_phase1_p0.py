@@ -1,5 +1,7 @@
 import io
+import json
 import time
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from engine import store
 
 
@@ -82,9 +84,71 @@ def test_portable_leaklens_vault_export_and_import(client):
     # Verify imported items appear in importer's vault
     items_after = client.get("/api/vault").get_json()
     assert len(items_after) == 2
+    assert all(item["masked_preview"] == "••••" for item in items_after)
     keys = {it["key_name"] for it in items_after}
     assert "GITHUB_API_KEY" in keys
     assert "STRIPE_KEY" in keys
+
+
+def test_malformed_portable_vault_import_is_atomic(client):
+    client.post("/api/auth/register", json={
+        "username": "atomic_import_user",
+        "email": "atomic_import@example.com",
+        "password": "Password123"
+    })
+
+    password = "PortablePassword123"
+    salt = b"0123456789abcdef"
+    nonce = b"abcdefghijkl"
+    payload = {
+        "format": "leaklens-portable-vault",
+        "version": 1,
+        "item_count": 2,
+        "items": [
+            {
+                "key_name": "VALID_TOKEN",
+                "provider": "Generic",
+                "masked_preview": "untrusted preview",
+                "value": "example-secret-value",
+            },
+            {"key_name": ["invalid"], "provider": "Generic", "value": "invalid-entry"},
+        ],
+    }
+    ciphertext = AESGCM(store._scrypt_key(password, salt)).encrypt(
+        nonce, json.dumps(payload).encode("utf-8"), None
+    )
+    vault_blob = store._VAULT_MAGIC + salt + nonce + ciphertext
+
+    response = client.post(
+        "/api/vault/import",
+        data={"file": (io.BytesIO(vault_blob), "malformed.leaklens"), "password": password},
+        content_type="multipart/form-data",
+    )
+    assert response.status_code == 400
+    assert client.get("/api/vault").get_json() == []
+
+
+def test_portable_vault_export_fails_when_a_saved_entry_cannot_decrypt(client):
+    client.post("/api/auth/register", json={
+        "username": "corrupt_export_user",
+        "email": "corrupt_export@example.com",
+        "password": "Password123"
+    })
+    client.post("/api/vault", json={
+        "key_name": "VALID_TOKEN",
+        "provider": "Generic",
+        "raw_value": "example-secret-value"
+    })
+    user_id = client.get("/api/auth/me").get_json()["user"]["id"]
+    with store._db() as con:
+        con.execute(
+            "UPDATE user_vault SET encrypted_value=? WHERE user_id=?",
+            ("not-valid-base64", user_id),
+        )
+
+    response = client.post("/api/vault/export", json={"password": "PortablePassword123"})
+    assert response.status_code == 400
+    assert "export was stopped" in response.get_json()["error"]
 
 
 def test_totp_2fa_full_lifecycle(client):

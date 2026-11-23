@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LeakLens — Privacy Leak Detection & Developer Security</title>
+<link rel="stylesheet" href="/static/tokens.css">
 <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -13,48 +14,76 @@
     <span class="brand-text">LeakLens</span>
     <span class="badge pro">SECURE</span>
   </div>
-  <nav class="tabs" role="tablist">
-    <button class="tab" data-view="home" role="tab">Home</button>
-    <button class="tab active" data-view="scan" role="tab">Scan Files</button>
-    <button class="tab" data-view="dashboard" role="tab" id="nav-dashboard">Dashboard</button>
-    <button class="tab" data-view="history" role="tab">History</button>
-    <button class="tab" data-view="team" role="tab">Team Setup</button>
-    <button class="tab" data-view="ide" role="tab">IDE Guard</button>
-    <button class="tab" data-view="eval" role="tab">Model Metrics</button>
-    <button class="tab admin-only" data-view="admin" role="tab" id="nav-admin" hidden>Admin</button>
-  </nav>
-  <div class="top-actions">
-    <div id="chips" class="chips"></div>
-    <button class="btn icon-btn" id="theme-toggle" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">🌓</button>
-    <div id="auth-nav" class="auth-nav">
-      <button class="btn sm" id="btn-show-login">Log In</button>
-      <button class="btn sm primary" id="btn-show-register">Register</button>
-    </div>
-    <div id="user-menu" class="user-menu" hidden>
-      <span class="user-label" id="user-display-name"></span>
-      <button class="btn sm" id="btn-show-profile">Settings</button>
-      <button class="btn sm outline" id="btn-logout">Logout</button>
+  <button class="btn icon-btn mobile-nav-toggle" id="mobile-nav-toggle" type="button"
+          aria-label="Open primary navigation" aria-controls="primary-menu" aria-expanded="false" aria-hidden="true" tabindex="-1">
+    <span aria-hidden="true">☰</span>
+  </button>
+  <div id="primary-menu" class="primary-menu" aria-hidden="false">
+    <nav class="tabs" aria-label="Primary navigation">
+      <button class="tab" data-view="home">Home</button>
+      <button class="tab" data-view="scan">Scan Files</button>
+      <button class="tab" data-view="dashboard" id="nav-dashboard">Dashboard</button>
+      <button class="tab" data-view="history">History</button>
+      <button class="tab" data-view="team">Team Setup</button>
+      <button class="tab" data-view="ide">IDE Guard</button>
+      <button class="tab" data-view="eval">Model Metrics</button>
+      <button class="tab admin-only" data-view="admin" id="nav-admin" hidden>Admin</button>
+    </nav>
+    <div class="top-actions">
+      <div id="chips" class="chips"></div>
+      <button class="btn icon-btn" id="theme-toggle" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">🌓</button>
+      <div id="auth-nav" class="auth-nav">
+        <button class="btn sm" id="btn-show-login">Log In</button>
+        <button class="btn sm primary" id="btn-show-register">Register</button>
+      </div>
+      <div id="user-menu" class="user-menu" hidden>
+        <span class="user-label" id="user-display-name"></span>
+        <button class="btn sm" id="btn-show-profile">Settings</button>
+        <button class="btn sm outline" id="btn-logout">Logout</button>
+      </div>
     </div>
   </div>
 </header>
 
 <main>
 <!-- ================================= HOME / LANDING ================================= -->
-<section id="view-home" class="view" hidden>
-  <div class="hero">
-    <div class="hero-badge">🛡️ LOCAL PRIVACY FIRST • ZERO CLOUD APIS • ZERO COST</div>
-    <h1>Detect, Explain & Redact Secrets <br><span class="accent-text">Before You Share or Commit</span></h1>
-    <p class="hero-sub">
-      A hybrid cybersecurity platform pairing deterministic rules and checksum validators with a local char n-gram ML classifier.
-      Sanitise files, configure safe team handoffs, and guard your IDE in real time.
-    </p>
-    <div class="hero-cta">
-      <button class="btn primary lg" onclick="document.querySelector('[data-view=scan]').click()">Scan a File Now</button>
-      <button class="btn lg" onclick="document.querySelector('[data-view=team]').click()">Safe Team Setup (.env)</button>
+<section id="view-home" class="view">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-grain" aria-hidden="true"></div>
+    <div class="hero-layout">
+      <div class="hero-copy">
+        <p class="hero-eyebrow"><span class="signal-dot"></span> PRIVATE BY DESIGN <span class="eyebrow-divider">/</span> LOCAL-FIRST SCANNING</p>
+        <h1 id="hero-title">Tracing<br>the <span class="hero-outline">unseen.</span></h1>
+        <p class="hero-sub">
+          Find exposed secrets before they leave your hands.
+          LeakLens scans, explains, and redacts sensitive data without sending your files to third-party cloud APIs.
+        </p>
+        <div class="hero-cta">
+          <button class="btn primary lg hero-primary" data-go-view="scan">Scan a file <span aria-hidden="true">↗</span></button>
+          <button class="hero-link" data-go-view="ide">Explore IDE Guard <span aria-hidden="true">→</span></button>
+        </div>
+      </div>
+      <aside class="hero-hud" aria-label="LeakLens privacy status">
+        <div class="hud-top"><span class="signal-dot"></span> PRIVACY STATUS <span class="hud-live">ACTIVE</span></div>
+        <div class="hud-stat">LOCAL <span>temporary file processing</span></div>
+        <div class="hud-divider"></div>
+        <div class="hud-foot"><span>LOCAL-FIRST SCANNING</span><span class="hud-mark">LL / 01</span></div>
+      </aside>
     </div>
-  </div>
+    <div class="ribbon-wrap" aria-hidden="true">
+      <div class="ribbon-stage"></div>
+    </div>
+    <div class="hero-index" aria-hidden="true"><span>01</span> / SEE WHAT'S HIDDEN</div>
+    <a class="scroll-cue" href="#landing-features" aria-label="Scroll to product capabilities"><span></span> SCROLL TO EXPLORE</a>
+  </section>
 
-  <div class="features-grid">
+  <section class="landing-details" id="landing-features" aria-labelledby="landing-features-title">
+    <div class="landing-section-head">
+      <p class="hero-eyebrow"><span class="signal-dot"></span> BUILT FOR THE MOMENT BEFORE COMMIT</p>
+      <h2 id="landing-features-title">Keep the signal.<br><span class="accent-text">Lose the exposure.</span></h2>
+      <p class="hero-sub">A precise, private security workflow from first scan to safe handoff.</p>
+    </div>
+    <div class="features-grid">
     <div class="feature-card">
       <div class="f-icon">🧠</div>
       <h3>Hybrid Detection</h3>
@@ -63,7 +92,7 @@
     <div class="feature-card">
       <div class="f-icon">🎯</div>
       <h3>Context-Aware Scoring</h3>
-      <p>Recognises placeholders (`example.com`, `<TOKEN>`), environment reads, and test fixtures to eliminate false positives.</p>
+      <p>Recognises placeholders (`example.com`, `&lt;TOKEN&gt;`), environment reads, and test fixtures to eliminate false positives.</p>
     </div>
     <div class="feature-card">
       <div class="f-icon">🔒</div>
@@ -85,21 +114,171 @@
       <h3>User & Admin Dashboards</h3>
       <p>Track your privacy posture over time with isolated user scan history and privacy-preserving administrative controls.</p>
     </div>
+    </div>
   </div>
+  </section>
+  <section class="workflow-section" aria-labelledby="workflow-title">
+    <div class="workflow-intro">
+      <p class="hero-eyebrow"><span class="signal-dot"></span> A CLEARER WAY TO SHIP</p>
+      <h2 id="workflow-title">From first signal<br>to <span class="accent-text">safe handoff.</span></h2>
+      <p>One calm workflow for finding, understanding, and safely sharing sensitive code.</p>
+      <button class="btn primary workflow-cta" data-go-view="scan">Start with a file <span aria-hidden="true">↗</span></button>
+    </div>
+    <div class="workflow-steps">
+      <article class="workflow-step">
+        <span class="step-index">01 / INSPECT</span>
+        <span class="step-icon" aria-hidden="true">⌕</span>
+        <h3>Scan locally</h3>
+        <p>Inspect supported files with hybrid detection while keeping raw file contents on your machine.</p>
+      </article>
+      <article class="workflow-step">
+        <span class="step-index">02 / UNDERSTAND</span>
+        <span class="step-icon" aria-hidden="true">◎</span>
+        <h3>Review with context</h3>
+        <p>See why a finding was flagged, where it appears, and which items need attention.</p>
+      </article>
+      <article class="workflow-step">
+        <span class="step-index">03 / SHARE SAFELY</span>
+        <span class="step-icon" aria-hidden="true">↗</span>
+        <h3>Redact and hand off</h3>
+        <p>Create a sanitised copy and a safe environment template for your team.</p>
+      </article>
+    </div>
+  </section>
+  <section class="product-preview" aria-labelledby="preview-title">
+    <div class="preview-copy">
+      <p class="hero-eyebrow"><span class="signal-dot"></span> THE LEAKLENS WORKSPACE</p>
+      <h2 id="preview-title">Clarity at<br>every <span class="accent-text">step.</span></h2>
+      <p>Move from a private file scan to a verified sanitised export without losing the context behind each finding.</p>
+      <button class="hero-link" data-go-view="dashboard">Explore your dashboard <span aria-hidden="true">→</span></button>
+    </div>
+    <div class="preview-window" aria-label="Illustrative LeakLens workspace preview">
+      <div class="preview-window-bar"><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>LEAKLENS / SCAN PREVIEW</span><span class="preview-demo-label">ILLUSTRATIVE</span></div>
+      <div class="preview-window-body">
+        <div class="preview-file"><span class="file-glyph" aria-hidden="true">{ }</span><span><strong>service.config</strong><small>Local scan · sample data</small></span><span class="preview-status"><i></i> REVIEW</span></div>
+        <div class="preview-finding"><span class="finding-level">HIGH</span><span><strong>Credential-like value</strong><small>Line 18 · redacted in preview</small></span><code>sk_••••••••••••••••</code></div>
+        <div class="preview-finding"><span class="finding-level finding-medium">MED</span><span><strong>Potential private key</strong><small>Line 42 · sample only</small></span><code>••••••••••••</code></div>
+        <div class="preview-progress"><span></span></div>
+        <div class="preview-window-foot"><span>Example interface · no real scan data</span><span>LOCAL-FIRST</span></div>
+      </div>
+    </div>
+  </section>
+  <section class="faq-section" aria-labelledby="faq-title">
+    <div class="faq-heading">
+      <p class="hero-eyebrow"><span class="signal-dot"></span> GOOD TO KNOW</p>
+      <h2 id="faq-title">Questions,<br><span class="accent-text">answered.</span></h2>
+      <p>Clear answers about how LeakLens handles your files.</p>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>Are my files sent to a cloud API?<span aria-hidden="true"></span></summary>
+        <p>LeakLens is designed for local-first scanning. Review your deployment and configuration to understand any network behavior in your own environment.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Does redaction revoke a leaked credential?<span aria-hidden="true"></span></summary>
+        <p>No. Redaction creates a safer copy; rotate any real credential that may already have been exposed.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Which files can I inspect?<span aria-hidden="true"></span></summary>
+        <p>Supported extensions and upload limits are shown in the scanner and are loaded from the running application.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Can I prevent secrets from reaching a commit?<span aria-hidden="true"></span></summary>
+        <p>Use IDE Guard and the Git pre-commit hook to inspect your workflow before changes are committed.</p>
+      </details>
+    </div>
+  </section>
+  <section class="landing-contact">
+    <div>
+      <p class="hero-eyebrow"><span class="signal-dot"></span> KEEP YOUR NEXT HANDOFF CLEAN</p>
+      <h2>Find it before<br>it <span class="accent-text">travels.</span></h2>
+    </div>
+    <div class="contact-actions">
+      <p>Start with a local scan, or add LeakLens to your developer workflow.</p>
+      <button class="btn primary lg" data-go-view="scan">Scan a file <span aria-hidden="true">↗</span></button>
+      <button class="btn" data-go-view="ide">Set up IDE Guard</button>
+    </div>
+  </section>
+  <footer class="landing-footer">
+    <div class="footer-brand"><span class="logo" aria-hidden="true"></span><strong>LeakLens</strong><span>Privacy-aware security for the work you ship.</span></div>
+    <nav aria-label="Product navigation">
+      <button data-go-view="scan">Scanner</button><button data-go-view="team">Team setup</button><button data-go-view="ide">IDE Guard</button><button data-go-view="eval">Model metrics</button>
+    </nav>
+    <span class="footer-note">Local-first by design.</span>
+  </footer>
 </section>
 
 <!-- ================================= SCAN VIEW ================================= -->
-<section id="view-scan" class="view">
-  <div id="drop" class="drop" tabindex="0">
-    <input id="file" type="file" hidden>
-    <div class="drop-icon">📁</div>
-    <strong>Drop a file here, or click to choose</strong>
-    <span id="drop-hint" class="muted">Code, text, PDF or screenshot. Processed locally; temp copies deleted automatically.</span>
-    <div class="supported-tags">
-      <span>.py</span><span>.js</span><span>.ts</span><span>.env</span><span>.json</span><span>.pdf</span><span>.png / .jpg</span>
+<section id="view-scan" class="view scan-page" hidden>
+  <section class="scan-hero" aria-labelledby="scan-title">
+    <div class="scan-hero-copy">
+      <p class="scan-eyebrow"><span class="signal-dot"></span> LEAKLENS FILE INSPECTION</p>
+      <h1 id="scan-title">Scan your files before they become <span class="scan-accent">data leaks.</span></h1>
+      <p class="scan-lede">Detect exposed credentials, API keys, personal information and supported metadata before sharing or committing files.</p>
+      <p class="scan-runtime-note">File handling and retention follow this LeakLens installation's configuration.</p>
+    </div>
+    <div class="scan-hero-visual">
+      <div class="scan-shield-glow" aria-hidden="true"></div>
+      <svg class="scan-shield" viewBox="0 0 180 190" role="img" aria-label="Shield with a keyhole">
+        <defs>
+          <linearGradient id="scan-shield-fill" x1="25" y1="10" x2="150" y2="175" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#38BDF8" stop-opacity=".85"/>
+            <stop offset=".52" stop-color="#8B5CF6" stop-opacity=".86"/>
+            <stop offset="1" stop-color="#EC4899" stop-opacity=".76"/>
+          </linearGradient>
+          <linearGradient id="scan-shield-rim" x1="30" y1="15" x2="145" y2="165" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#C4B5FD"/>
+            <stop offset=".52" stop-color="#8B5CF6"/>
+            <stop offset="1" stop-color="#38BDF8"/>
+          </linearGradient>
+        </defs>
+        <path d="M90 10 151 35v47c0 43-25 73-61 96C54 155 29 125 29 82V35L90 10Z" fill="url(#scan-shield-fill)" fill-opacity=".26" stroke="url(#scan-shield-rim)" stroke-width="5"/>
+        <path d="M90 23 139 43v39c0 34-18 59-49 80-31-21-49-46-49-80V43l49-20Z" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2"/>
+        <rect x="68" y="82" width="44" height="36" rx="9" fill="#F8FAFC" fill-opacity=".95"/>
+        <path d="M77 82v-8a13 13 0 0 1 26 0v8" fill="none" stroke="#F8FAFC" stroke-width="8" stroke-linecap="round"/>
+        <circle cx="90" cy="99" r="4" fill="#6342FF"/>
+        <path d="M90 103v7" stroke="#6342FF" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      <div class="scan-status-card" aria-label="Scanner configuration" aria-live="polite">
+        <p class="scan-status-heading"><span class="signal-dot"></span><span id="scan-status-title">Loading scanner status</span></p>
+        <div class="scan-status-row"><span>Machine learning</span><strong id="scan-ml-state">—</strong></div>
+        <div class="scan-status-row"><span>Image OCR</span><strong id="scan-ocr-state">—</strong></div>
+        <div class="scan-status-row"><span>Maximum file</span><strong id="scan-max-size">—</strong></div>
+        <div class="scan-status-row"><span>Temporary retention</span><strong id="scan-ttl">—</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="drop" class="drop scan-dropzone" tabindex="0" role="group" aria-labelledby="scan-upload-title" aria-describedby="drop-hint">
+    <input id="file" type="file" hidden disabled>
+    <div class="scan-upload-icon" aria-hidden="true">
+      <svg viewBox="0 0 64 64" focusable="false">
+        <path d="M18 45h28a11 11 0 0 0 1-22 16 16 0 0 0-30-3A12 12 0 0 0 18 45Z" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M32 43V27m0 0-7 7m7-7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="scan-upload-copy">
+      <p class="scan-upload-eyebrow">PRIVATE FILE REVIEW</p>
+      <h2 id="scan-upload-title">Drop your files here</h2>
+      <p class="scan-upload-subtitle">or browse your device</p>
+      <button class="btn primary lg scan-browse" id="scan-browse" type="button" disabled>
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 5.5h6l1.5 2h7.5v8.25A1.75 1.75 0 0 1 15.75 17.5h-11A2.25 2.25 0 0 1 2.5 15.25V5.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M2.5 8h15" stroke="currentColor" stroke-width="1.7"/></svg>
+        Browse Files
+      </button>
+      <div class="scan-selected-file" id="scan-selected-file" hidden aria-live="polite">
+        <span class="scan-selected-mark" id="scan-selected-mark" aria-hidden="true">✓</span>
+        <span><strong id="scan-selected-name"></strong><small id="scan-selected-size"></small></span>
+      </div>
+      <p class="scan-drop-hint" id="drop-hint">Loading supported formats and upload limit…</p>
+    </div>
+    <div class="scan-supported">
+      <span class="scan-supported-label">Supported formats from this instance</span>
+      <div class="supported-tags" id="supported-tags" aria-label="Supported file extensions"></div>
     </div>
   </div>
-  <div id="busy" class="busy" hidden><span class="spinner"></span> Scanning &amp; analysing with hybrid detector&hellip;</div>
+  <div id="busy" class="busy scan-busy" role="status" aria-live="polite" hidden>
+    <span class="spinner" aria-hidden="true"></span><span id="scan-busy-label">Analysing file…</span>
+  </div>
   <div id="error" class="error" role="alert" hidden></div>
 
   <div id="results" hidden>
@@ -135,106 +314,388 @@
       <button class="link text-danger" id="discard">Delete this scan's temporary files now</button>
     </div>
   </div>
+
+  <section class="scan-capabilities" aria-label="What LeakLens does">
+    <article class="scan-capability">
+      <span class="scan-capability-icon" aria-hidden="true">⌕</span>
+      <div><h2>Smart Detection</h2><p>Find credential-like values, API keys and personal information.</p></div>
+    </article>
+    <article class="scan-capability">
+      <span class="scan-capability-icon" aria-hidden="true">◎</span>
+      <div><h2>Explainable Risk</h2><p>Understand why a finding was detected and where it appears.</p></div>
+    </article>
+    <article class="scan-capability">
+      <span class="scan-capability-icon" aria-hidden="true">✓</span>
+      <div><h2>Redact &amp; Verify</h2><p>Select findings, generate a sanitised copy and verify the result.</p></div>
+    </article>
+  </section>
+
+  <section class="scan-samples" aria-labelledby="scan-samples-title">
+    <div class="scan-section-heading">
+      <p class="scan-eyebrow"><span class="signal-dot"></span> SYNTHETIC FIXTURES</p>
+      <h2 id="scan-samples-title">Explore LeakLens with sample files</h2>
+      <p>These repository samples contain intentionally fake, secret-like values for demonstration. Never use them as real credentials.</p>
+    </div>
+    <div class="scan-sample-actions">
+      <button class="scan-sample" type="button" data-sample="python" disabled><span class="scan-sample-type">PY</span><span>Demo Python<small>demo_app.py</small></span></button>
+      <button class="scan-sample" type="button" data-sample="pdf" disabled><span class="scan-sample-type">PDF</span><span>Demo report<small>demo_report.pdf</small></span></button>
+      <button class="scan-sample" type="button" data-sample="screenshot" disabled><span class="scan-sample-type">IMG</span><span>Demo screenshot<small>demo_screenshot.jpg</small></span></button>
+      <button class="scan-sample" type="button" data-sample="notes" disabled><span class="scan-sample-type">TXT</span><span>Demo notes<small>demo_notes.txt</small></span></button>
+    </div>
+  </section>
+
+  <section class="scan-workflow" aria-label="Scan workflow">
+    <article><span>01 / UPLOAD</span><h2>Choose a supported file</h2><p>Use the browser picker, drop zone or one of the synthetic samples.</p></article>
+    <article><span>02 / ANALYSE</span><h2>Review the scan</h2><p>LeakLens examines supported content and metadata using this instance's configured detectors.</p></article>
+    <article><span>03 / PROTECT</span><h2>Redact and verify</h2><p>Choose findings to redact, then inspect the sanitised output and verification results.</p></article>
+  </section>
 </section>
 
 <!-- ================================= USER DASHBOARD ================================= -->
 <section id="view-dashboard" class="view" hidden>
-  <div class="section-head">
-    <h2>Privacy & Security Dashboard</h2>
-    <p class="muted">Overview of your scanned files, detected vulnerabilities, and sanitisation metrics.</p>
-  </div>
-  <div class="dashboard-cards" id="dash-cards">
-    <div class="d-card"><div class="num" id="stat-files">-</div><div class="lbl">Files Scanned</div></div>
-    <div class="d-card"><div class="num" id="stat-findings">-</div><div class="lbl">Total Findings</div></div>
-    <div class="d-card danger"><div class="num" id="stat-high">-</div><div class="lbl">High Risk</div></div>
-    <div class="d-card warning"><div class="num" id="stat-med">-</div><div class="lbl">Medium Risk</div></div>
-    <div class="d-card success"><div class="num" id="stat-low">-</div><div class="lbl">Low Risk</div></div>
-    <div class="d-card accent"><div class="num" id="stat-sanitised">-</div><div class="lbl">Files Sanitised</div></div>
+  <div id="dashboard-guest" class="dashboard-shell dashboard-guest" hidden>
+    <section class="guest-hero" aria-labelledby="guest-dashboard-title">
+      <div class="guest-hero-copy">
+        <p class="dashboard-eyebrow"><span class="signal-dot"></span> SECURITY OVERVIEW</p>
+        <h1 id="guest-dashboard-title">Your Security<br><span>Command Center</span></h1>
+        <p>Explore how LeakLens helps developers detect, understand and prevent accidental exposure of sensitive information.</p>
+        <div class="guest-hero-actions">
+          <button class="btn primary" id="guest-login" type="button">Log in to view my dashboard</button>
+          <button class="btn" id="guest-register" type="button">Create account</button>
+        </div>
+      </div>
+      <div class="guest-shield" aria-hidden="true">
+        <div class="guest-orbit orbit-one"></div><div class="guest-orbit orbit-two"></div>
+        <svg viewBox="0 0 180 190" focusable="false">
+          <defs>
+            <linearGradient id="guest-shield-gradient" x1="25" y1="10" x2="150" y2="175" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#38bdf8"/><stop offset=".52" stop-color="#8b5cf6"/><stop offset="1" stop-color="#ec4899"/>
+            </linearGradient>
+          </defs>
+          <path d="M90 10 151 35v47c0 43-25 73-61 96C54 155 29 125 29 82V35L90 10Z" fill="url(#guest-shield-gradient)" fill-opacity=".26" stroke="url(#guest-shield-gradient)" stroke-width="5"/>
+          <path d="M90 23 139 43v39c0 34-18 59-49 80-31-21-49-46-49-80V43l49-20Z" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2"/>
+          <rect x="68" y="82" width="44" height="36" rx="9" fill="#f8fafc" fill-opacity=".95"/>
+          <path d="M77 82v-8a13 13 0 0 1 26 0v8" fill="none" stroke="#f8fafc" stroke-width="8" stroke-linecap="round"/>
+          <circle cx="90" cy="99" r="4" fill="#6342ff"/><path d="M90 103v7" stroke="#6342ff" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </section>
+
+    <section class="guest-demo" aria-label="Illustrative dashboard preview">
+      <div class="demo-banner"><span>✦ ILLUSTRATIVE PREVIEW</span><span>Sample data, not your account</span></div>
+      <div class="guest-metrics">
+        <article class="demo-card"><div class="demo-card-icon files-icon" aria-hidden="true">▱</div><div><span>Files scanned <b class="demo-tag">DEMO</b></span><strong>24</strong><small>Illustrative activity</small></div><svg class="demo-spark spark-violet" viewBox="0 0 100 34" aria-hidden="true"><polyline points="2,30 18,24 31,26 47,14 60,20 76,10 98,3"/></svg></article>
+        <article class="demo-card"><div class="demo-card-icon findings-icon" aria-hidden="true">!</div><div><span>Findings reviewed <b class="demo-tag">DEMO</b></span><strong>8</strong><small>Illustrative activity</small></div><svg class="demo-spark spark-pink" viewBox="0 0 100 34" aria-hidden="true"><polyline points="2,30 18,26 31,18 47,21 60,11 76,14 98,3"/></svg></article>
+        <article class="demo-card"><div class="demo-card-icon score-icon" aria-hidden="true">✓</div><div><span>Protection status <b class="demo-tag">DEMO</b></span><strong>Demo</strong><small>Sample status only</small></div></article>
+        <article class="demo-card"><div class="demo-card-icon safe-icon" aria-hidden="true">◈</div><div><span>Sanitised copies <b class="demo-tag">DEMO</b></span><strong>6</strong><small>Illustrative activity</small></div></article>
+      </div>
+    </section>
+
+    <div class="guest-chart-grid">
+      <section class="panel guest-chart-panel">
+        <header class="panel-heading"><h3><span aria-hidden="true">▥</span> Scan activity preview <b class="demo-tag">DEMO</b></h3></header>
+        <svg class="trend-svg guest-trend-svg" viewBox="0 0 720 220" role="img" aria-label="Illustrative sample chart, not real account activity">
+          <g class="demo-chart-grid"><path d="M40 25H708M40 65H708M40 105H708M40 145H708M40 185H708"/><path d="M40 20V185M175 20V185M310 20V185M445 20V185M580 20V185M708 20V185"/></g>
+          <polyline class="chart-line files" points="40,155 125,145 210,125 295,110 380,125 465,112 550,82 635,92 708,105"/>
+          <polyline class="chart-line findings" points="40,168 125,162 210,150 295,142 380,155 465,140 550,120 635,132 708,138"/>
+          <g class="demo-chart-labels"><text x="8" y="189">0</text><text x="8" y="149">5</text><text x="2" y="109">10</text><text x="2" y="69">15</text><text x="2" y="29">20</text><text x="40" y="210">Oct 22</text><text x="210" y="210">Oct 29</text><text x="380" y="210">Nov 05</text><text x="550" y="210">Nov 12</text><text x="670" y="210">Nov 19</text></g>
+        </svg>
+        <div class="chart-legend"><span><i class="legend-files"></i>Files scanned</span><span><i class="legend-findings"></i>Findings reviewed</span><span class="demo-note">Illustrative sample only</span></div>
+      </section>
+      <section class="panel guest-risk-panel">
+        <header class="panel-heading"><h3><span aria-hidden="true">◫</span> Risk distribution <b class="demo-tag">DEMO</b></h3></header>
+        <div class="risk-layout">
+          <div class="risk-donut demo-donut" role="img" aria-label="Demonstration only: sample risk distribution"><div><strong>24</strong><small>DEMO</small></div></div>
+          <div class="risk-legend">
+            <div><span class="risk-dot high"></span><b>High</b><strong>20%</strong></div>
+            <div><span class="risk-dot medium"></span><b>Medium</b><strong>45%</strong></div>
+            <div><span class="risk-dot low"></span><b>Low</b><strong>35%</strong></div>
+          </div>
+        </div>
+        <p class="demo-note">Sample distribution only — not actual findings.</p>
+      </section>
+    </div>
+
+    <div class="guest-benefits-grid">
+      <section class="panel guest-benefits">
+        <header class="panel-heading"><h3>What you get when you sign in</h3></header>
+        <div class="benefit-list">
+          <div><span aria-hidden="true">◷</span><p><strong>Private scan history</strong><small>Track your scans securely</small></p></div>
+          <div><span aria-hidden="true">▥</span><p><strong>Personal risk analytics</strong><small>Understand your trends</small></p></div>
+          <div><span aria-hidden="true">◎</span><p><strong>Explainable findings</strong><small>See why issues matter</small></p></div>
+          <div><span aria-hidden="true">✓</span><p><strong>Remediation tracking</strong><small>Fix and verify issues</small></p></div>
+          <div><span aria-hidden="true">▤</span><p><strong>Sanitised file reports</strong><small>Review safe outputs</small></p></div>
+        </div>
+      </section>
+      <section class="panel guest-insights">
+        <header class="panel-heading"><h3><span aria-hidden="true">✦</span> Security Insights</h3></header>
+        <p>Sign in to receive personalised security tips and recommendations based on your scans.</p>
+        <button class="btn primary" id="guest-insights-login" type="button">Log in →</button>
+      </section>
+    </div>
   </div>
 
-  <div class="dash-grid">
-    <div class="panel">
-      <h3>Scan Volume & Risk Trends</h3>
-      <div id="chart-trends" class="chart-container">
-        <p class="muted center">No scan data recorded yet. Upload files to see trends.</p>
+  <div id="dashboard-authenticated" class="dashboard-shell" hidden>
+    <header class="dashboard-header">
+      <div>
+        <p class="dashboard-eyebrow"><span class="signal-dot"></span> SECURITY OVERVIEW</p>
+        <h1 id="dashboard-auth-welcome">Welcome back.</h1>
+        <p class="muted">Here's your LeakLens security overview.</p>
       </div>
-    </div>
-    <div class="panel">
-      <h3>Findings by provider</h3>
-      <div id="chart-providers" class="chart-container">
-        <p class="muted center">Log in and scan files to see which providers show up in your findings.</p>
+      <div class="dashboard-controls">
+        <button class="dashboard-refresh" id="dashboard-refresh" type="button" title="Refresh dashboard" aria-label="Refresh dashboard">↻</button>
+        <div class="range-select" role="group" aria-label="Dashboard date range">
+          <button type="button" data-days="7">7D</button>
+          <button type="button" data-days="30" class="active">30D</button>
+          <button type="button" data-days="90">90D</button>
+        </div>
       </div>
+    </header>
+
+    <div id="dashboard-status" class="dashboard-status" aria-live="polite"></div>
+    <div class="dashboard-cards" id="dash-cards">
+      <article class="d-card">
+        <span class="kpi-icon files-icon" aria-hidden="true">▧</span>
+        <div><span class="kpi-label">Files Scanned</span><strong class="num" id="stat-files">—</strong><small id="stat-files-detail">Loading</small></div>
+        <svg class="kpi-spark" id="files-spark" viewBox="0 0 120 38" role="img" aria-label="Files scanned sparkline"></svg>
+      </article>
+      <article class="d-card">
+        <span class="kpi-icon findings-icon" aria-hidden="true">!</span>
+        <div><span class="kpi-label">Findings Detected</span><strong class="num" id="stat-findings">—</strong><small id="stat-findings-detail">Loading</small></div>
+      </article>
+      <article class="d-card">
+        <span class="kpi-icon score-icon" aria-hidden="true">✓</span>
+        <div><span class="kpi-label">Security Score</span><strong class="num" id="stat-score">N/A</strong><small id="stat-score-detail">No documented aggregate calculation</small></div>
+      </article>
+      <article class="d-card">
+        <span class="kpi-icon safe-icon" aria-hidden="true">◈</span>
+        <div><span class="kpi-label">Sanitised Files</span><strong class="num" id="stat-sanitised">—</strong><small id="stat-sanitised-detail">Loading</small></div>
+      </article>
     </div>
-    <div class="panel">
-      <h3>Security Advice & Policies</h3>
-      <ul class="clean-list">
-        <li><strong>Rule 1:</strong> Always rotate keys once exposed in shared repositories or chats.</li>
-        <li><strong>Rule 2:</strong> Store credentials in `.env` and load them via environment variables.</li>
-        <li><strong>Rule 3:</strong> Redacting a copy creates a safe distribution, but doesn't revoke leaked keys.</li>
-        <li><strong>Rule 4:</strong> Use our pre-commit hook to catch secrets before staging.</li>
-      </ul>
+
+    <div class="dashboard-grid">
+      <section class="panel trend-panel">
+        <header class="panel-heading">
+          <h3><span aria-hidden="true">⌁</span> Scan Activity Trend</h3>
+        </header>
+        <div id="chart-trends" class="chart-container" aria-live="polite"></div>
+      </section>
+      <section class="panel risk-panel">
+        <header class="panel-heading"><h3><span aria-hidden="true">◫</span> Risk Distribution</h3></header>
+        <div class="risk-layout">
+          <div id="risk-donut" class="risk-donut" role="img" aria-label="Risk distribution"><div><strong id="risk-total">0</strong><small>Total Findings</small></div></div>
+          <div class="risk-legend">
+            <div><span class="risk-dot high"></span><b>High</b><strong id="risk-high">0</strong><small id="risk-high-pct">0%</small></div>
+            <div><span class="risk-dot medium"></span><b>Medium</b><strong id="risk-medium">0</strong><small id="risk-medium-pct">0%</small></div>
+            <div><span class="risk-dot low"></span><b>Low</b><strong id="risk-low">0</strong><small id="risk-low-pct">0%</small></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="dashboard-bottom">
+      <section class="panel recent-panel">
+        <header class="panel-heading">
+          <h3><span aria-hidden="true">◷</span> Recent Scans</h3>
+          <button class="panel-link" type="button" data-go-view="history">View All →</button>
+        </header>
+        <div id="dashboard-recent" class="recent-scans" aria-live="polite"></div>
+      </section>
+      <section class="panel insights-panel">
+        <header class="panel-heading"><h3><span aria-hidden="true">◆</span> Security Insights</h3></header>
+        <ul id="dashboard-insights" class="insights-list"></ul>
+      </section>
     </div>
   </div>
 </section>
 
 <!-- ================================= SCAN HISTORY ================================= -->
 <section id="view-history" class="view" hidden>
-  <div class="row">
+  <div class="history-heading">
     <div>
+      <p class="history-eyebrow">PRIVATE SCAN RECORDS</p>
       <h2>Scan History</h2>
-      <p class="muted">Only metadata and masked summaries are stored. Raw files are never kept in history.</p>
+      <p class="muted">Review your scans, revisit masked findings, and download available reports.</p>
     </div>
-    <button class="btn sm text-danger" id="clear-history">Clear history</button>
+    <button class="btn sm text-danger" id="history-clear" hidden>Clear history</button>
   </div>
-  <div class="filter-bar">
-    <input type="text" id="history-search" class="input sm" placeholder="Search by filename...">
-    <select id="history-filter-risk" class="input sm">
-      <option value="">All Risk Levels</option>
-      <option value="high">High Risk</option>
-      <option value="medium">Medium Risk</option>
-      <option value="low">Low Risk</option>
-    </select>
-    <select id="history-filter-kind" class="input sm">
-      <option value="">All Formats</option>
-      <option value="text">Text / Code</option>
-      <option value="pdf">PDF Document</option>
-      <option value="image">Image / OCR</option>
-    </select>
+
+  <section id="history-guest" class="history-guest panel" hidden aria-labelledby="history-guest-title">
+    <div class="history-guest-mark" aria-hidden="true">⌁</div>
+    <p class="history-eyebrow">YOUR PRIVATE WORKSPACE</p>
+    <h3 id="history-guest-title">Your scan history stays yours.</h3>
+    <p>Sign in to review your saved scans, explore masked findings, and pick up where you left off. Guest visitors cannot view personal scan records.</p>
+    <div class="history-guest-actions">
+      <button class="btn primary" id="history-guest-login">Log in</button>
+      <button class="btn outline" id="history-guest-register">Create account</button>
+    </div>
+  </section>
+
+  <div id="history-authenticated" hidden>
+    <div id="history-summary" class="history-summary" aria-label="Your scan history summary"></div>
+    <div class="history-controls panel">
+      <label class="history-search-field">
+        <span class="sr-only">Search filenames</span>
+        <input type="search" id="history-search" class="input sm" placeholder="Search filenames…" autocomplete="off">
+      </label>
+      <label>
+        <span class="sr-only">Filter by risk</span>
+        <select id="history-filter-risk" class="input sm">
+          <option value="">All risk levels</option>
+          <option value="high">High risk</option>
+          <option value="medium">Medium risk</option>
+          <option value="low">Low risk</option>
+        </select>
+      </label>
+      <label>
+        <span class="sr-only">Filter by file format</span>
+        <select id="history-filter-format" class="input sm">
+          <option value="">All formats</option>
+        </select>
+      </label>
+      <label>
+        <span class="sr-only">Filter by date</span>
+        <select id="history-filter-days" class="input sm">
+          <option value="0">Any time</option>
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+        </select>
+      </label>
+      <label>
+        <span class="sr-only">Sort scan history</span>
+        <select id="history-sort" class="input sm">
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="highest">Highest risk</option>
+          <option value="lowest">Lowest risk</option>
+          <option value="filename">Filename</option>
+        </select>
+      </label>
+    </div>
+    <div class="history-results-head">
+      <p id="history-status" class="muted small" role="status" aria-live="polite"></p>
+      <div class="history-results-actions">
+        <label class="history-page-size">
+          <span class="small muted">Rows</span>
+          <select id="history-page-size" class="input sm" aria-label="Rows per page">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+        </label>
+        <button class="btn sm outline" id="history-reset">Reset filters</button>
+      </div>
+    </div>
+    <div id="history-list" class="history-list" aria-live="polite"></div>
+    <nav id="history-pagination" class="history-pagination" aria-label="Scan history pages"></nav>
+    <section id="history-preview" class="history-preview panel" hidden aria-live="polite"></section>
   </div>
-  <div id="history"></div>
 </section>
 
 <!-- ================================= SAFE TEAM SETUP ================================= -->
-<section id="view-team" class="view" hidden>
-  <div class="section-head">
-    <h2>Safe Team Developer Handoff</h2>
-    <p class="muted">Configure projects collaboratively without pasting real API keys into team chats or public repositories.</p>
-  </div>
+<section id="view-team" class="view team-page" hidden>
+  <section class="team-hero" aria-labelledby="team-title">
+    <div class="team-hero-copy">
+      <p class="team-eyebrow"><span aria-hidden="true">✦</span> Developer Collaboration</p>
+      <h1 id="team-title">Safe Team <span>Developer Handoff</span></h1>
+      <p>Share configuration templates and securely manage sensitive credentials without exposing secrets in repositories or team chats.</p>
+    </div>
+    <div class="team-hero-art" aria-hidden="true">
+      <div class="team-orbit team-orbit-one"></div>
+      <div class="team-orbit team-orbit-two"></div>
+      <svg viewBox="0 0 160 180" role="presentation">
+        <path class="team-shield-outline" d="M80 10 137 32v45c0 41-24 70-57 91C47 147 23 118 23 77V32L80 10Z"/>
+        <path class="team-shield-inner" d="M80 27 121 43v34c0 30-16 53-41 70-25-17-41-40-41-70V43l41-16Z"/>
+        <rect class="team-lock-body" x="59" y="77" width="42" height="35" rx="8"/>
+        <path class="team-lock-arch" d="M68 77V64a12 12 0 0 1 24 0v13"/>
+        <circle class="team-lock-key" cx="80" cy="93" r="3"/>
+        <path class="team-lock-key" d="M80 96v6"/>
+      </svg>
+      <div class="team-hero-trust"><span>✓</span> Share safely <span>✓</span> Encrypt at rest <span>✓</span> Stay secure</div>
+    </div>
+  </section>
 
-  <div class="cols">
-    <div class="col">
-      <div class="panel">
-        <h3>1. Environment Template (.env.example)</h3>
-        <p class="muted small">Template containing variable names and placeholder assignments only. <strong>Zero real secret values.</strong></p>
-        <textarea id="env-preview" class="code-box" rows="12" spellcheck="false"></textarea>
-        <div class="grp foot-grp">
-          <button class="btn sm" id="btn-copy-env">Copy .env.example</button>
-          <button class="btn sm primary" id="btn-download-team-zip">Download Team Setup Package (.zip)</button>
+  <div class="team-workspaces">
+    <section class="panel team-panel team-template-panel" aria-labelledby="team-template-title">
+      <header class="team-panel-heading">
+        <span class="team-panel-icon template-icon" aria-hidden="true">▤</span>
+        <div>
+          <div class="team-title-row">
+            <h2 id="team-template-title">Environment Template</h2>
+            <span class="team-file-badge">.env.example</span>
+          </div>
+          <p>Share project configuration without exposing real credentials.</p>
+        </div>
+      </header>
+
+      <div class="team-editor" aria-label="Generated environment template preview">
+        <div class="team-editor-bar" aria-hidden="true">
+          <span class="team-window-dots"><i></i><i></i><i></i></span>
+          <span>SAFE CONFIGURATION PREVIEW</span>
+          <span class="team-editor-readonly">PLACEHOLDERS ONLY</span>
+        </div>
+        <pre id="env-preview" class="team-code-preview" tabindex="0"><code id="env-preview-code"></code></pre>
+      </div>
+
+      <div class="team-template-indicators" aria-label="Template safety status">
+        <span class="team-status-pill is-pending" id="team-indicator-safe"><i aria-hidden="true"></i> Checking template</span>
+        <span class="team-status-pill is-pending" id="team-indicator-secrets"><i aria-hidden="true"></i> No real secrets</span>
+        <span class="team-status-pill is-pending" id="team-indicator-ready"><i aria-hidden="true"></i> Waiting for scan</span>
+      </div>
+      <p class="team-feedback" id="team-template-feedback" role="status" aria-live="polite"></p>
+
+      <div class="team-template-actions">
+        <button class="btn outline" id="btn-copy-env" type="button" disabled>Copy Template</button>
+        <button class="btn outline" id="btn-download-env" type="button" disabled>Download .env.example</button>
+        <button class="btn primary" id="btn-download-team-zip" type="button" disabled>Download Team Package (.zip)</button>
+      </div>
+    </section>
+
+    <section class="panel team-panel team-vault-panel" aria-labelledby="team-vault-title">
+      <header class="team-panel-heading">
+        <span class="team-panel-icon vault-icon" aria-hidden="true">⌑</span>
+        <div>
+          <div class="team-title-row">
+            <h2 id="team-vault-title">Encrypted Credential Vault</h2>
+            <span class="team-vault-badge"><i aria-hidden="true"></i> <span id="vault-availability">Checking vault</span></span>
+          </div>
+          <p>Store sensitive configuration values in a vault scoped to your account.</p>
+        </div>
+      </header>
+
+      <div class="team-vault-security" id="team-vault-status" aria-live="polite">
+        <div class="team-vault-status-icon" aria-hidden="true">✓</div>
+        <div>
+          <strong id="vault-encryption-status">New entries use AES-256-GCM</strong>
+          <p>Each new entry is encrypted before it is saved. Vault entries are scoped to your account.</p>
         </div>
       </div>
-    </div>
 
-    <div class="col">
-      <div class="panel">
-        <h3>2. Local Encrypted Vault (Owner-Controlled)</h3>
-        <p class="muted small">Safely store and label local environment keys on your machine. Values are encrypted with authenticated Scrypt + AES-256-GCM. Admins cannot view private secrets.</p>
-        <div class="grp foot-grp" style="margin-bottom: .8rem; justify-content: flex-start;">
-          <button class="btn sm" id="btn-show-export-vault">Export .leaklens Vault</button>
-          <button class="btn sm outline" id="btn-show-import-vault">Import .leaklens Vault</button>
+      <div class="team-vault-actions" aria-label="Vault management">
+        <button class="team-vault-action" id="btn-show-export-vault" type="button">
+          <span aria-hidden="true">⇧</span><strong>Export Vault</strong><small>Encrypted backup</small>
+        </button>
+        <button class="team-vault-action" id="btn-show-import-vault" type="button">
+          <span aria-hidden="true">⇩</span><strong>Import Vault</strong><small>Restore a backup</small>
+        </button>
+      </div>
+
+      <form id="vault-form" class="team-vault-form" novalidate>
+        <div class="team-form-heading">
+          <div>
+            <h3>Add a private credential</h3>
+            <p>Saved values are not displayed in the vault list.</p>
+          </div>
+          <span class="team-form-lock" aria-hidden="true">⌑</span>
         </div>
-        <form id="vault-form" class="vault-form">
-          <div class="form-row">
-            <input type="text" id="vault-key" placeholder="Variable Name (e.g. GITHUB_TOKEN)" required class="input">
+        <div class="team-vault-fields">
+          <label for="vault-key">Variable Name
+            <input type="text" id="vault-key" class="input" placeholder="e.g. GITHUB_TOKEN" required
+                   pattern="[A-Za-z_][A-Za-z0-9_]{0,127}" maxlength="128" autocomplete="off"
+                   autocapitalize="characters" spellcheck="false" aria-describedby="vault-key-hint">
+          </label>
+          <label for="vault-provider">Category
             <select id="vault-provider" class="input">
               <option value="Generic">Generic</option>
               <option value="AWS">AWS</option>
@@ -244,16 +705,44 @@
               <option value="OpenAI">OpenAI</option>
               <option value="Twilio">Twilio</option>
             </select>
-          </div>
-          <div class="form-row">
-            <input type="password" id="vault-val" placeholder="Secret Value (stored encrypted)" required class="input">
-            <button type="submit" class="btn primary sm">Save to Local Vault</button>
-          </div>
-        </form>
-        <div id="vault-items" class="vault-list"></div>
+          </label>
+          <p class="team-field-hint" id="vault-key-hint">Use letters, numbers, and underscores for environment variable names.</p>
+          <label for="vault-val" class="team-secret-field">Secret Value
+            <span class="team-secret-input-wrap">
+              <input type="password" id="vault-val" class="input" placeholder="Enter secret value…" required
+                     maxlength="16384" autocomplete="new-password" aria-describedby="vault-secret-hint">
+              <button class="team-secret-toggle" id="vault-secret-toggle" type="button" aria-label="Show secret value" aria-pressed="false">Show</button>
+            </span>
+          </label>
+          <p class="team-field-hint team-secret-hint" id="vault-secret-hint">Only the masked preview is shown after you save.</p>
+        </div>
+        <button type="submit" class="btn primary team-save-button" id="vault-save-button" disabled>
+          <span aria-hidden="true">⌑</span> <span>Save to Vault</span>
+        </button>
+        <p class="team-feedback" id="vault-form-feedback" role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="team-vault-list-heading">
+        <h3>Your saved entries</h3>
+        <span id="vault-item-count">0 entries</span>
       </div>
-    </div>
+      <div id="vault-items" class="team-vault-list" aria-live="polite"></div>
+      <button class="btn outline team-login-cta" id="team-login" type="button" hidden>Log in to access your private vault</button>
+    </section>
   </div>
+
+  <section class="team-security-guide" aria-labelledby="team-security-title">
+    <span class="team-guide-icon" aria-hidden="true">◇</span>
+    <div class="team-guide-copy">
+      <h2 id="team-security-title">Security Best Practices</h2>
+      <p>Never share real API keys or credentials. Commit <code>.env.example</code> files containing placeholders only. Keep actual credentials in your account-scoped vault or secure environment configuration.</p>
+    </div>
+    <details class="team-security-details">
+      <summary>How the vault works</summary>
+      <p>New vault entries use per-entry Scrypt-derived keys and AES-256-GCM authenticated encryption before server-side storage. The server application can decrypt entries for password-protected portable exports; this is not a client-side or zero-knowledge vault. Portable exports use a separate password-derived Scrypt key and AES-256-GCM, and importing re-encrypts entries for the signed-in account.</p>
+      <p>The vault listing returns variable names, categories, and masked previews only. Secret values are not returned by the listing endpoint.</p>
+    </details>
+  </section>
 </section>
 
 <!-- ================================= IDE GUARD ================================= -->
@@ -485,25 +974,26 @@ AWS_KEY = "AKIAU2GCFJIBS14Q4CTV"
 </div>
 
 <div id="modal-vault-export" class="modal" hidden>
-  <div class="modal-card">
-    <div class="modal-head"><h3>Export .leaklens Vault</h3><button class="modal-close">&times;</button></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="vault-export-title">
+    <div class="modal-head"><h3 id="vault-export-title">Export .leaklens Vault</h3><button class="modal-close" type="button" aria-label="Close export dialog">&times;</button></div>
     <form id="form-vault-export">
-      <div id="vault-export-error" class="error sm" hidden></div>
-      <p class="muted small">Create an encrypted portable <code>.leaklens</code> file protected by a custom password using Scrypt + AES-256-GCM.</p>
+      <div id="vault-export-error" class="error sm" role="alert" hidden></div>
+      <p class="muted small">Create a portable file protected by a custom password using Scrypt and AES-256-GCM. The export contains encrypted values.</p>
       <label>Vault Export Password (min 8 chars)<input type="password" id="vault-export-pw" required minlength="8" class="input"></label>
-      <button type="submit" class="btn primary full">Download .leaklens File</button>
+      <button type="submit" class="btn primary full" id="vault-export-submit">Download .leaklens File</button>
     </form>
   </div>
 </div>
 
 <div id="modal-vault-import" class="modal" hidden>
-  <div class="modal-card">
-    <div class="modal-head"><h3>Import .leaklens Vault</h3><button class="modal-close">&times;</button></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="vault-import-title">
+    <div class="modal-head"><h3 id="vault-import-title">Import .leaklens Vault</h3><button class="modal-close" type="button" aria-label="Close import dialog">&times;</button></div>
     <form id="form-vault-import">
-      <div id="vault-import-error" class="error sm" hidden></div>
-      <label>Choose .leaklens file<input type="file" id="vault-import-file" required accept=".leaklens" class="input"></label>
-      <label>Vault Password<input type="password" id="vault-import-pw" required class="input"></label>
-      <button type="submit" class="btn primary full">Decrypt &amp; Import</button>
+      <div id="vault-import-error" class="error sm" role="alert" hidden></div>
+      <label>Choose .leaklens file<input type="file" id="vault-import-file" required accept=".leaklens" class="input" aria-describedby="vault-import-hint"></label>
+      <p id="vault-import-hint" class="muted small">Encrypted portable vault file. Maximum file size: 10 MB.</p>
+      <label>Vault Password<input type="password" id="vault-import-pw" required minlength="8" autocomplete="current-password" class="input"></label>
+      <button type="submit" class="btn primary full" id="vault-import-submit">Decrypt &amp; Import</button>
     </form>
   </div>
 </div>

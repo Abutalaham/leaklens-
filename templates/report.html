@@ -1,18 +1,33 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><title>LeakLens report</title>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>LeakLens report</title>
+<link rel="stylesheet" href="/static/tokens.css">
 <style>
-body{font:15px/1.5 system-ui,sans-serif;max-width:900px;margin:2rem auto;padding:0 1rem;color:#1b2430}
-h1{margin-bottom:.2rem} .muted{color:#667}
-table{border-collapse:collapse;width:100%;margin:.6rem 0 1.4rem} th,td{border:1px solid #d5dbe3;padding:.4rem .5rem;text-align:left;vertical-align:top;font-size:14px}
-th{background:#f2f5f9} .high{color:#b3261e;font-weight:600} .medium{color:#a15c00;font-weight:600} .low{color:#2d6a4f;font-weight:600}
-code{background:#f2f5f9;padding:0 .25rem;border-radius:3px}
+*{box-sizing:border-box}
+body{font:15px/1.6 var(--font-sans);max-width:1120px;margin:0 auto;padding:32px clamp(16px,4vw,48px) 64px;background:var(--bg-canvas);color:var(--text-primary);transition:background-color .4s var(--ease-apple),color .4s var(--ease-apple)}
+.report-top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:48px;padding-bottom:16px;border-bottom:1px solid var(--border-glass)}
+.report-brand{display:flex;align-items:center;gap:10px;font-weight:750;letter-spacing:-.03em}.report-mark{width:12px;height:12px;border:2px solid var(--accent-primary);border-radius:4px;box-shadow:0 0 14px var(--accent-primary)}
+.theme-toggle{width:40px;height:40px;border:1px solid var(--border-glass);border-radius:50%;background:var(--glass-bg);color:var(--text-primary);cursor:pointer}
+main{max-width:100%;padding:0}.report-eyebrow{font:600 .72rem/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)}
+h1,h2{letter-spacing:-.03em;line-height:1.08}h1{font-size:clamp(2rem,5vw,3.8rem);margin:.5rem 0}h2{font-size:1.3rem;margin:40px 0 14px}
+.muted{color:var(--text-muted)}.report-meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-variant-numeric:tabular-nums}
+.report-summary{margin:28px 0;padding:24px;border:1px solid var(--border-glass);border-radius:24px;background:var(--surface-solid)}
+.report-risk{font-weight:750}.high{color:var(--high)}.medium{color:var(--med)}.low{color:var(--low)}
+.report-table-wrap{max-width:100%;overflow-x:auto;border:1px solid var(--border-glass);border-radius:18px;background:var(--surface-solid)}
+table{border-collapse:collapse;width:100%;min-width:920px;table-layout:fixed}th,td{border-bottom:1px solid var(--border-glass);padding:12px 14px;text-align:left;vertical-align:top;font-size:14px;overflow-wrap:anywhere}th{background:var(--bg-elevated);color:var(--text-primary);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}th:nth-child(1){width:5%}th:nth-child(2){width:10%}th:nth-child(3){width:12%}th:nth-child(4){width:11%}th:nth-child(5){width:12%}th:nth-child(6){width:14%}th:nth-child(7){width:28%}th:nth-child(8){width:8%}tr:last-child td{border-bottom:0}
+code{background:var(--bg-elevated);color:var(--text-primary);padding:2px 6px;border-radius:6px;overflow-wrap:anywhere}
+@media(max-width:600px){.report-top{margin-bottom:32px}.report-summary{padding:18px;border-radius:20px}h2{margin-top:32px}}
 </style></head><body>
+<header class="report-top"><div class="report-brand"><span class="report-mark" aria-hidden="true"></span> LeakLens <span class="report-eyebrow">/ SCAN REPORT</span></div><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch theme">☼</button></header>
+<main>
+<p class="report-eyebrow">PRIVATE SCAN SUMMARY</p>
 <h1>LeakLens scan report</h1>
-<p class="muted">{{ r.filename }} &middot; {{ r.kind }} &middot; scanned {{ r.scanned_at }}</p>
-<h2>Overall risk: <span class="{{ r.summary.overall.level }}">{{ r.summary.overall.level|upper }} ({{ r.summary.overall.score }}/100)</span></h2>
+<p class="muted report-meta"><span>{{ r.filename }}</span><span>{{ r.kind }}</span><span>Scanned {{ r.scanned_at }}</span></p>
+<section class="report-summary">
+<h2>Overall risk: <span class="report-risk {{ r.summary.overall.level }}">{{ r.summary.overall.level|upper }} ({{ r.summary.overall.score }}/100)</span></h2>
 <p>{{ r.summary.overall.explanation }}
 Active findings: {{ r.summary.high }} high, {{ r.summary.medium }} medium, {{ r.summary.low }} low.
 Also listed: {{ r.summary.placeholder }} placeholder(s), {{ r.summary.likely_benign }} likely-benign.</p>
+</section>
 
 <h2>Action taken</h2>
 <p>{{ r.action.redacted_count }} finding(s) redacted using the <code>{{ r.action.style }}</code> style &rarr; <code>{{ r.action.output_file }}</code>.
@@ -25,6 +40,7 @@ Metadata fields remaining: {{ r.verification.metadata_remaining }}.</p>
 {% endif %}
 
 <h2>Findings</h2>
+<div class="report-table-wrap">
 <table><tr><th>#</th><th>Risk</th><th>Type</th><th>Location</th><th>Status</th><th>Preview</th><th>Why flagged</th><th>Redacted</th></tr>
 {% for f in r.findings %}
 <tr><td>{{ f.id }}</td><td class="{{ f.level }}">{{ f.level }} ({{ f.score }})</td><td>{{ f.label }}</td>
@@ -34,6 +50,8 @@ Metadata fields remaining: {{ r.verification.metadata_remaining }}.</p>
 <em>{{ f.action }}</em>
 {% if f.blast_radius %}<br><strong>Blast radius:</strong> {{ f.blast_radius }}{% endif %}</td>
 <td>{{ 'yes' if f.id in r.action.redacted_ids else ('stripped' if f.metadata else 'no') }}</td></tr>
-{% endfor %}</table>
+{% endfor %}</table></div>
 <p class="muted">Scores are transparent design values, not validated risk measurements. Redaction does not make an already-exposed secret safe: rotate any real credential.</p>
+</main>
+<script src="/static/report.js"></script>
 </body></html>

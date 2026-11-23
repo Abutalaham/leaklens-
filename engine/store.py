@@ -392,24 +392,94 @@ def get_audit_logs(limit: int = 50) -> list[dict]:
 
 
 # ----------------------------------------------------------------- Scan records
+def _safe_history_findings(findings: list[dict]) -> list[dict]:
+    return [{
+        "id": finding.get("id"),
+        "type": finding.get("type"),
+        "label": finding.get("label"),
+        "category": finding.get("category"),
+        "provider": finding.get("provider", "Generic"),
+        "level": finding.get("level"),
+        "status": finding.get("status"),
+        "line": finding.get("line"),
+        "preview": finding.get("preview"),
+        "key": finding.get("key"),
+        "blast_radius": finding.get("blast_radius") or "",
+    } for finding in findings]
+
+
+def _decode_history_findings(raw_findings: Optional[str]) -> tuple[list[dict], bool]:
+    if raw_findings is None:
+        return [], False
+    try:
+        findings = json.loads(raw_findings)
+    except (TypeError, ValueError):
+        return [], False
+    valid_findings = isinstance(findings, list) and all(isinstance(finding, dict) for finding in findings)
+    return (findings, True) if valid_findings else ([], False)
+
+
+def _history_finding_counts(findings: list[dict], redacted: int, *,
+                            data_available: bool) -> dict:
+    if not data_available:
+        return {
+            "total": None,
+            "active_total": None,
+            "active_high": None,
+            "active_medium": None,
+            "active_low": None,
+            "redacted": redacted,
+            "placeholder": None,
+            "likely_benign": None,
+            "unclassified": None,
+            "status_available": False,
+        }
+
+    recognized_statuses = {"active", "placeholder", "likely_benign", "redacted"}
+    statuses_valid = all(finding.get("status") in recognized_statuses for finding in findings)
+    redacted_count = sum(1 for finding in findings if finding.get("status") == "redacted")
+    status_available = statuses_valid and redacted_count == redacted
+    total = len(findings)
+    if not status_available:
+        return {
+            "total": total,
+            "active_total": None,
+            "active_high": None,
+            "active_medium": None,
+            "active_low": None,
+            "redacted": redacted,
+            "placeholder": None,
+            "likely_benign": None,
+            "unclassified": None,
+            "status_available": False,
+        }
+
+    active = [finding for finding in findings if finding["status"] == "active"]
+    active_high = sum(1 for finding in active if finding.get("level") == "high")
+    active_medium = sum(1 for finding in active if finding.get("level") == "medium")
+    active_low = sum(1 for finding in active if finding.get("level") == "low")
+    placeholder = sum(1 for finding in findings if finding["status"] == "placeholder")
+    likely_benign = sum(1 for finding in findings if finding["status"] == "likely_benign")
+    redacted_count = sum(1 for finding in findings if finding["status"] == "redacted")
+    unclassified = total - active_high - active_medium - active_low - placeholder - likely_benign - redacted_count
+    return {
+        "total": total,
+        "active_total": len(active),
+        "active_high": active_high,
+        "active_medium": active_medium,
+        "active_low": active_low,
+        "redacted": redacted_count,
+        "placeholder": placeholder,
+        "likely_benign": likely_benign,
+        "unclassified": unclassified,
+        "status_available": True,
+    }
+
+
 def record_scan(scan_id: str, filename: str, kind: str, size: int, summ: dict,
                 user_id: Optional[str] = None, findings: Optional[list] = None):
-    safe_findings = []
-    if findings:
-        for f in findings:
-            safe_findings.append({
-                "type": f.get("type"),
-                "label": f.get("label"),
-                "category": f.get("category"),
-                "provider": f.get("provider", "Generic"),
-                "level": f.get("level"),
-                "status": f.get("status"),
-                "line": f.get("line"),
-                "preview": f.get("preview"),
-                "key": f.get("key"),
-                "blast_radius": f.get("blast_radius") or "",
-            })
-    f_json = json.dumps(safe_findings) if safe_findings else None
+    safe_findings = _safe_history_findings(findings or [])
+    f_json = json.dumps(safe_findings)
 
     with _db() as con:
         con.execute(
@@ -422,15 +492,33 @@ def record_scan(scan_id: str, filename: str, kind: str, size: int, summ: dict,
         )
 
 
-def record_redaction(scan_id: str, n: int):
+def record_redaction(scan_id: str, redacted_ids: list[str], findings: list[dict]):
+    selected_ids = {str(finding_id) for finding_id in redacted_ids}
+    stored_findings = _safe_history_findings(findings)
+    recorded_ids = set()
+    for finding in stored_findings:
+        if finding.get("id") in selected_ids:
+            finding["status"] = "redacted"
+            recorded_ids.add(finding["id"])
+    if recorded_ids != selected_ids:
+        raise ValueError("Redacted finding IDs do not match the stored scan findings.")
+
     with _db() as con:
-        con.execute("UPDATE scans SET redacted=? WHERE id=?", (n, scan_id))
+        con.execute(
+            "UPDATE scans SET redacted=?, findings_json=? WHERE id=?",
+            (len(recorded_ids), json.dumps(stored_findings), scan_id),
+        )
 
 
 def get_scan(scan_id: str) -> Optional[dict]:
     with _db() as con:
         row = con.execute("SELECT * FROM scans WHERE id=?", (scan_id,)).fetchone()
         return dict(row) if row else None
+
+
+def delete_scan_record(scan_id: str):
+    with _db() as con:
+        con.execute("DELETE FROM scans WHERE id=?", (scan_id,))
 
 
 def history(limit: int = 30) -> list[dict]:
@@ -470,7 +558,95 @@ def user_history(user_id: str, limit: int = 50, risk_level: Optional[str] = None
         return res
 
 
-def user_dashboard_stats(user_id: str) -> dict:
+def user_history_page(user_id: str, *, risk_level: Optional[str] = None,
+                      file_format: Optional[str] = None, search: Optional[str] = None,
+                      days: int = 0, sort: str = "newest", page: int = 1,
+                      per_page: int = 10) -> dict:
+    filters = ["user_id=?"]
+    params: list = [user_id]
+    if risk_level:
+        filters.append("LOWER(level)=?")
+        params.append(risk_level.lower())
+    if file_format:
+        filters.append("LOWER(filename) LIKE ?")
+        params.append(f"%.{file_format.lower()}")
+    if search:
+        filters.append("instr(LOWER(filename), LOWER(?)) > 0")
+        params.append(search)
+    if days:
+        filters.append("created>=?")
+        params.append(int(time.time()) - days * 86400)
+
+    where = " AND ".join(filters)
+    order_by = {
+        "newest": "created DESC",
+        "oldest": "created ASC",
+        "highest": "score DESC, created DESC",
+        "lowest": "score ASC, created DESC",
+        "filename": "filename COLLATE NOCASE ASC, created DESC",
+    }.get(sort, "created DESC")
+
+    with _db() as con:
+        summary = con.execute(
+            """SELECT COUNT(*) AS total,
+                      SUM(CASE WHEN LOWER(level)='high' THEN 1 ELSE 0 END) AS high_risk,
+                      SUM(CASE WHEN redacted>0 THEN 1 ELSE 0 END) AS sanitised
+               FROM scans WHERE user_id=?""",
+            (user_id,),
+        ).fetchone()
+        total = con.execute(f"SELECT COUNT(*) FROM scans WHERE {where}", tuple(params)).fetchone()[0]
+        pages = max(1, (total + per_page - 1) // per_page)
+        page = min(page, pages)
+        rows = con.execute(
+            f"""SELECT id, created, filename, kind, size, score, level, high, medium, low, redacted,
+                       findings_json
+                FROM scans WHERE {where}
+                ORDER BY {order_by}, id ASC LIMIT ? OFFSET ?""",
+            tuple(params + [per_page, (page - 1) * per_page]),
+        ).fetchall()
+    items = []
+    for row in rows:
+        item = dict(row)
+        raw_findings = item.pop("findings_json", None)
+        findings, data_available = _decode_history_findings(raw_findings)
+        item["finding_counts"] = _history_finding_counts(
+            findings, item["redacted"], data_available=data_available,
+        )
+        items.append(item)
+    return {
+        "items": items,
+        "total": total,
+        "page": page,
+        "per_page": per_page,
+        "pages": pages,
+        "summary": {
+            "total": summary["total"] or 0,
+            "high_risk": summary["high_risk"] or 0,
+            "sanitised": summary["sanitised"] or 0,
+        },
+    }
+
+
+def user_history_detail(user_id: str, scan_id: str) -> Optional[dict]:
+    with _db() as con:
+        row = con.execute(
+            """SELECT id, created, filename, kind, size, score, level, high, medium, low,
+                      redacted, findings_json
+               FROM scans WHERE id=? AND user_id=?""",
+            (scan_id, user_id),
+        ).fetchone()
+    if not row:
+        return None
+    result = dict(row)
+    raw_findings = result.pop("findings_json", None)
+    result["findings"], data_available = _decode_history_findings(raw_findings)
+    result["finding_counts"] = _history_finding_counts(
+        result["findings"], result["redacted"], data_available=data_available,
+    )
+    return result
+
+
+def user_dashboard_stats(user_id: str, days: int = 0) -> dict:
     with _db() as con:
         rows = con.execute("SELECT * FROM scans WHERE user_id=?", (user_id,)).fetchall()
         total_files = len(rows)
@@ -480,13 +656,41 @@ def user_dashboard_stats(user_id: str) -> dict:
         sanitised = sum(1 for r in rows if r["redacted"] > 0)
         total_findings = high + medium + low
 
-        recent = con.execute(
-            """SELECT strftime('%Y-%m-%d', datetime(created, 'unixepoch')) as day,
-                      SUM(high) as h, SUM(medium) as m, SUM(low) as l, COUNT(*) as files
-               FROM scans WHERE user_id=?
-               GROUP BY day ORDER BY day DESC LIMIT 14""",
-            (user_id,),
-        ).fetchall()
+        active_findings = 0
+        for r in rows:
+            raw = r["findings_json"]
+            if not raw:
+                continue
+            try:
+                findings = json.loads(raw)
+            except (TypeError, ValueError):
+                continue
+            active_findings += sum(1 for f in findings if f.get("status") in (None, "", "active"))
+
+        cutoff = int(time.time()) - (days * 86400) if days else None
+        trend_rows = [r for r in rows if cutoff is None or r["created"] >= cutoff]
+        period_files = len(trend_rows)
+        period_high = sum(r["high"] for r in trend_rows)
+        period_medium = sum(r["medium"] for r in trend_rows)
+        period_low = sum(r["low"] for r in trend_rows)
+        period_findings = period_high + period_medium + period_low
+
+        if cutoff is None:
+            recent = con.execute(
+                """SELECT strftime('%Y-%m-%d', datetime(created, 'unixepoch')) as day,
+                          SUM(high) as h, SUM(medium) as m, SUM(low) as l, COUNT(*) as files
+                   FROM scans WHERE user_id=?
+                   GROUP BY day ORDER BY day DESC LIMIT 14""",
+                (user_id,),
+            ).fetchall()
+        else:
+            recent = con.execute(
+                """SELECT strftime('%Y-%m-%d', datetime(created, 'unixepoch')) as day,
+                          SUM(high) as h, SUM(medium) as m, SUM(low) as l, COUNT(*) as files
+                   FROM scans WHERE user_id=? AND created>=?
+                   GROUP BY day ORDER BY day DESC LIMIT ?""",
+                (user_id, cutoff, days),
+            ).fetchall()
 
         providers: dict[str, int] = {}
         categories: dict[str, int] = {}
@@ -513,10 +717,16 @@ def user_dashboard_stats(user_id: str) -> dict:
         return {
             "total_files": total_files,
             "total_findings": total_findings,
+            "active_findings": active_findings,
             "high": high,
             "medium": medium,
             "low": low,
             "sanitised": sanitised,
+            "period_files": period_files,
+            "period_findings": period_findings,
+            "period_high": period_high,
+            "period_medium": period_medium,
+            "period_low": period_low,
             "trends": [dict(r) for r in reversed(recent)],
             "providers": _ranked(providers, "provider"),
             "categories": _ranked(categories, "category"),
@@ -667,15 +877,15 @@ def vault_get_all_raw(user_id: str) -> list[dict]:
         for r in rows:
             try:
                 decrypted = _decrypt_vault_value(user_id, r["encrypted_value"])
-                items.append({
-                    "id": r["id"],
-                    "key_name": r["key_name"],
-                    "provider": r["provider"],
-                    "masked_preview": r["masked_preview"],
-                    "value": decrypted,
-                })
-            except Exception:
-                continue
+            except Exception as exc:
+                raise ValueError("A saved vault item could not be decrypted; export was stopped.") from exc
+            items.append({
+                "id": r["id"],
+                "key_name": r["key_name"],
+                "provider": r["provider"],
+                "masked_preview": r["masked_preview"],
+                "value": decrypted,
+            })
         return items
 
 
@@ -686,12 +896,24 @@ def vault_delete_item(user_id: str, item_id: str):
 
 # ----------------------------------------------------------------- Portable .leaklens Vault
 _VAULT_MAGIC = b"LEAKLENS_VAULT\x01"
+_PORTABLE_VAULT_MAX_ITEMS = 500
+_PORTABLE_VAULT_MAX_VALUE_LENGTH = 16_384
 
 
 def export_portable_vault(user_id: str, export_password: str) -> bytes:
-    if len(export_password) < 8:
+    if not isinstance(export_password, str) or len(export_password) < 8:
         raise ValueError("Export password must be at least 8 characters long.")
     raw_items = vault_get_all_raw(user_id)
+    if len(raw_items) > _PORTABLE_VAULT_MAX_ITEMS:
+        raise ValueError("Vault contains too many entries for a portable export.")
+    for item in raw_items:
+        if (not isinstance(item["key_name"], str)
+                or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,127}", item["key_name"])
+                or not isinstance(item["provider"], str) or len(item["provider"]) > 64
+                or any(ord(char) < 32 for char in item["provider"])
+                or not isinstance(item["value"], str) or not item["value"]
+                or len(item["value"]) > _PORTABLE_VAULT_MAX_VALUE_LENGTH):
+            raise ValueError("A saved vault item is invalid for portable export.")
     payload_data = {
         "format": "leaklens-portable-vault",
         "version": 1,
@@ -717,9 +939,15 @@ def export_portable_vault(user_id: str, export_password: str) -> bytes:
 
 
 def import_portable_vault(user_id: str, import_password: str, file_bytes: bytes) -> dict:
+    if not isinstance(import_password, str) or not import_password:
+        raise ValueError("Vault password is required.")
+    if not isinstance(file_bytes, bytes) or len(file_bytes) > config.MAX_UPLOAD_BYTES:
+        raise ValueError("Vault file is invalid or exceeds the supported size.")
     if not file_bytes.startswith(_VAULT_MAGIC):
         raise ValueError("Invalid .leaklens vault file header signature.")
     magic_len = len(_VAULT_MAGIC)
+    if len(file_bytes) < magic_len + 16 + 12 + 16:
+        raise ValueError("Invalid .leaklens vault file.")
     salt = file_bytes[magic_len : magic_len + 16]
     nonce = file_bytes[magic_len + 16 : magic_len + 28]
     ct = file_bytes[magic_len + 28 :]
@@ -731,19 +959,48 @@ def import_portable_vault(user_id: str, import_password: str, file_bytes: bytes)
     except Exception:
         raise ValueError("Decryption failed. Incorrect password or corrupted vault file.")
 
-    data = json.loads(pt.decode("utf-8"))
-    items = data.get("items", [])
-    count = 0
-    for it in items:
-        vault_add_item(
-            user_id,
-            it["key_name"],
-            it.get("provider", "Generic"),
-            it.get("masked_preview", "••••"),
-            it["value"],
+    try:
+        data = json.loads(pt.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError, RecursionError) as exc:
+        raise ValueError("Vault payload is malformed.") from exc
+    if (not isinstance(data, dict) or data.get("format") != "leaklens-portable-vault"
+            or type(data.get("version")) is not int or data.get("version") != 1):
+        raise ValueError("Unsupported .leaklens vault format.")
+    items = data.get("items")
+    if (not isinstance(items, list) or len(items) > _PORTABLE_VAULT_MAX_ITEMS
+            or type(data.get("item_count")) is not int or data.get("item_count") != len(items)):
+        raise ValueError("Vault payload has an invalid item list.")
+
+    validated_items = []
+    for item in items:
+        if not isinstance(item, dict):
+            raise ValueError("Vault payload contains an invalid entry.")
+        key_name = item.get("key_name")
+        provider = item.get("provider", "Generic")
+        value = item.get("value")
+        if (not isinstance(key_name, str) or not key_name.strip() or len(key_name) > 128
+                or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,127}", key_name.strip())
+                or not isinstance(provider, str) or len(provider) > 64
+                or any(ord(char) < 32 for char in provider)
+                or not isinstance(value, str) or not value
+                or len(value) > _PORTABLE_VAULT_MAX_VALUE_LENGTH):
+            raise ValueError("Vault payload contains an invalid entry.")
+        validated_items.append((key_name.strip(), provider.strip() or "Generic", value))
+
+    now = time.time()
+    encrypted_items = [
+        (uuid.uuid4().hex, user_id, key_name, provider, "••••",
+         _encrypt_vault_value(user_id, value), now)
+        for key_name, provider, value in validated_items
+    ]
+    with _db() as con:
+        con.executemany(
+            """INSERT INTO user_vault
+               (id, user_id, key_name, provider, masked_preview, encrypted_value, created_at)
+               VALUES (?,?,?,?,?,?,?)""",
+            encrypted_items,
         )
-        count += 1
-    return {"success": True, "imported_count": count}
+    return {"success": True, "imported_count": len(encrypted_items)}
 
 
 # ----------------------------------------------------------------- API Tokens (PATs)

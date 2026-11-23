@@ -75,6 +75,13 @@ def test_pdf_and_pages(client, fake):
 
 
 def test_history_status_evaluation(client, fake):
+    assert client.get("/api/history").status_code == 401
+    assert client.delete("/api/history").status_code == 401
+    client.post("/api/auth/register", json={
+        "username": "history_user",
+        "email": "history_user@example.com",
+        "password": "Password123",
+    })
     upload(client, "h.txt", f"pw = \"{fake['pw']}\"".encode())
     h = client.get("/api/history").get_json()
     assert h and h[0]["filename"] == "h.txt" and "pw" not in str(h[0].keys())
@@ -83,7 +90,44 @@ def test_history_status_evaluation(client, fake):
     assert ev.status_code in (200, 404)
 
 
+def test_history_preview_contains_only_masked_finding_data(client, fake):
+    client.post("/api/auth/register", json={
+        "username": "history_preview_user",
+        "email": "history_preview@example.com",
+        "password": "Password123",
+    })
+    scan = upload(client, "masked.py", f"GH_TOKEN = \"{fake['gh']}\"".encode()).get_json()
+    detail = client.get(f"/api/user/history/{scan['scan_id']}")
+    assert detail.status_code == 200
+    payload = detail.get_json()
+    assert payload["findings"]
+    assert fake["gh"] not in str(payload)
+    assert "findings_json" not in payload and "user_id" not in payload
+
+
+def test_synthetic_sample_files_are_allowlisted(client):
+    from pathlib import Path
+
+    samples = {
+        "python": "demo_app.py",
+        "pdf": "demo_report.pdf",
+        "screenshot": "demo_screenshot.jpg",
+        "notes": "demo_notes.txt",
+    }
+    for sample_id, filename in samples.items():
+        response = client.get(f"/api/samples/{sample_id}")
+        assert response.status_code == 200
+        assert response.data == (Path(__file__).parents[1] / "samples" / filename).read_bytes()
+        response.close()
+    assert client.get("/api/samples/not-a-sample").status_code == 404
+
+
 def test_index_and_headers(client):
     r = client.get("/")
+    html = r.get_data(as_text=True)
     assert r.status_code == 200 and b"LeakLens" in r.data
+    assert 'id="view-home" class="view"' in html
+    assert 'id="view-scan" class="view scan-page" hidden' in html
+    assert 'class="ribbon-stage"' in html and "Tracing<br>the" in html
+    assert '/static/tokens.css' in html
     assert "default-src 'self'" in r.headers["Content-Security-Policy"]

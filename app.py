@@ -36,8 +36,16 @@ log = logging.getLogger("leaklens")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 ID_RX = re.compile(r"[0-9a-f]{32}")
+ENV_VAR_RX = re.compile(r"[A-Za-z_][A-Za-z0-9_]{0,127}")
+VAULT_PROVIDERS = {"Generic", "AWS", "GitHub", "Stripe", "Google Cloud", "OpenAI", "Twilio"}
 MIME = {"png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg", "bmp": "image/bmp",
         "tif": "image/tiff", "tiff": "image/tiff", "webp": "image/webp"}
+SAMPLE_FILES = {
+    "python": "demo_app.py",
+    "pdf": "demo_report.pdf",
+    "screenshot": "demo_screenshot.jpg",
+    "notes": "demo_notes.txt",
+}
 
 
 # ----------------------------------------------------------------- security & helpers
@@ -59,6 +67,13 @@ def scan_dir(scan_id: str):
 def load_state(scan_id: str):
     d = scan_dir(scan_id)
     return d, json.loads((d / "state.json").read_text(encoding="utf-8"))
+
+
+def can_access_scan(scan_id: str, state: dict) -> bool:
+    user = get_current_user()
+    record = store.get_scan(scan_id)
+    owner_id = (record or {}).get("user_id") or state.get("user_id")
+    return not owner_id or bool(user and (user["id"] == owner_id or user["role"] == "admin"))
 
 
 def err(msg: str, code: int = 400):
@@ -194,6 +209,17 @@ def status():
         "user": {"id": u["id"], "username": u["username"], "role": u["role"]} if u else None,
         "csrf_token": get_or_create_csrf_token(),
     })
+
+
+@app.get("/api/samples/<sample_id>")
+def sample_file(sample_id: str):
+    filename = SAMPLE_FILES.get(sample_id)
+    if filename is None:
+        return err("Sample not found.", 404)
+    path = config.BASE_DIR / "samples" / filename
+    if not path.is_file():
+        abort(404, description="Sample file not found.")
+    return send_file(path, as_attachment=False, download_name=filename)
 
 
 # ------------------------------------------------------------------ auth routes
@@ -374,7 +400,7 @@ def logout():
     if user:
         store.record_audit(user["id"], "user_logged_out", request.remote_addr, f"User: {user['username']}")
     session.clear()
-    return jsonify({"success": True})
+    return jsonify({"success": True, "csrf_token": get_or_create_csrf_token()})
 
 
 @app.get("/api/auth/me")
@@ -518,9 +544,8 @@ def scan():
 @app.get("/api/original/<scan_id>")
 def original(scan_id):
     d, st = load_state(scan_id)
-    user = get_current_user()
-    if st.get("user_id") and (not user or (user["id"] != st["user_id"] and user["role"] != "admin")):
-        abort(403)
+    if not can_access_scan(scan_id, st):
+        abort(403, description="Access denied to this scan.")
     if st["kind"] != "image":
         abort(404)
     ext = os.path.splitext(st["filename"])[1].lower().lstrip(".")
@@ -533,7 +558,7 @@ def redact():
     scan_id = str(body.get("scan_id", ""))
     d, st = load_state(scan_id)
     user = get_current_user()
-    if st.get("user_id") and (not user or (user["id"] != st["user_id"] and user["role"] != "admin")):
+    if not can_access_scan(scan_id, st):
         return err("Unauthorized to redact this scan.", 403)
 
     ids = {str(i) for i in body.get("finding_ids", [])}
@@ -565,7 +590,7 @@ def redact():
     }
     (d / "out" / "report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     (d / "out" / "report.html").write_text(render_template("report.html", r=report), encoding="utf-8")
-    store.record_redaction(d.name, len(applied))
+    store.record_redaction(d.name, [finding["id"] for finding in applied], findings)
     if user:
         store.record_audit(user["id"], "file_redacted", request.remote_addr, f"{st['filename']} redacted={len(applied)}")
     log.info("redact %s applied=%d remaining=%s", d.name[:8], len(applied), verify.get("active"))
@@ -586,10 +611,8 @@ def download_sarif_direct(scan_id):
 
 @app.get("/api/download/<scan_id>/<what>")
 def download(scan_id, what):
-    d = scan_dir(scan_id)
-    _, st = load_state(scan_id)
-    user = get_current_user()
-    if st.get("user_id") and (not user or (user["id"] != st["user_id"] and user["role"] != "admin")):
+    d, st = load_state(scan_id)
+    if not can_access_scan(scan_id, st):
         abort(403, description="Access denied to this download.")
 
     if what in ("sarif", "report_sarif"):
@@ -614,10 +637,8 @@ def download(scan_id, what):
 
 @app.get("/report/<scan_id>")
 def report_view(scan_id):
-    d = scan_dir(scan_id)
-    _, st = load_state(scan_id)
-    user = get_current_user()
-    if st.get("user_id") and (not user or (user["id"] != st["user_id"] and user["role"] != "admin")):
+    d, st = load_state(scan_id)
+    if not can_access_scan(scan_id, st):
         abort(403, description="Access denied to this report.")
     p = d / "out" / "report.html"
     if not p.exists():
@@ -627,15 +648,11 @@ def report_view(scan_id):
 
 @app.delete("/api/scan/<scan_id>")
 def delete_scan(scan_id):
-    d = scan_dir(scan_id)
-    try:
-        _, st = load_state(scan_id)
-        user = get_current_user()
-        if st.get("user_id") and (not user or (user["id"] != st["user_id"] and user["role"] != "admin")):
-            return err("Unauthorized to delete this scan.", 403)
-    except Exception:
-        pass
-    shutil.rmtree(d, ignore_errors=True)
+    d, st = load_state(scan_id)
+    if not can_access_scan(scan_id, st):
+        return err("Unauthorized to delete this scan.", 403)
+    store.delete_scan_record(scan_id)
+    shutil.rmtree(d)
     return jsonify({"deleted": True})
 
 
@@ -644,18 +661,68 @@ def delete_scan(scan_id):
 @login_required
 def user_stats():
     user = get_current_user()
-    return jsonify(store.user_dashboard_stats(user["id"]))
+    try:
+        days = int(request.args.get("days", "0"))
+    except (TypeError, ValueError):
+        days = 0
+    if days not in (7, 30, 90):
+        days = 0
+    return jsonify(store.user_dashboard_stats(user["id"], days=days))
 
 
 @app.get("/api/user/history")
 @login_required
 def user_history_api():
     user = get_current_user()
+    if "page" in request.args:
+        risk = request.args.get("risk", "").lower()
+        file_format = request.args.get("format", "").lower()
+        sort = request.args.get("sort", "newest")
+        try:
+            page = int(request.args.get("page", "1"))
+            per_page = int(request.args.get("per_page", "10"))
+            days = int(request.args.get("days", "0"))
+        except ValueError:
+            return err("History page, page size, and date range must be integers.", 400)
+        if risk and risk not in ("high", "medium", "low"):
+            return err("Invalid risk filter.", 400)
+        if file_format and file_format not in {
+            ext.lstrip(".").lower() for ext in config.TEXT_EXTS | config.PDF_EXTS | config.IMAGE_EXTS
+        }:
+            return err("Unsupported file format filter.", 400)
+        if sort not in ("newest", "oldest", "highest", "lowest", "filename"):
+            return err("Invalid history sort order.", 400)
+        if page < 1 or per_page not in (10, 20, 50) or days not in (0, 7, 30, 90):
+            return err("Invalid history page, page size, or date range.", 400)
+        result = store.user_history_page(
+            user["id"], risk_level=risk or None, file_format=file_format or None,
+            search=request.args.get("q", "")[:100] or None, days=days, sort=sort,
+            page=page, per_page=per_page,
+        )
+        for item in result["items"]:
+            out_dir = config.TMP_DIR / item["id"] / "out"
+            item["report_available"] = (out_dir / "report.html").is_file()
+            item["sanitised_available"] = out_dir.is_dir() and any(out_dir.glob("sanitised_*"))
+        return jsonify(result)
+
     risk = request.args.get("risk")
     kind = request.args.get("kind")
     search = request.args.get("q")
     items = store.user_history(user["id"], limit=100, risk_level=risk, kind=kind, search=search)
     return jsonify(items)
+
+
+@app.get("/api/user/history/<scan_id>")
+@login_required
+def user_history_detail_api(scan_id):
+    user = get_current_user()
+    item = store.user_history_detail(user["id"], scan_id)
+    if not item:
+        abort(404, description="Scan not found.")
+    out_dir = config.TMP_DIR / scan_id / "out" if ID_RX.fullmatch(scan_id or "") else None
+    item["report_available"] = bool(out_dir and (out_dir / "report.html").is_file())
+    item["sanitised_available"] = bool(out_dir and out_dir.is_dir() and any(out_dir.glob("sanitised_*")))
+    return jsonify(item)
 
 
 @app.post("/api/feedback")
@@ -703,20 +770,17 @@ def clear_user_history_api():
 
 
 @app.get("/api/history")
+@login_required
 def history():
     user = get_current_user()
-    if user:
-        return jsonify(store.user_history(user["id"], limit=30))
-    return jsonify(store.history(limit=30))
+    return jsonify(store.user_history(user["id"], limit=30))
 
 
 @app.delete("/api/history")
+@login_required
 def clear_history():
     user = get_current_user()
-    if user:
-        store.clear_user_history(user["id"])
-    else:
-        store.clear_history()
+    store.clear_user_history(user["id"])
     return jsonify({"cleared": True})
 
 
@@ -796,66 +860,96 @@ def admin_save_policies():
 
 
 # ---------------------------------------------------------- safe team setup
-@app.post("/api/team/env-example")
-def generate_env_example():
-    body = request.get_json(silent=True) or {}
-    scan_id = body.get("scan_id")
-    raw_findings = []
+def _team_env_name(value) -> Optional[str]:
+    if not isinstance(value, str):
+        return None
+    value = value.strip()
+    if not ENV_VAR_RX.fullmatch(value):
+        return None
+    return value.upper()
 
-    if scan_id:
-        try:
-            _, st = load_state(scan_id)
-            raw_findings = st.get("findings", [])
-        except Exception:
-            pass
-    if not raw_findings:
-        raw_findings = body.get("findings", [])
 
-    env_vars = {}
-    for f in raw_findings:
-        if f.get("status") not in ("active", "likely_benign"):
-            continue
-        key = f.get("key")
-        ftype = f.get("type", "SECRET")
-        if not key:
-            key = ftype
-        var_name = re.sub(r"[^\w]", "_", key).upper()
-        if not var_name.isidentifier():
-            var_name = f"VAR_{var_name}"
-        # NEVER include secret values! Always assign placeholder
-        placeholder = f"your_{var_name.lower()}_here"
-        env_vars[var_name] = placeholder
-
-    # Common fallbacks if none detected
-    if not env_vars:
-        env_vars = {
-            "DATABASE_URL": "your_database_url_here",
-            "API_KEY": "your_api_key_here",
-            "SECRET_KEY": "your_secret_key_here",
-        }
-
+def _render_team_env_example(variable_names) -> str:
+    names = set()
+    for name in variable_names:
+        normalized = _team_env_name(name)
+        if normalized:
+            names.add(normalized)
+    names = sorted(names)
     lines = [
-        "# ===================================================================",
-        "# LeakLens Safe Team Setup — Environment Configuration Template",
-        "# Generated automatically. NEVER put real secrets into this file.",
-        "# Copy this file to .env and insert your local/test credentials.",
-        "# ===================================================================",
+        "# LeakLens Environment Configuration",
+        "# Share placeholders only; never commit real credentials.",
         "",
     ]
-    for k, v in sorted(env_vars.items()):
-        lines.append(f"{k}={v}")
-    lines.append("")
+    if names:
+        lines.extend(f"{name}=your_{name.lower()}_here" for name in names)
+    else:
+        lines.extend([
+            "# No scan-specific variables detected yet.",
+            "# Scan a project file to generate a tailored template.",
+        ])
+    return "\n".join(lines) + "\n"
 
-    return jsonify({"env_example": "\n".join(lines), "variables": sorted(env_vars.keys())})
+
+def _team_template_names(env_example) -> set[str]:
+    if not isinstance(env_example, str):
+        raise ValueError("Environment template must be text.")
+    if len(env_example) > 1_000_000:
+        raise ValueError("Environment template is too large.")
+    names = set()
+    for line in env_example.splitlines():
+        match = re.match(r"\s*([A-Za-z_][A-Za-z0-9_]{0,127})\s*=", line)
+        if match:
+            names.add(match.group(1))
+    return names
+
+
+@app.post("/api/team/env-example")
+def generate_env_example():
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        return err("Request body must be a JSON object.")
+    scan_id = body.get("scan_id")
+    if scan_id is not None:
+        if not isinstance(scan_id, str) or not scan_id:
+            return err("Invalid scan identifier.")
+        _, state = load_state(scan_id)
+        if not can_access_scan(scan_id, state):
+            return err("Unauthorized to use this scan.", 403)
+        raw_findings = state.get("findings", [])
+    else:
+        raw_findings = body.get("findings", [])
+    if not isinstance(raw_findings, list) or any(not isinstance(finding, dict) for finding in raw_findings):
+        return err("Findings must be a list of scan findings.")
+
+    env_names = set()
+    for finding in raw_findings:
+        if finding.get("status") not in ("active", "likely_benign"):
+            continue
+        name = _team_env_name(finding.get("key")) or _team_env_name(finding.get("type"))
+        if name:
+            env_names.add(name)
+    return jsonify({
+        "env_example": _render_team_env_example(env_names),
+        "variables": sorted(env_names),
+        "safe_template": True,
+    })
 
 
 @app.post("/api/team/package")
 def generate_team_package():
-    body = request.get_json(silent=True) or {}
-    env_content = body.get("env_example") or (
-        "DATABASE_URL=your_database_url_here\nAPI_KEY=your_api_key_here\nSECRET_KEY=your_secret_key_here\n"
-    )
-    project_name = safe_name(body.get("project_name") or "project")
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        return err("Request body must be a JSON object.")
+    project = body.get("project_name", "project")
+    if not isinstance(project, str):
+        return err("Project name must be text.")
+    try:
+        env_names = _team_template_names(body.get("env_example", ""))
+    except ValueError as exc:
+        return err(str(exc), 413 if "too large" in str(exc).lower() else 400)
+    env_content = _render_team_env_example(env_names)
+    project_name = safe_name(project)
 
     readme_content = f"""# {project_name} — Safe Team Setup Guide
 Prepared with LeakLens Privacy Guard.
@@ -939,13 +1033,21 @@ def get_vault():
 @login_required
 def add_vault_item():
     user = get_current_user()
-    body = request.get_json(silent=True) or {}
-    key_name = (body.get("key_name") or "").strip()
-    provider = (body.get("provider") or "Generic").strip()
-    raw_val = body.get("raw_value") or ""
-
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        return err("Request body must be a JSON object.")
+    key_name = body.get("key_name", "")
+    provider = body.get("provider", "Generic")
+    raw_val = body.get("raw_value", "")
+    if not isinstance(key_name, str) or not isinstance(provider, str) or not isinstance(raw_val, str):
+        return err("Variable name, category, and secret must be text.")
+    key_name = key_name.strip()
+    provider = provider.strip()
     if not key_name or not raw_val:
         return err("Key name and secret value are required.")
+    if (not ENV_VAR_RX.fullmatch(key_name) or provider not in VAULT_PROVIDERS
+            or len(raw_val) > 16_384):
+        return err("Use a valid variable name, supported category, and a secret of at most 16 KB.")
 
     # Server generates masked preview; raw value is encrypted in store
     masked = service.mask_value(raw_val)
@@ -967,9 +1069,11 @@ def delete_vault_item(item_id):
 @login_required
 def export_vault():
     user = get_current_user()
-    body = request.get_json(silent=True) or {}
-    export_pw = body.get("password") or ""
-    if len(export_pw) < 8:
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        return err("Request body must be a JSON object.")
+    export_pw = body.get("password", "")
+    if not isinstance(export_pw, str) or len(export_pw) < 8:
         return err("Vault export password must be at least 8 characters long.")
 
     try:
@@ -994,10 +1098,14 @@ def import_vault():
 
     if not f or not f.filename:
         return err("Please select a .leaklens vault file to import.")
+    if not f.filename.lower().endswith(".leaklens"):
+        return err("Choose a .leaklens vault file.")
     if not password:
         return err("Vault password is required for decryption.")
 
-    file_bytes = f.read()
+    file_bytes = f.stream.read(config.MAX_UPLOAD_BYTES + 1)
+    if len(file_bytes) > config.MAX_UPLOAD_BYTES:
+        return err(f"Vault file exceeds the {config.MAX_UPLOAD_BYTES // (1024 * 1024)} MB limit.", 413)
     try:
         res = store.import_portable_vault(user["id"], password, file_bytes)
         store.record_audit(user["id"], "portable_vault_imported", request.remote_addr, f"Items: {res['imported_count']}")

@@ -131,3 +131,12 @@ def test_index_and_headers(client):
     assert 'class="ribbon-stage"' in html and "Tracing<br>the" in html
     assert '/static/tokens.css' in html
     assert "default-src 'self'" in r.headers["Content-Security-Policy"]
+
+
+def test_chamber_frontend_routes(client):
+    for route in ("/chamber", "/landing"):
+        r = client.get(route)
+        html = r.get_data(as_text=True)
+        assert r.status_code == 200
+        assert "The Digital Inspection Chamber" in html
+        assert "https://cdnjs.cloudflare.com" in r.headers["Content-Security-Policy"]

@@ -68,24 +68,29 @@ themeToggle.addEventListener("click", () => {
 });
 
 const ribbonStage = $(".ribbon-stage");
-for (let index = 0; index < 36; index += 1) {
-  const slice = document.createElement("span");
-  slice.className = "ribbon-slice";
-  slice.style.setProperty("--index", index);
-  ribbonStage.append(slice);
-}
+if (ribbonStage) {
+  for (let index = 0; index < 36; index += 1) {
+    const slice = document.createElement("span");
+    slice.className = "ribbon-slice";
+    slice.style.setProperty("--index", index);
+    ribbonStage.append(slice);
+  }
 
-$(".hero").addEventListener("pointermove", (event) => {
-  const bounds = event.currentTarget.getBoundingClientRect();
-  const x = ((event.clientX - bounds.left) / bounds.width - .5) * 2;
-  const y = ((event.clientY - bounds.top) / bounds.height - .5) * 2;
-  ribbonStage.style.setProperty("--mouse-x", x.toFixed(3));
-  ribbonStage.style.setProperty("--mouse-y", y.toFixed(3));
-});
-$(".hero").addEventListener("pointerleave", () => {
-  ribbonStage.style.setProperty("--mouse-x", "0");
-  ribbonStage.style.setProperty("--mouse-y", "0");
-});
+  const legacyHero = $(".hero");
+  if (legacyHero) {
+    legacyHero.addEventListener("pointermove", (event) => {
+      const bounds = event.currentTarget.getBoundingClientRect();
+      const x = ((event.clientX - bounds.left) / bounds.width - .5) * 2;
+      const y = ((event.clientY - bounds.top) / bounds.height - .5) * 2;
+      ribbonStage.style.setProperty("--mouse-x", x.toFixed(3));
+      ribbonStage.style.setProperty("--mouse-y", y.toFixed(3));
+    });
+    legacyHero.addEventListener("pointerleave", () => {
+      ribbonStage.style.setProperty("--mouse-x", "0");
+      ribbonStage.style.setProperty("--mouse-y", "0");
+    });
+  }
+}
 
 /* ---------------------------------------------------------------- Navigation */
 const mobileNavQuery = window.matchMedia("(max-width: 1080px)");

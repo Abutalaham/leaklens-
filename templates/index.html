@@ -6,6 +6,7 @@
 <title>LeakLens — Privacy Leak Detection & Developer Security</title>
 <link rel="stylesheet" href="/static/tokens.css">
 <link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/home-chamber.css">
 </head>
 <body>
 <header class="top">
@@ -47,164 +48,586 @@
 
 <main>
 <!-- ================================= HOME / LANDING ================================= -->
-<section id="view-home" class="view">
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="hero-grain" aria-hidden="true"></div>
-    <div class="hero-layout">
-      <div class="hero-copy">
-        <p class="hero-eyebrow"><span class="signal-dot"></span> PRIVATE BY DESIGN <span class="eyebrow-divider">/</span> LOCAL-FIRST SCANNING</p>
-        <h1 id="hero-title">Tracing<br>the <span class="hero-outline">unseen.</span></h1>
-        <p class="hero-sub">
-          Find exposed secrets before they leave your hands.
-          LeakLens scans, explains, and redacts sensitive data without sending your files to third-party cloud APIs.
+<section id="view-home" class="view ll-home-root ll-home-intro-prep" data-stage="awaken">
+  <!-- HERO + OPTICAL INSPECTION ENGINE -->
+  <section class="ll-home-hero" id="ll-home-hero" aria-labelledby="ll-hero-headline">
+    <div class="ll-home-hero-grid">
+      <div class="ll-home-hero-copy">
+        <p class="ll-home-eyebrow">
+          <span class="ll-home-eyebrow-dot" aria-hidden="true"></span>
+          <span>PRIVATE BY DESIGN</span>
+          <span class="ll-home-eyebrow-sep" aria-hidden="true">/</span>
+          <span>INTELLIGENT FILE INSPECTION</span>
         </p>
-        <div class="hero-cta">
-          <button class="btn primary lg hero-primary" data-go-view="scan">Scan a file <span aria-hidden="true">↗</span></button>
-          <button class="hero-link" data-go-view="ide">Explore IDE Guard <span aria-hidden="true">→</span></button>
+        <h1 class="ll-home-hero-title" id="ll-hero-headline">
+          <span class="ll-home-mask"><span class="ll-home-mask-inner">Trace what</span></span>
+          <span class="ll-home-mask"><span class="ll-home-mask-inner ll-home-hero-title-accent">shouldn&apos;t leave.</span></span>
+        </h1>
+        <p class="ll-home-hero-desc">
+          Detect exposed credentials, personal information and sensitive metadata before sharing your files. Understand the risk, redact selected findings and verify a safer copy.
+        </p>
+        <div class="ll-home-hero-actions">
+          <button class="ll-home-btn-primary" type="button" data-go-view="scan">
+            SCAN A FILE <span aria-hidden="true">↗</span>
+          </button>
+          <button class="ll-home-btn-secondary" type="button" data-go-view="ide">
+            EXPLORE IDE GUARD <span aria-hidden="true">→</span>
+          </button>
+          <button class="ll-home-btn-ghost" type="button" id="ll-home-replay-btn">
+            Replay inspection ↺
+          </button>
+        </div>
+        <div class="ll-home-hero-meta" aria-label="Deployment and inspection overview">
+          <span class="ll-home-hero-pill"><span class="ll-home-pill-dot" aria-hidden="true"></span> Configurable local-first server</span>
+          <span>•</span>
+          <span>Selective redaction &amp; rescan verification</span>
+          <span>•</span>
+          <span><a href="#ll-home-problem" style="color:inherit;text-decoration:underline;">Inspect workflow ↓</a></span>
         </div>
       </div>
-      <aside class="hero-hud" aria-label="LeakLens privacy status">
-        <div class="hud-top"><span class="signal-dot"></span> PRIVACY STATUS <span class="hud-live">ACTIVE</span></div>
-        <div class="hud-stat">LOCAL <span>temporary file processing</span></div>
-        <div class="hud-divider"></div>
-        <div class="hud-foot"><span>LOCAL-FIRST SCANNING</span><span class="hud-mark">LL / 01</span></div>
-      </aside>
-    </div>
-    <div class="ribbon-wrap" aria-hidden="true">
-      <div class="ribbon-stage"></div>
-    </div>
-    <div class="hero-index" aria-hidden="true"><span>01</span> / SEE WHAT'S HIDDEN</div>
-    <a class="scroll-cue" href="#landing-features" aria-label="Scroll to product capabilities"><span></span> SCROLL TO EXPLORE</a>
-  </section>
 
-  <section class="landing-details" id="landing-features" aria-labelledby="landing-features-title">
-    <div class="landing-section-head">
-      <p class="hero-eyebrow"><span class="signal-dot"></span> BUILT FOR THE MOMENT BEFORE COMMIT</p>
-      <h2 id="landing-features-title">Keep the signal.<br><span class="accent-text">Lose the exposure.</span></h2>
-      <p class="hero-sub">A precise, private security workflow from first scan to safe handoff.</p>
-    </div>
-    <div class="features-grid">
-    <div class="feature-card">
-      <div class="f-icon">🧠</div>
-      <h3>Hybrid Detection</h3>
-      <p>Blends regex patterns, checksums (Luhn, Verhoeff), entropy checks, and Logistic Regression without sending data off your machine.</p>
-    </div>
-    <div class="feature-card">
-      <div class="f-icon">🎯</div>
-      <h3>Context-Aware Scoring</h3>
-      <p>Recognises placeholders (`example.com`, `&lt;TOKEN&gt;`), environment reads, and test fixtures to eliminate false positives.</p>
-    </div>
-    <div class="feature-card">
-      <div class="f-icon">🔒</div>
-      <h3>In-Place Redaction & Audit</h3>
-      <p>Generates sanitised text, code, PDFs, and images with automatic rescan verification and exportable compliance reports.</p>
-    </div>
-    <div class="feature-card">
-      <div class="f-icon">🤝</div>
-      <h3>Safe Team Handoff</h3>
-      <p>Converts project findings into safe `.env.example` templates and setup packages with zero real secret leakage.</p>
-    </div>
-    <div class="feature-card">
-      <div class="f-icon">💻</div>
-      <h3>IDE Guard & Pre-Commit</h3>
-      <p>VS Code extension diagnostics and Git pre-commit hooks to block secrets before they enter version control.</p>
-    </div>
-    <div class="feature-card">
-      <div class="f-icon">📊</div>
-      <h3>User & Admin Dashboards</h3>
-      <p>Track your privacy posture over time with isolated user scan history and privacy-preserving administrative controls.</p>
-    </div>
-    </div>
-  </div>
-  </section>
-  <section class="workflow-section" aria-labelledby="workflow-title">
-    <div class="workflow-intro">
-      <p class="hero-eyebrow"><span class="signal-dot"></span> A CLEARER WAY TO SHIP</p>
-      <h2 id="workflow-title">From first signal<br>to <span class="accent-text">safe handoff.</span></h2>
-      <p>One calm workflow for finding, understanding, and safely sharing sensitive code.</p>
-      <button class="btn primary workflow-cta" data-go-view="scan">Start with a file <span aria-hidden="true">↗</span></button>
-    </div>
-    <div class="workflow-steps">
-      <article class="workflow-step">
-        <span class="step-index">01 / INSPECT</span>
-        <span class="step-icon" aria-hidden="true">⌕</span>
-        <h3>Scan locally</h3>
-        <p>Inspect supported files with hybrid detection while keeping raw file contents on your machine.</p>
-      </article>
-      <article class="workflow-step">
-        <span class="step-index">02 / UNDERSTAND</span>
-        <span class="step-icon" aria-hidden="true">◎</span>
-        <h3>Review with context</h3>
-        <p>See why a finding was flagged, where it appears, and which items need attention.</p>
-      </article>
-      <article class="workflow-step">
-        <span class="step-index">03 / SHARE SAFELY</span>
-        <span class="step-icon" aria-hidden="true">↗</span>
-        <h3>Redact and hand off</h3>
-        <p>Create a sanitised copy and a safe environment template for your team.</p>
-      </article>
-    </div>
-  </section>
-  <section class="product-preview" aria-labelledby="preview-title">
-    <div class="preview-copy">
-      <p class="hero-eyebrow"><span class="signal-dot"></span> THE LEAKLENS WORKSPACE</p>
-      <h2 id="preview-title">Clarity at<br>every <span class="accent-text">step.</span></h2>
-      <p>Move from a private file scan to a verified sanitised export without losing the context behind each finding.</p>
-      <button class="hero-link" data-go-view="dashboard">Explore your dashboard <span aria-hidden="true">→</span></button>
-    </div>
-    <div class="preview-window" aria-label="Illustrative LeakLens workspace preview">
-      <div class="preview-window-bar"><span class="window-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>LEAKLENS / SCAN PREVIEW</span><span class="preview-demo-label">ILLUSTRATIVE</span></div>
-      <div class="preview-window-body">
-        <div class="preview-file"><span class="file-glyph" aria-hidden="true">{ }</span><span><strong>service.config</strong><small>Local scan · sample data</small></span><span class="preview-status"><i></i> REVIEW</span></div>
-        <div class="preview-finding"><span class="finding-level">HIGH</span><span><strong>Credential-like value</strong><small>Line 18 · redacted in preview</small></span><code>sk_••••••••••••••••</code></div>
-        <div class="preview-finding"><span class="finding-level finding-medium">MED</span><span><strong>Potential private key</strong><small>Line 42 · sample only</small></span><code>••••••••••••</code></div>
-        <div class="preview-progress"><span></span></div>
-        <div class="preview-window-foot"><span>Example interface · no real scan data</span><span>LOCAL-FIRST</span></div>
+      <div class="ll-home-chamber-wrap">
+        <div class="ll-home-chamber" id="ll-home-chamber" aria-label="LeakLens optical inspection chamber demonstration">
+          <canvas class="ll-home-chamber-canvas" id="ll-home-canvas" aria-hidden="true"></canvas>
+
+          <div class="ll-home-lens-stage" aria-hidden="true">
+            <div class="ll-home-lens-core">
+              <div class="ll-home-ring ll-home-ring-outer"></div>
+              <div class="ll-home-ring ll-home-ring-ticks"></div>
+              <div class="ll-home-ring ll-home-ring-seg"></div>
+              <div class="ll-home-ring ll-home-ring-inner"></div>
+              <div class="ll-home-aperture">
+                <div class="ll-home-aperture-core"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ll-home-scan-beam" aria-hidden="true"></div>
+
+          <button class="ll-home-doc-card ll-home-doc-1" type="button" data-doc="config.py">
+            <div class="ll-home-doc-head">
+              <span class="ll-home-doc-name">config.py</span>
+              <span class="ll-home-doc-badge">SAMPLE</span>
+            </div>
+            <div class="ll-home-doc-snippet">API_KEY = sk_live_••••••••</div>
+            <div class="ll-home-doc-detail">Illustrative finding · High risk · Masked preview</div>
+          </button>
+
+          <button class="ll-home-doc-card ll-home-doc-2" type="button" data-doc=".env">
+            <div class="ll-home-doc-head">
+              <span class="ll-home-doc-name">.env</span>
+              <span class="ll-home-doc-badge">SAMPLE</span>
+            </div>
+            <div class="ll-home-doc-snippet">PASSWORD = ••••••••</div>
+            <div class="ll-home-doc-detail">Illustrative finding · High risk · Masked preview</div>
+          </button>
+
+          <button class="ll-home-doc-card ll-home-doc-3" type="button" data-doc="report.pdf">
+            <div class="ll-home-doc-head">
+              <span class="ll-home-doc-name">report.pdf</span>
+              <span class="ll-home-doc-badge">SAMPLE</span>
+            </div>
+            <div class="ll-home-doc-snippet">EMAIL = u••••@example.com</div>
+            <div class="ll-home-doc-detail">Illustrative finding · Medium risk · Masked preview</div>
+          </button>
+
+          <button class="ll-home-doc-card ll-home-doc-4" type="button" data-doc="credentials.json">
+            <div class="ll-home-doc-head">
+              <span class="ll-home-doc-name">credentials.json</span>
+              <span class="ll-home-doc-badge">SAMPLE</span>
+            </div>
+            <div class="ll-home-doc-snippet">API_KEY = sk_live_••••••••</div>
+            <div class="ll-home-doc-detail">Illustrative finding · High risk · Masked preview</div>
+          </button>
+
+          <div class="ll-home-chamber-hud" role="status" aria-live="polite">
+            <span class="ll-home-hud-stage" id="ll-home-stage-label">STAGE 01–04 · CHAMBER &amp; FILES READY</span>
+            <span class="ll-home-verify-strip" id="ll-home-verify-strip" hidden>
+              <span>REDACTION COMPLETE</span>
+              <span>·</span>
+              <span>VERIFICATION PASSED</span>
+              <span>·</span>
+              <span>SAFE COPY READY</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="ll-home-chamber-controls">
+          <span class="ll-home-demo-tag">Illustrative demonstration data · Synthetic values only</span>
+          <span style="font-family:var(--mono);font-size:0.68rem;color:var(--ll-muted);">Click a file card to inspect preview</span>
+        </div>
       </div>
     </div>
   </section>
-  <section class="faq-section" aria-labelledby="faq-title">
-    <div class="faq-heading">
-      <p class="hero-eyebrow"><span class="signal-dot"></span> GOOD TO KNOW</p>
-      <h2 id="faq-title">Questions,<br><span class="accent-text">answered.</span></h2>
-      <p>Clear answers about how LeakLens handles your files.</p>
-    </div>
-    <div class="faq-list">
-      <details class="faq-item">
-        <summary>Are my files sent to a cloud API?<span aria-hidden="true"></span></summary>
-        <p>LeakLens is designed for local-first scanning. Review your deployment and configuration to understand any network behavior in your own environment.</p>
-      </details>
-      <details class="faq-item">
-        <summary>Does redaction revoke a leaked credential?<span aria-hidden="true"></span></summary>
-        <p>No. Redaction creates a safer copy; rotate any real credential that may already have been exposed.</p>
-      </details>
-      <details class="faq-item">
-        <summary>Which files can I inspect?<span aria-hidden="true"></span></summary>
-        <p>Supported extensions and upload limits are shown in the scanner and are loaded from the running application.</p>
-      </details>
-      <details class="faq-item">
-        <summary>Can I prevent secrets from reaching a commit?<span aria-hidden="true"></span></summary>
-        <p>Use IDE Guard and the Git pre-commit hook to inspect your workflow before changes are committed.</p>
-      </details>
+
+  <!-- SECTION 01 — THE PROBLEM -->
+  <section class="ll-home-problem" id="ll-home-problem" aria-labelledby="ll-problem-title">
+    <div class="ll-home-container">
+      <p class="ll-home-eyebrow"><span class="ll-home-eyebrow-dot" aria-hidden="true"></span> SECTION 01 / THE EXPOSURE GAP</p>
+      <h2 class="ll-home-h2" id="ll-problem-title">Most leaks happen <span class="ll-home-h2-accent">before you notice.</span></h2>
+      <p class="ll-home-lead">
+        Sensitive values slip into shared archives, tickets, notebooks, exports, and commits long after the initial draft feels routine. Distinguishing ordinary text from high-risk tokens requires structured inspection before anything leaves your hands.
+      </p>
+
+      <div class="ll-home-problem-grid">
+        <div class="ll-home-risk-list">
+          <div class="ll-home-risk-item">
+            <strong>API keys</strong>
+            <span>Service and provider keys embedded in scripts, configs, or copied snippets.</span>
+          </div>
+          <div class="ll-home-risk-item">
+            <strong>Access tokens</strong>
+            <span>Short-lived or long-lived session and automation tokens left in local files.</span>
+          </div>
+          <div class="ll-home-risk-item">
+            <strong>Passwords</strong>
+            <span>Database, service, or staging credentials pasted during debugging.</span>
+          </div>
+          <div class="ll-home-risk-item">
+            <strong>Private keys</strong>
+            <span>Cryptographic or signing material included inside bundles or archives.</span>
+          </div>
+          <div class="ll-home-risk-item">
+            <strong>Personal information</strong>
+            <span>Email addresses, identifiers, and contact details inside reports or logs.</span>
+          </div>
+          <div class="ll-home-risk-item">
+            <strong>Sensitive metadata</strong>
+            <span>Document or file properties that reveal internal paths, authors, or origins.</span>
+          </div>
+        </div>
+
+        <div class="ll-home-doc-stream" aria-label="Animated document signal versus suspicious fragments">
+          <div class="ll-home-stream-bar">
+            <span>DOCUMENT STREAM · SYNTHETIC FRAGMENTS</span>
+            <span class="ll-home-demo-tag">ILLUSTRATIVE EXAMPLE</span>
+          </div>
+          <div class="ll-home-stream-lines">
+            <div class="ll-home-stream-line">
+              <span>service_name = "checkout-worker"</span>
+              <span class="ll-home-tag-ordinary">ORDINARY</span>
+            </div>
+            <div class="ll-home-stream-line is-exposed">
+              <span>API_KEY = sk_live_••••••••</span>
+              <span class="ll-home-tag-suspect">EXPOSED TOKEN</span>
+            </div>
+            <div class="ll-home-stream-line">
+              <span>retry_backoff_seconds = 15</span>
+              <span class="ll-home-tag-ordinary">ORDINARY</span>
+            </div>
+            <div class="ll-home-stream-line is-exposed">
+              <span>EMAIL = u••••@example.com</span>
+              <span class="ll-home-tag-suspect">PERSONAL DATA</span>
+            </div>
+            <div class="ll-home-stream-line is-exposed">
+              <span>PASSWORD = ••••••••</span>
+              <span class="ll-home-tag-suspect">CREDENTIAL</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
-  <section class="landing-contact">
-    <div>
-      <p class="hero-eyebrow"><span class="signal-dot"></span> KEEP YOUR NEXT HANDOFF CLEAN</p>
-      <h2>Find it before<br>it <span class="accent-text">travels.</span></h2>
-    </div>
-    <div class="contact-actions">
-      <p>Start with a local scan, or add LeakLens to your developer workflow.</p>
-      <button class="btn primary lg" data-go-view="scan">Scan a file <span aria-hidden="true">↗</span></button>
-      <button class="btn" data-go-view="ide">Set up IDE Guard</button>
+
+  <!-- SECTION 02 — THE SOLUTION -->
+  <section class="ll-home-solution" id="ll-home-solution" aria-labelledby="ll-solution-title">
+    <div class="ll-home-container">
+      <p class="ll-home-eyebrow"><span class="ll-home-eyebrow-dot" aria-hidden="true"></span> SECTION 02 / FIVE-STAGE PIPELINE</p>
+      <h2 class="ll-home-h2" id="ll-solution-title">One inspection. <span class="ll-home-h2-accent">Multiple layers of protection.</span></h2>
+      <p class="ll-home-lead">
+        Move through a clear sequence from file inspection to verified redaction so you can see what was found, mask what you choose, and confirm the sanitised output.
+      </p>
+
+      <svg class="ll-home-pipeline-svg" viewBox="0 0 1000 26" preserveAspectRatio="none" aria-hidden="true">
+        <line class="ll-home-pipeline-path" x1="20" y1="13" x2="980" y2="13"></line>
+        <line class="ll-home-pipeline-pulse" x1="20" y1="13" x2="980" y2="13"></line>
+      </svg>
+
+      <div class="ll-home-pipeline">
+        <article class="ll-home-stage-node">
+          <div class="ll-home-stage-code">01 — SCAN</div>
+          <h3>Inspect supported files</h3>
+          <p>Submit supported files to your configured LeakLens scanner to extract text, structure, and metadata.</p>
+        </article>
+        <article class="ll-home-stage-node">
+          <div class="ll-home-stage-code">02 — DETECT</div>
+          <h3>Identify potential sensitive information</h3>
+          <p>Surface candidate credentials, secrets, personal fields, and metadata entries across the file.</p>
+        </article>
+        <article class="ll-home-stage-node">
+          <div class="ll-home-stage-code">03 — EXPLAIN</div>
+          <h3>Understand the findings and their risk</h3>
+          <p>Inspect context, severity, and potential exposure impact before deciding what to mask.</p>
+        </article>
+        <article class="ll-home-stage-node">
+          <div class="ll-home-stage-code">04 — REDACT</div>
+          <h3>Create a separate sanitised copy</h3>
+          <p>Apply selective redaction to generate a sanitised copy while keeping your original file untouched.</p>
+        </article>
+        <article class="ll-home-stage-node">
+          <div class="ll-home-stage-code">05 — VERIFY</div>
+          <h3>Rescan the result</h3>
+          <p>Run a verification rescan on the sanitised output to check what remains before sharing.</p>
+        </article>
+      </div>
     </div>
   </section>
-  <footer class="landing-footer">
-    <div class="footer-brand"><span class="logo" aria-hidden="true"></span><strong>LeakLens</strong><span>Privacy-aware security for the work you ship.</span></div>
-    <nav aria-label="Product navigation">
-      <button data-go-view="scan">Scanner</button><button data-go-view="team">Team setup</button><button data-go-view="ide">IDE Guard</button><button data-go-view="eval">Model metrics</button>
-    </nav>
-    <span class="footer-note">Local-first by design.</span>
+
+  <!-- SECTION 03 — PRODUCT FEATURES -->
+  <section class="ll-home-features" id="ll-home-features" aria-labelledby="ll-features-title">
+    <div class="ll-home-container">
+      <p class="ll-home-eyebrow"><span class="ll-home-eyebrow-dot" aria-hidden="true"></span> SECTION 03 / CAPABILITIES</p>
+      <h2 class="ll-home-h2" id="ll-features-title">Security with context. <span class="ll-home-h2-accent">Not just alerts.</span></h2>
+      <p class="ll-home-lead">
+        Designed for developers and security reviewers who need clear context, selective redaction, and team workflows rather than noisy raw pattern matches.
+      </p>
+
+      <div class="ll-home-bento">
+        <article class="ll-home-bento-cell ll-home-bento-hero">
+          <span class="ll-home-bento-kicker">Detection Engine</span>
+          <h3>Hybrid Detection</h3>
+          <p>Combines pattern rules, format/checksum checks, and machine learning models to identify candidate secrets and sensitive values across files.</p>
+        </article>
+
+        <article class="ll-home-bento-cell ll-home-bento-wide">
+          <span class="ll-home-bento-kicker">Signal Filtering</span>
+          <h3>Context-Aware Classification</h3>
+          <p>Evaluates surrounding code and document context to separate likely real exposures from test examples, comments, or placeholders.</p>
+        </article>
+
+        <article class="ll-home-bento-cell ll-home-bento-med">
+          <span class="ll-home-bento-kicker">Risk Clarity</span>
+          <h3>Explainable Risk and Provider Blast-Radius Explanations</h3>
+          <p>Shows why an item was flagged, which provider or category it resembles, and what could be affected if exposed.</p>
+        </article>
+
+        <article class="ll-home-bento-cell ll-home-bento-med">
+          <span class="ll-home-bento-kicker">Targeted Masking</span>
+          <h3>Selective Redaction</h3>
+          <p>Choose specific findings to redact and generate a separate sanitised copy in your preferred redaction style.</p>
+        </article>
+
+        <article class="ll-home-bento-cell ll-home-bento-med">
+          <span class="ll-home-bento-kicker">Output Check</span>
+          <h3>Verification Rescan</h3>
+          <p>Automatically re-inspects the sanitised output so you can verify whether targeted findings were masked.</p>
+        </article>
+
+        <article class="ll-home-bento-cell ll-home-bento-med">
+          <span class="ll-home-bento-kicker">Model Tuning</span>
+          <h3>Feedback Reporting</h3>
+          <p>Report false positives or missed findings so reviewers and maintainers can improve detection quality over time.</p>
+        </article>
+
+        <article class="ll-home-bento-cell ll-home-bento-med">
+          <span class="ll-home-bento-kicker">Collaboration</span>
+          <h3>Safe Team Handoff</h3>
+          <p>Generate placeholder-based environment templates and handoff packages without embedding raw secret values.</p>
+        </article>
+
+        <article class="ll-home-bento-cell ll-home-bento-med">
+          <span class="ll-home-bento-kicker">Credential Storage</span>
+          <h3>Encrypted Credential Vault</h3>
+          <p>Store account-scoped credentials encrypted at rest using Scrypt-derived keys and AES-256-GCM authenticated encryption.</p>
+        </article>
+
+        <article class="ll-home-bento-cell ll-home-bento-wide">
+          <span class="ll-home-bento-kicker">Visibility &amp; Governance</span>
+          <h3>User and Admin Dashboards</h3>
+          <p>Review personal scan trends, history, and reports, while administrators manage accounts, policies, and privacy-preserving audit logs.</p>
+        </article>
+
+        <article class="ll-home-bento-cell ll-home-bento-wide">
+          <span class="ll-home-bento-kicker">Account Security</span>
+          <h3>Two-Factor Authentication</h3>
+          <p>Protect user accounts with TOTP authenticator verification and single-use recovery codes.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 04 — PRODUCT PREVIEW -->
+  <section class="ll-home-preview" id="ll-home-preview" aria-labelledby="ll-preview-title">
+    <div class="ll-home-container">
+      <p class="ll-home-eyebrow"><span class="ll-home-eyebrow-dot" aria-hidden="true"></span> SECTION 04 / INSPECTION WORKSPACE</p>
+      <h2 class="ll-home-h2" id="ll-preview-title">See exactly what <span class="ll-home-h2-accent">needs attention.</span></h2>
+      <p class="ll-home-lead">
+        Inspect masked previews, provider context, remediation notes, and verification status side by side before exporting a sanitised copy.
+      </p>
+
+      <div class="ll-home-preview-shell" aria-label="Illustrative LeakLens inspection panel preview">
+        <div class="ll-home-preview-topbar">
+          <div>
+            <strong>service_settings.py</strong>
+            <span style="color:var(--ll-muted);"> · Python file · 2.4 KB · Line-level inspection</span>
+          </div>
+          <span class="ll-home-demo-tag">Illustrative mock data · Not a live scan</span>
+        </div>
+
+        <div class="ll-home-preview-grid">
+          <div class="ll-home-preview-col">
+            <div class="ll-home-finding-box">
+              <div class="ll-home-finding-head">
+                <span class="ll-home-sev-high">HIGH RISK</span>
+                <strong>API Key Pattern</strong>
+                <span style="font-family:var(--mono);font-size:0.68rem;color:var(--ll-muted);">Provider: Token / Example</span>
+              </div>
+              <div style="font-family:var(--mono);font-size:0.74rem;color:var(--ll-white);">
+                Masked preview: <code>sk_live_••••••••</code> · Line 12, col 18
+              </div>
+              <p><strong>Why flagged:</strong> Matches a live-style key prefix with high character variety outside a test block.</p>
+              <p><strong>Recommended:</strong> Move the value into an environment variable or secret store and redact this copy.</p>
+            </div>
+
+            <div class="ll-home-finding-box" style="margin-bottom:0;">
+              <div class="ll-home-finding-head">
+                <span class="ll-home-sev-med">MEDIUM RISK</span>
+                <strong>Email Address</strong>
+                <span style="font-family:var(--mono);font-size:0.68rem;color:var(--ll-muted);">Category: Contact / Example</span>
+              </div>
+              <div style="font-family:var(--mono);font-size:0.74rem;color:var(--ll-white);">
+                Masked preview: <code>u••••@example.com</code> · Line 27, col 11
+              </div>
+              <p><strong>Why flagged:</strong> Contact address detected in configuration notes prior to external sharing.</p>
+              <p><strong>Recommended:</strong> Redact if external recipients do not require contact details.</p>
+            </div>
+          </div>
+
+          <div class="ll-home-preview-col">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;">
+              <strong style="font-size:0.95rem;">Selected Redaction &amp; Sanitised Copy</strong>
+              <span style="font-family:var(--mono);font-size:0.68rem;color:var(--ll-green);">VERIFIED · SAFE COPY READY</span>
+            </div>
+            <div class="ll-home-sanitized-box"># Sanitised output (illustrative demonstration)
+SERVICE_ENV = "staging"
+API_KEY = "[REDACTED:API_KEY]"
+PASSWORD = "[REDACTED:SECRET]"
+CONTACT_EMAIL = "[REDACTED:EMAIL]"
+
+# Verification rescan: 0 selected findings remaining</div>
+            <div style="margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;">
+              <span style="font-size:0.8rem;color:var(--ll-muted);">Selected findings masked into a separate output file.</span>
+              <button class="ll-home-btn-secondary" type="button" data-go-view="scan" style="min-height:38px;padding:0 14px;font-size:0.7rem;">
+                Open real scanner ↗
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 05 — DEVELOPER TOOLS -->
+  <section class="ll-home-devtools" id="ll-home-devtools" aria-labelledby="ll-devtools-title">
+    <div class="ll-home-container">
+      <p class="ll-home-eyebrow"><span class="ll-home-eyebrow-dot" aria-hidden="true"></span> SECTION 05 / WORKFLOW INTEGRATIONS</p>
+      <h2 class="ll-home-h2" id="ll-devtools-title">Protection belongs <span class="ll-home-h2-accent">where you build.</span></h2>
+      <p class="ll-home-lead">
+        Bring LeakLens checks into your editor, pre-commit workflow, command line, API calls, and CI reporting without inventing external tools.
+      </p>
+
+      <div class="ll-home-devtools-grid">
+        <div class="ll-home-tool-list" role="tablist" aria-label="LeakLens developer integrations">
+          <button class="ll-home-tool-btn is-selected" type="button" data-tool="vscode">
+            <strong>VS Code IDE Guard</strong>
+            <span>In-editor diagnostics &amp; QuickFix</span>
+          </button>
+          <button class="ll-home-tool-btn" type="button" data-tool="hook">
+            <strong>Git Pre-Commit Hook</strong>
+            <span>Inspect staged changes before commit</span>
+          </button>
+          <button class="ll-home-tool-btn" type="button" data-tool="cli">
+            <strong>Standalone CLI</strong>
+            <span>Scan &amp; redact files from terminal</span>
+          </button>
+          <button class="ll-home-tool-btn" type="button" data-tool="api">
+            <strong>REST API</strong>
+            <span>Programmatic scan &amp; redaction</span>
+          </button>
+          <button class="ll-home-tool-btn" type="button" data-tool="pat">
+            <strong>Personal Access Tokens</strong>
+            <span>Scoped tokens for CLI &amp; automation</span>
+          </button>
+          <button class="ll-home-tool-btn" type="button" data-tool="sarif">
+            <strong>SARIF Export</strong>
+            <span>Standard static analysis output</span>
+          </button>
+        </div>
+
+        <div class="ll-home-terminal">
+          <div class="ll-home-terminal-head">
+            <span id="ll-home-term-file">ide-extension / diagnostics.ts</span>
+            <span>WORKFLOW SNIPPET</span>
+          </div>
+          <pre id="ll-home-term-code">// LeakLens IDE Guard (illustrative example)
+// Flags hardcoded token-like literals in-memory before save
+const config = {
+  endpoint: "https://api.example.internal",
+  apiKey: "sk_live_••••••••" // -&gt; QuickFix: read from environment variable
+};</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 06 — PRIVACY AND TRUST -->
+  <section class="ll-home-privacy" id="ll-home-privacy" aria-labelledby="ll-privacy-title">
+    <div class="ll-home-container">
+      <p class="ll-home-eyebrow"><span class="ll-home-eyebrow-dot" aria-hidden="true"></span> SECTION 06 / PRIVACY &amp; DEPLOYMENT REALITY</p>
+      <h2 class="ll-home-h2" id="ll-privacy-title">Security should not create <span class="ll-home-h2-accent">another privacy problem.</span></h2>
+      <p class="ll-home-lead">
+        Clear operational facts about how files, previews, redactions, and credentials are handled so you can evaluate your deployment accurately.
+      </p>
+
+      <div class="ll-home-privacy-grid">
+        <div class="ll-home-privacy-card">
+          <strong>Local-first processing depends on deployment configuration</strong>
+          <p>How scans run and which detectors or OCR modules are enabled depend on how your LeakLens instance is deployed and configured.</p>
+        </div>
+        <div class="ll-home-privacy-card">
+          <strong>Processed by the configured LeakLens server</strong>
+          <p>Submitted files are inspected by the configured LeakLens server rather than promised to never touch a server boundary.</p>
+        </div>
+        <div class="ll-home-privacy-card">
+          <strong>Temporary storage &amp; configured retention</strong>
+          <p>Web scans use temporary storage according to your instance&apos;s configured retention settings rather than universal zero-retention.</p>
+        </div>
+        <div class="ll-home-privacy-card">
+          <strong>Masked previews in findings</strong>
+          <p>Findings display masked previews to reduce unnecessary raw value exposure during review.</p>
+        </div>
+        <div class="ll-home-privacy-card">
+          <strong>Redaction creates a safer copy</strong>
+          <p>Redacting selected findings produces a separate sanitised copy so you can review and share a cleaner version.</p>
+        </div>
+        <div class="ll-home-privacy-card">
+          <strong>Rotation or revocation may still be needed</strong>
+          <p>Redacting a file does not revoke credentials that were already exposed—rotate or revoke any real secret that may have leaked.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 07 — FAQ -->
+  <section class="ll-home-faq" id="ll-home-faq" aria-labelledby="ll-faq-title">
+    <div class="ll-home-container ll-home-faq-layout">
+      <div>
+        <p class="ll-home-eyebrow"><span class="ll-home-eyebrow-dot" aria-hidden="true"></span> SECTION 07 / FREQUENTLY ASKED QUESTIONS</p>
+        <h2 class="ll-home-h2" id="ll-faq-title">Questions, <span class="ll-home-h2-accent">answered.</span></h2>
+        <p class="ll-home-lead">Direct answers on supported files, processing boundaries, redaction, and developer tools.</p>
+      </div>
+
+      <div class="ll-home-faq-list">
+        <div class="ll-home-faq-item">
+          <button class="ll-home-faq-trigger" type="button" aria-expanded="false" aria-controls="ll-faq-1">
+            <span>What file types does LeakLens support?</span>
+            <span class="ll-home-faq-plus" aria-hidden="true"></span>
+          </button>
+          <div class="ll-home-faq-panel" id="ll-faq-1" hidden>
+            Supported file extensions and size limits are configured on the running LeakLens instance and displayed directly inside the Scan Files view once loaded.
+          </div>
+        </div>
+
+        <div class="ll-home-faq-item">
+          <button class="ll-home-faq-trigger" type="button" aria-expanded="false" aria-controls="ll-faq-2">
+            <span>Where are my files processed?</span>
+            <span class="ll-home-faq-plus" aria-hidden="true"></span>
+          </button>
+          <div class="ll-home-faq-panel" id="ll-faq-2" hidden>
+            Files are processed by the configured LeakLens server according to its deployment setup and temporary retention policy. Local-first operation depends on how the server and environment are deployed.
+          </div>
+        </div>
+
+        <div class="ll-home-faq-item">
+          <button class="ll-home-faq-trigger" type="button" aria-expanded="false" aria-controls="ll-faq-3">
+            <span>Does LeakLens guarantee detection?</span>
+            <span class="ll-home-faq-plus" aria-hidden="true"></span>
+          </button>
+          <div class="ll-home-faq-panel" id="ll-faq-3" hidden>
+            No security scanner can guarantee detection of every secret or zero false positives. LeakLens combines rule, context, and ML signals to surface likely candidates for human review and verification.
+          </div>
+        </div>
+
+        <div class="ll-home-faq-item">
+          <button class="ll-home-faq-trigger" type="button" aria-expanded="false" aria-controls="ll-faq-4">
+            <span>What happens after redaction?</span>
+            <span class="ll-home-faq-plus" aria-hidden="true"></span>
+          </button>
+          <div class="ll-home-faq-panel" id="ll-faq-4" hidden>
+            LeakLens generates a separate sanitised copy with selected findings masked and runs a verification rescan so you can inspect the remaining findings before sharing.
+          </div>
+        </div>
+
+        <div class="ll-home-faq-item">
+          <button class="ll-home-faq-trigger" type="button" aria-expanded="false" aria-controls="ll-faq-5">
+            <span>Does redaction revoke credentials?</span>
+            <span class="ll-home-faq-plus" aria-hidden="true"></span>
+          </button>
+          <div class="ll-home-faq-panel" id="ll-faq-5" hidden>
+            No. Redacting a file creates a safer copy; it does not revoke or invalidate live credentials. If a real credential was ever exposed elsewhere, rotate or revoke it with the provider.
+          </div>
+        </div>
+
+        <div class="ll-home-faq-item">
+          <button class="ll-home-faq-trigger" type="button" aria-expanded="false" aria-controls="ll-faq-6">
+            <span>What does IDE Guard require?</span>
+            <span class="ll-home-faq-plus" aria-hidden="true"></span>
+          </button>
+          <div class="ll-home-faq-panel" id="ll-faq-6" hidden>
+            IDE Guard runs from the VS Code extension alongside a reachable LeakLens backend endpoint (such as your local instance) and can be paired with the Git pre-commit hook script.
+          </div>
+        </div>
+
+        <div class="ll-home-faq-item">
+          <button class="ll-home-faq-trigger" type="button" aria-expanded="false" aria-controls="ll-faq-7">
+            <span>Is image OCR available?</span>
+            <span class="ll-home-faq-plus" aria-hidden="true"></span>
+          </button>
+          <div class="ll-home-faq-panel" id="ll-faq-7" hidden>
+            Image OCR availability depends on whether OCR is enabled on your LeakLens installation; the scanner header and status card report the live OCR state for this instance.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 08 — FINAL CTA & FOOTER -->
+  <section class="ll-home-final-cta" id="ll-home-final-cta" aria-labelledby="ll-final-cta-title">
+    <div class="ll-home-container">
+      <div class="ll-home-cta-banner">
+        <div>
+          <p class="ll-home-eyebrow"><span class="ll-home-eyebrow-dot" aria-hidden="true"></span> SECTION 08 / READY TO INSPECT</p>
+          <h2 class="ll-home-h2" id="ll-final-cta-title" style="margin-bottom:8px;">Know what <span class="ll-home-h2-accent">leaves your hands.</span></h2>
+          <p class="ll-home-lead">Inspect, understand and protect sensitive information before sharing your work.</p>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
+          <button class="ll-home-btn-primary" type="button" data-go-view="scan">
+            SCAN A FILE <span aria-hidden="true">↗</span>
+          </button>
+          <button class="ll-home-btn-secondary" type="button" data-go-view="ide">
+            EXPLORE DEVELOPER TOOLS <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="ll-home-footer" aria-label="Homepage footer">
+    <div class="ll-home-footer-inner">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="logo" aria-hidden="true"></span>
+        <strong style="color:var(--ll-white);">LeakLens</strong>
+        <span>· Digital Inspection Chamber</span>
+      </div>
+      <nav class="ll-home-footer-nav" aria-label="Quick view links">
+        <button type="button" data-go-view="scan">Scan Files</button>
+        <button type="button" data-go-view="dashboard">Dashboard</button>
+        <button type="button" data-go-view="team">Team Setup</button>
+        <button type="button" data-go-view="ide">IDE Guard</button>
+        <button type="button" data-go-view="eval">Model Metrics</button>
+      </nav>
+      <span>Configured per deployment</span>
+    </div>
   </footer>
 </section>
 
@@ -1000,5 +1423,6 @@ AWS_KEY = "AKIAU2GCFJIBS14Q4CTV"
 
 </main>
 <script src="/static/app.js"></script>
+<script src="/static/home-chamber.js"></script>
 </body>
 </html>

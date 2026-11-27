@@ -126,8 +126,24 @@ def test_index_and_headers(client):
     r = client.get("/")
     html = r.get_data(as_text=True)
     assert r.status_code == 200 and b"LeakLens" in r.data
-    assert 'id="view-home" class="view"' in html
+    assert "The Digital Inspection Chamber" in html
+    assert "https://cdnjs.cloudflare.com" in r.headers["Content-Security-Policy"]
+
+
+def test_application_route_preserved(client):
+    r = client.get("/app")
+    html = r.get_data(as_text=True)
+    assert r.status_code == 200 and b"LeakLens" in r.data
+    assert 'id="view-home"' in html
+    assert "ll-home-root" in html
     assert 'id="view-scan" class="view scan-page" hidden' in html
-    assert 'class="ribbon-stage"' in html and "Tracing<br>the" in html
+    assert 'class="ll-home-hero"' in html and "Trace what" in html
     assert '/static/tokens.css' in html
     assert "default-src 'self'" in r.headers["Content-Security-Policy"]
+
+
+def test_chamber_frontend_routes(client):
+    for route in ("/chamber", "/landing"):
+        r = client.get(route)
+        assert r.status_code == 302
+        assert r.headers["Location"] == "/"

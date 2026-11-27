@@ -19,7 +19,7 @@ from datetime import datetime, timedelta
 from functools import wraps
 from typing import Optional
 
-from flask import (Flask, abort, jsonify, render_template, request,
+from flask import (Flask, abort, jsonify, redirect, render_template, request,
                    send_file, session)
 
 import config
@@ -159,11 +159,21 @@ def check_csrf_protection():
 def apply_headers(resp):
     resp.headers["X-Content-Type-Options"] = "nosniff"
     resp.headers["Referrer-Policy"] = "no-referrer"
-    resp.headers["Content-Security-Policy"] = (
-        "default-src 'self'; img-src 'self' blob: data:; "
-        "style-src 'self' 'unsafe-inline'; "
-        "object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
-    )
+    if request.path in ("/", "/chamber", "/landing"):
+        resp.headers["Content-Security-Policy"] = (
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; "
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+            "font-src 'self' https://fonts.gstatic.com; "
+            "img-src 'self' blob: data:; "
+            "object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+        )
+    else:
+        resp.headers["Content-Security-Policy"] = (
+            "default-src 'self'; img-src 'self' blob: data:; "
+            "style-src 'self' 'unsafe-inline'; "
+            "object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+        )
     if request.path.startswith("/api/"):
         resp.headers["Cache-Control"] = "no-store"
     return resp
@@ -191,8 +201,19 @@ def crash(e):
 
 # ------------------------------------------------------------------ views & status
 @app.get("/")
+def landing():
+    return render_template("chamber.html")
+
+
+@app.get("/app")
 def index():
     return render_template("index.html")
+
+
+@app.get("/chamber")
+@app.get("/landing")
+def chamber_alias():
+    return redirect("/", code=302)
 
 
 @app.get("/api/status")

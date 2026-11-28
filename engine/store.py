@@ -143,6 +143,29 @@ def _db():
         status TEXT NOT NULL DEFAULT 'active'
     )""")
 
+    # External OAuth / Identity Provider mappings (e.g., Google 'sub')
+    con.execute("""CREATE TABLE IF NOT EXISTS user_identities (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        provider TEXT NOT NULL,
+        provider_sub TEXT NOT NULL,
+        email TEXT,
+        email_verified INTEGER DEFAULT 0,
+        created_at REAL NOT NULL,
+        UNIQUE(provider, provider_sub)
+    )""")
+
+    # Short-lived single-use tokens for password-verified account linking
+    con.execute("""CREATE TABLE IF NOT EXISTS oauth_link_tokens (
+        token TEXT PRIMARY KEY,
+        provider TEXT NOT NULL,
+        provider_sub TEXT NOT NULL,
+        email TEXT NOT NULL,
+        email_verified INTEGER DEFAULT 0,
+        expires_at REAL NOT NULL,
+        used INTEGER DEFAULT 0
+    )""")
+
     return con
 
 
@@ -228,9 +251,120 @@ def update_user_status(user_id: str, status: str):
 def delete_user(user_id: str):
     with _db() as con:
         con.execute("DELETE FROM users WHERE id=?", (user_id,))
+        con.execute("DELETE FROM user_identities WHERE user_id=?", (user_id,))
         con.execute("DELETE FROM scans WHERE user_id=?", (user_id,))
         con.execute("DELETE FROM user_vault WHERE user_id=?", (user_id,))
         con.execute("DELETE FROM twofa_temp_tokens WHERE user_id=?", (user_id,))
+
+
+# ----------------------------------------------------------------- External Identity Linking
+def get_user_by_identity(provider: str, provider_sub: str) -> Optional[dict]:
+    provider = (provider or "").strip().lower()
+    provider_sub = (provider_sub or "").strip()
+    if not provider or not provider_sub:
+        return None
+    with _db() as con:
+        row = con.execute(
+            """SELECT u.* FROM users u
+               JOIN user_identities ui ON ui.user_id = u.id
+               WHERE ui.provider=? AND ui.provider_sub=?""",
+            (provider, provider_sub),
+        ).fetchone()
+        return dict(row) if row else None
+
+
+def link_user_identity(
+    user_id: str, provider: str, provider_sub: str, email: Optional[str], email_verified: bool
+) -> dict:
+    provider = (provider or "").strip().lower()
+    provider_sub = (provider_sub or "").strip()
+    clean_email = (email or "").strip().lower() or None
+    if not user_id or not provider or not provider_sub:
+        raise ValueError("Invalid identity linking parameters.")
+    ident_id = uuid.uuid4().hex
+    now = time.time()
+    with _db() as con:
+        existing = con.execute(
+            "SELECT user_id FROM user_identities WHERE provider=? AND provider_sub=?",
+            (provider, provider_sub),
+        ).fetchone()
+        if existing:
+            if existing["user_id"] != user_id:
+                raise ValueError("This external identity is already linked to another account.")
+            return {"id": ident_id, "user_id": user_id, "provider": provider, "provider_sub": provider_sub}
+        con.execute(
+            """INSERT INTO user_identities (id, user_id, provider, provider_sub, email, email_verified, created_at)
+               VALUES (?,?,?,?,?,?,?)""",
+            (ident_id, user_id, provider, provider_sub, clean_email, 1 if email_verified else 0, now),
+        )
+    return {"id": ident_id, "user_id": user_id, "provider": provider, "provider_sub": provider_sub}
+
+
+def _unique_username(con: sqlite3.Connection, seed: str) -> str:
+    base = re.sub(r"[^a-z0-9_]", "_", (seed or "user").strip().lower()).strip("_")
+    if len(base) < 3:
+        base = f"user_{base or 'll'}"
+    base = base[:24]
+    candidate = base
+    suffix = 1
+    while con.execute("SELECT 1 FROM users WHERE username=?", (candidate,)).fetchone():
+        suffix += 1
+        candidate = f"{base[:20]}_{suffix}"
+    return candidate
+
+
+def create_google_user(email: str, name: str, provider_sub: str, email_verified: bool) -> dict:
+    email = (email or "").strip().lower()
+    provider_sub = (provider_sub or "").strip()
+    if not email or not provider_sub or not email_verified:
+        raise ValueError("Verified email and Google subject are required.")
+
+    user_id = uuid.uuid4().hex
+    ident_id = uuid.uuid4().hex
+    # Non-loginable random password hash; user can set a password later via profile/reset.
+    pwhash = generate_password_hash(secrets.token_urlsafe(48))
+    now = time.time()
+    seed = name or email.split("@")[0]
+
+    with _db() as con:
+        if con.execute("SELECT 1 FROM users WHERE email=?", (email,)).fetchone():
+            raise ValueError("An account with this email already exists.")
+        if con.execute("SELECT 1 FROM user_identities WHERE provider='google' AND provider_sub=?", (provider_sub,)).fetchone():
+            raise ValueError("This Google account is already linked.")
+        username = _unique_username(con, seed)
+        con.execute(
+            "INSERT INTO users (id, username, email, password_hash, role, status, created_at, totp_enabled) VALUES (?,?,?,?,?,?,?,0)",
+            (user_id, username, email, pwhash, "user", "active", now),
+        )
+        con.execute(
+            """INSERT INTO user_identities (id, user_id, provider, provider_sub, email, email_verified, created_at)
+               VALUES (?,?,?,?,?,?,?)""",
+            (ident_id, user_id, "google", provider_sub, email, 1, now),
+        )
+    return get_user_by_id(user_id)
+
+
+def create_oauth_link_token(provider: str, provider_sub: str, email: str, email_verified: bool) -> str:
+    token = secrets.token_urlsafe(32)
+    expires = time.time() + 300  # 5 minutes
+    with _db() as con:
+        con.execute(
+            """INSERT INTO oauth_link_tokens (token, provider, provider_sub, email, email_verified, expires_at, used)
+               VALUES (?,?,?,?,?,?,0)""",
+            (token, provider, provider_sub, email.strip().lower(), 1 if email_verified else 0, expires),
+        )
+    return token
+
+
+def consume_oauth_link_token(token: str) -> Optional[dict]:
+    with _db() as con:
+        row = con.execute(
+            "SELECT * FROM oauth_link_tokens WHERE token=?", (token,)
+        ).fetchone()
+        if not row or row["used"] or time.time() > row["expires_at"]:
+            return None
+        con.execute("UPDATE oauth_link_tokens SET used=1 WHERE token=?", (token,))
+        return dict(row)
 
 
 # ----------------------------------------------------------------- Rate limiting

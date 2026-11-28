@@ -7,6 +7,8 @@
 <link rel="stylesheet" href="/static/tokens.css">
 <link rel="stylesheet" href="/static/style.css">
 <link rel="stylesheet" href="/static/home-chamber.css">
+<link rel="stylesheet" href="/static/app-shell.css">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 <header class="top">
@@ -633,57 +635,35 @@ const config = {
 
 <!-- ================================= SCAN VIEW ================================= -->
 <section id="view-scan" class="view scan-page" hidden>
-  <section class="scan-hero" aria-labelledby="scan-title">
-    <div class="scan-hero-copy">
-      <p class="scan-eyebrow"><span class="signal-dot"></span> LEAKLENS FILE INSPECTION</p>
-      <h1 id="scan-title">Scan your files before they become <span class="scan-accent">data leaks.</span></h1>
-      <p class="scan-lede">Detect exposed credentials, API keys, personal information and supported metadata before sharing or committing files.</p>
-      <p class="scan-runtime-note">File handling and retention follow this LeakLens installation's configuration.</p>
+  <section class="ll-scan-header" aria-labelledby="scan-title">
+    <div>
+      <p class="ll-eyebrow"><span class="ll-eyebrow-dot" aria-hidden="true"></span> INSPECTION COMMAND CENTER</p>
+      <h1 class="ll-page-title" id="scan-title">Inspect before <span class="ll-accent">you expose.</span></h1>
+      <p class="ll-page-sub">Discover sensitive information, understand the risk and create verified sanitised copies.</p>
+      <p class="ll-scan-runtime-note">File handling and temporary retention follow this LeakLens installation&apos;s configuration.</p>
     </div>
-    <div class="scan-hero-visual">
-      <div class="scan-shield-glow" aria-hidden="true"></div>
-      <svg class="scan-shield" viewBox="0 0 180 190" role="img" aria-label="Shield with a keyhole">
-        <defs>
-          <linearGradient id="scan-shield-fill" x1="25" y1="10" x2="150" y2="175" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#38BDF8" stop-opacity=".85"/>
-            <stop offset=".52" stop-color="#8B5CF6" stop-opacity=".86"/>
-            <stop offset="1" stop-color="#EC4899" stop-opacity=".76"/>
-          </linearGradient>
-          <linearGradient id="scan-shield-rim" x1="30" y1="15" x2="145" y2="165" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#C4B5FD"/>
-            <stop offset=".52" stop-color="#8B5CF6"/>
-            <stop offset="1" stop-color="#38BDF8"/>
-          </linearGradient>
-        </defs>
-        <path d="M90 10 151 35v47c0 43-25 73-61 96C54 155 29 125 29 82V35L90 10Z" fill="url(#scan-shield-fill)" fill-opacity=".26" stroke="url(#scan-shield-rim)" stroke-width="5"/>
-        <path d="M90 23 139 43v39c0 34-18 59-49 80-31-21-49-46-49-80V43l49-20Z" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2"/>
-        <rect x="68" y="82" width="44" height="36" rx="9" fill="#F8FAFC" fill-opacity=".95"/>
-        <path d="M77 82v-8a13 13 0 0 1 26 0v8" fill="none" stroke="#F8FAFC" stroke-width="8" stroke-linecap="round"/>
-        <circle cx="90" cy="99" r="4" fill="#6342FF"/>
-        <path d="M90 103v7" stroke="#6342FF" stroke-width="4" stroke-linecap="round"/>
-      </svg>
-      <div class="scan-status-card" aria-label="Scanner configuration" aria-live="polite">
-        <p class="scan-status-heading"><span class="signal-dot"></span><span id="scan-status-title">Loading scanner status</span></p>
-        <div class="scan-status-row"><span>Machine learning</span><strong id="scan-ml-state">—</strong></div>
-        <div class="scan-status-row"><span>Image OCR</span><strong id="scan-ocr-state">—</strong></div>
-        <div class="scan-status-row"><span>Maximum file</span><strong id="scan-max-size">—</strong></div>
-        <div class="scan-status-row"><span>Temporary retention</span><strong id="scan-ttl">—</strong></div>
-      </div>
+    <div class="scan-status-card" aria-label="Scanner configuration" aria-live="polite">
+      <p class="scan-status-heading"><span class="signal-dot"></span><span id="scan-status-title">Loading scanner status</span></p>
+      <div class="scan-status-row"><span>Machine learning</span><strong id="scan-ml-state">—</strong></div>
+      <div class="scan-status-row"><span>Image OCR</span><strong id="scan-ocr-state">—</strong></div>
+      <div class="scan-status-row"><span>Maximum file</span><strong id="scan-max-size">—</strong></div>
+      <div class="scan-status-row"><span>Temporary retention</span><strong id="scan-ttl">—</strong></div>
     </div>
   </section>
 
   <div id="drop" class="drop scan-dropzone" tabindex="0" role="group" aria-labelledby="scan-upload-title" aria-describedby="drop-hint">
     <input id="file" type="file" hidden disabled>
-    <div class="scan-upload-icon" aria-hidden="true">
+    <div class="ll-chamber-aperture" aria-hidden="true">
+      <div class="ll-aperture-ring"></div>
       <svg viewBox="0 0 64 64" focusable="false">
-        <path d="M18 45h28a11 11 0 0 0 1-22 16 16 0 0 0-30-3A12 12 0 0 0 18 45Z" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M32 43V27m0 0-7 7m7-7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M18 45h28a11 11 0 0 0 1-22 16 16 0 0 0-30-3A12 12 0 0 0 18 45Z" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M32 43V27m0 0-7 7m7-7 7 7" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
     <div class="scan-upload-copy">
-      <p class="scan-upload-eyebrow">PRIVATE FILE REVIEW</p>
+      <p class="scan-upload-eyebrow">OPTICAL INSPECTION CHAMBER</p>
       <h2 id="scan-upload-title">Drop your files here</h2>
-      <p class="scan-upload-subtitle">or browse your device</p>
+      <p class="scan-upload-subtitle">or browse your device to start a private inspection</p>
       <button class="btn primary lg scan-browse" id="scan-browse" type="button" disabled>
         <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 5.5h6l1.5 2h7.5v8.25A1.75 1.75 0 0 1 15.75 17.5h-11A2.25 2.25 0 0 1 2.5 15.25V5.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M2.5 8h15" stroke="currentColor" stroke-width="1.7"/></svg>
         Browse Files
@@ -699,8 +679,20 @@ const config = {
       <div class="supported-tags" id="supported-tags" aria-label="Supported file extensions"></div>
     </div>
   </div>
-  <div id="busy" class="busy scan-busy" role="status" aria-live="polite" hidden>
-    <span class="spinner" aria-hidden="true"></span><span id="scan-busy-label">Analysing file…</span>
+
+  <div id="busy" class="busy scan-busy ll-scan-pipeline" role="status" aria-live="polite" hidden>
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <span class="spinner" aria-hidden="true"></span>
+      <span id="scan-busy-label">Analysing file…</span>
+    </div>
+    <div class="ll-scan-stages" id="ll-scan-stages" aria-label="Inspection sequence">
+      <div class="ll-scan-stage" data-stage="1"><strong>01</strong>FILE RECEIVED</div>
+      <div class="ll-scan-stage" data-stage="2"><strong>02</strong>CONTENT EXTRACTION</div>
+      <div class="ll-scan-stage" data-stage="3"><strong>03</strong>SECRET DETECTION</div>
+      <div class="ll-scan-stage" data-stage="4"><strong>04</strong>CONTEXTUAL ANALYSIS</div>
+      <div class="ll-scan-stage" data-stage="5"><strong>05</strong>RISK EVALUATION</div>
+      <div class="ll-scan-stage" data-stage="6"><strong>06</strong>RESULTS READY</div>
+    </div>
   </div>
   <div id="error" class="error" role="alert" hidden></div>
 
@@ -755,7 +747,7 @@ const config = {
 
   <section class="scan-samples" aria-labelledby="scan-samples-title">
     <div class="scan-section-heading">
-      <p class="scan-eyebrow"><span class="signal-dot"></span> SYNTHETIC FIXTURES</p>
+      <p class="ll-eyebrow"><span class="ll-eyebrow-dot" aria-hidden="true"></span> SYNTHETIC FIXTURES</p>
       <h2 id="scan-samples-title">Explore LeakLens with sample files</h2>
       <p>These repository samples contain intentionally fake, secret-like values for demonstration. Never use them as real credentials.</p>
     </div>
@@ -861,9 +853,9 @@ const config = {
   <div id="dashboard-authenticated" class="dashboard-shell" hidden>
     <header class="dashboard-header">
       <div>
-        <p class="dashboard-eyebrow"><span class="signal-dot"></span> SECURITY OVERVIEW</p>
-        <h1 id="dashboard-auth-welcome">Welcome back.</h1>
-        <p class="muted">Here's your LeakLens security overview.</p>
+        <p class="ll-eyebrow"><span class="ll-eyebrow-dot" aria-hidden="true"></span> SECURITY INTELLIGENCE CENTER</p>
+        <h1 class="ll-page-title" id="dashboard-auth-welcome">Your Security <span class="ll-accent">Intelligence.</span></h1>
+        <p class="ll-page-sub">Understand your scanning activity and review your security findings.</p>
       </div>
       <div class="dashboard-controls">
         <button class="dashboard-refresh" id="dashboard-refresh" type="button" title="Refresh dashboard" aria-label="Refresh dashboard">↻</button>
@@ -936,9 +928,9 @@ const config = {
 <section id="view-history" class="view" hidden>
   <div class="history-heading">
     <div>
-      <p class="history-eyebrow">PRIVATE SCAN RECORDS</p>
-      <h2>Scan History</h2>
-      <p class="muted">Review your scans, revisit masked findings, and download available reports.</p>
+      <p class="ll-eyebrow"><span class="ll-eyebrow-dot" aria-hidden="true"></span> FORENSIC INVESTIGATION TIMELINE</p>
+      <h2 class="ll-page-title">Your Inspection <span class="ll-accent">History.</span></h2>
+      <p class="ll-page-sub">Explore previous scans, review findings and revisit available reports.</p>
     </div>
     <button class="btn sm text-danger" id="history-clear" hidden>Clear history</button>
   </div>
@@ -1020,9 +1012,9 @@ const config = {
 <section id="view-team" class="view team-page" hidden>
   <section class="team-hero" aria-labelledby="team-title">
     <div class="team-hero-copy">
-      <p class="team-eyebrow"><span aria-hidden="true">✦</span> Developer Collaboration</p>
-      <h1 id="team-title">Safe Team <span>Developer Handoff</span></h1>
-      <p>Share configuration templates and securely manage sensitive credentials without exposing secrets in repositories or team chats.</p>
+      <p class="ll-eyebrow"><span class="ll-eyebrow-dot" aria-hidden="true"></span> SECURE COLLABORATION WORKSPACE</p>
+      <h1 class="ll-page-title" id="team-title">Prepare your project for <span class="ll-accent">safe handoff.</span></h1>
+      <p class="ll-page-sub">Share placeholder-only configuration templates and manage account-scoped credentials encrypted at rest without exposing secrets in repositories or team chats.</p>
     </div>
     <div class="team-hero-art" aria-hidden="true">
       <div class="team-orbit team-orbit-one"></div>
@@ -1170,61 +1162,84 @@ const config = {
 
 <!-- ================================= IDE GUARD ================================= -->
 <section id="view-ide" class="view" hidden>
-  <div class="section-head">
-    <h2>LeakLens IDE Guard &amp; Git Pre-Commit Hook</h2>
-    <p class="muted">Detect and prevent leaks right inside your developer workflow.</p>
+  <div class="ll-page-head">
+    <div>
+      <p class="ll-eyebrow"><span class="ll-eyebrow-dot" aria-hidden="true"></span> DEVELOPER SECURITY STUDIO</p>
+      <h1 class="ll-page-title">Security inside your <span class="ll-accent">development workflow.</span></h1>
+      <p class="ll-page-sub">Inspect code in-memory with VS Code IDE Guard, block staged leaks with Git pre-commit hooks, or integrate via CLI, REST API, PATs, and SARIF.</p>
+    </div>
   </div>
 
-  <div class="cols">
-    <div class="col">
-      <div class="panel">
-        <h3>VS Code Extension</h3>
-        <p class="muted">Get in-editor highlighting, line/column diagnostics, and automated QuickFix recommendations to move secret literals into environment variables.</p>
-        <ol class="step-list">
-          <li>Ensure LeakLens is running: <code>python app.py</code></li>
+  <div class="ll-ide-studio">
+    <div class="ll-ide-integrations">
+      <article class="ll-ide-card is-featured">
+        <p class="ll-eyebrow" style="margin-bottom:0.35rem;"><span class="ll-eyebrow-dot" aria-hidden="true"></span> VS CODE EXTENSION</p>
+        <h3 style="margin:0 0 0.4rem;">VS Code IDE Guard</h3>
+        <p class="muted" style="margin:0 0 0.75rem;">In-editor line/column diagnostics, scan-on-save, workspace scanning, and QuickFix suggestions backed by your configured LeakLens server.</p>
+        <ol class="step-list" style="margin:0 0 0.85rem;">
+          <li>Start the LeakLens backend: <code>python app.py</code></li>
           <li>Open <code>ide-extension/</code> in VS Code.</li>
-          <li>Run <code>npm install &amp;&amp; npm run compile</code></li>
-          <li>Press <code>F5</code> to test or package the extension.</li>
+          <li>Install &amp; build: <code>npm install &amp;&amp; npm run compile</code></li>
+          <li>Press <code>F5</code> to launch the extension host.</li>
         </ol>
-        <div class="callout-box">
-          <strong>Backend Endpoint:</strong> <code>http://127.0.0.1:5000/api/ide/scan</code><br>
-          Operates in-memory with zero disk persistence.
+        <div class="ll-copy-cmd">
+          <code>http://127.0.0.1:5000/api/ide/scan</code>
+          <button type="button" class="btn sm outline ll-copy-btn" data-copy="http://127.0.0.1:5000/api/ide/scan">Copy Endpoint</button>
         </div>
-      </div>
+      </article>
 
-      <div class="panel">
-        <h3>Git Pre-Commit Hook</h3>
-        <p class="muted">Block accidental commits containing high or medium risk credentials automatically.</p>
-        <p>Run the install command in your terminal:</p>
-        <pre class="code-box">python scripts/install-hook.py</pre>
-        <p class="small muted">Tests staged files using <code>git diff --cached</code> before allowing commits.</p>
-      </div>
+      <article class="ll-ide-card">
+        <p class="ll-eyebrow" style="margin-bottom:0.35rem;">PRE-COMMIT</p>
+        <h3 style="margin:0 0 0.4rem;">Git Pre-Commit Hook</h3>
+        <p class="muted small" style="margin:0 0 0.65rem;">Tests staged files via <code>git diff --cached</code> and blocks commits with high or medium risk findings.</p>
+        <div class="ll-copy-cmd">
+          <code>python scripts/install-hook.py</code>
+          <button type="button" class="btn sm outline ll-copy-btn" data-copy="python scripts/install-hook.py">Copy</button>
+        </div>
+      </article>
+
+      <article class="ll-ide-card">
+        <p class="ll-eyebrow" style="margin-bottom:0.35rem;">AUTOMATION</p>
+        <h3 style="margin:0 0 0.4rem;">CLI, REST API &amp; PATs</h3>
+        <p class="muted small" style="margin:0 0 0.65rem;">Run standalone <code>cli.py</code> scans, call <code>/api/scan</code>, authenticate with Personal Access Tokens, or export SARIF reports.</p>
+        <div class="ll-copy-cmd">
+          <code>python cli.py scan .</code>
+          <button type="button" class="btn sm outline ll-copy-btn" data-copy="python cli.py scan .">Copy</button>
+        </div>
+      </article>
     </div>
 
-    <div class="col">
-      <div class="panel">
-        <h3>Interactive IDE Simulator</h3>
-        <p class="muted">Test how LeakLens IDE Guard inspects code and offers instant QuickFix remediation:</p>
-        <textarea id="ide-sim-code" class="code-box" rows="8" spellcheck="false"># Sample script
+    <div class="ll-ide-editor-shell" aria-label="Interactive IDE Guard Simulator">
+      <div class="ll-ide-titlebar">
+        <span class="ll-ide-tab"><span class="ll-eyebrow-dot" aria-hidden="true"></span> app.py</span>
+        <span>IN-MEMORY DIAGNOSTICS SIMULATOR</span>
+      </div>
+      <div class="ll-ide-editor-body">
+        <div class="ll-ide-gutter" id="ll-ide-gutter" aria-hidden="true">1<br>2<br>3<br>4</div>
+        <textarea id="ide-sim-code" class="code-box" rows="9" spellcheck="false" aria-label="IDE simulator code editor"># Sample script
 DB_PASSWORD = "SuperSecretPassword123!"
 AWS_KEY = "AKIAU2GCFJIBS14Q4CTV"
         </textarea>
-        <div class="grp foot-grp">
-          <button class="btn primary sm" id="btn-ide-sim-run">Run IDE In-Memory Scan</button>
-        </div>
-        <div id="ide-sim-results" class="sim-output"></div>
       </div>
+      <div class="ll-ide-editor-foot">
+        <span class="small muted">Submits in-memory to <code>/api/ide/scan</code> · Zero disk persistence</span>
+        <button class="btn primary sm" id="btn-ide-sim-run" type="button">Run IDE In-Memory Scan</button>
+      </div>
+      <div id="ide-sim-results" class="sim-output" aria-live="polite"></div>
     </div>
   </div>
 </section>
 
 <!-- ================================= EVALUATION ================================= -->
 <section id="view-eval" class="view" hidden>
-  <div class="section-head">
-    <h2>Model &amp; System Evaluation</h2>
-    <p class="muted">Evaluated on held-out synthetic test dataset with 1,500 snippets across held-out variable and syntax families.</p>
+  <div class="ll-page-head">
+    <div>
+      <p class="ll-eyebrow"><span class="ll-eyebrow-dot" aria-hidden="true"></span> AI MODEL EVALUATION LAB</p>
+      <h1 class="ll-page-title">Inside the Detection <span class="ll-accent">Intelligence.</span></h1>
+      <p class="ll-page-sub">Explore how LeakLens evaluates its detection and classification behavior on held-out synthetic snippets.</p>
+    </div>
   </div>
-  <div id="eval"></div>
+  <div id="eval" aria-live="polite"></div>
 </section>
 
 <!-- ================================= ADMIN DASHBOARD ================================= -->
@@ -1271,31 +1286,107 @@ AWS_KEY = "AKIAU2GCFJIBS14Q4CTV"
 </section>
 
 <!-- ================================= MODALS ================================= -->
-<div id="modal-login" class="modal" hidden>
-  <div class="modal-card">
-    <div class="modal-head"><h3>Log In to LeakLens</h3><button class="modal-close">&times;</button></div>
-    <form id="form-login">
-      <div id="login-error" class="error sm" hidden></div>
-      <label>Username or Email<input type="text" id="login-ident" required class="input"></label>
-      <label>Password<input type="password" id="login-pw" required class="input"></label>
-      <div class="row">
-        <button type="button" class="link small" id="btn-show-forgot">Forgot Password?</button>
-        <button type="submit" class="btn primary">Sign In</button>
+<div id="modal-login" class="modal ll-auth-modal" hidden>
+  <div class="modal-card ll-auth-card" role="dialog" aria-modal="true" aria-labelledby="auth-login-title">
+    <div class="ll-auth-top">
+      <div class="brand">
+        <span class="logo" aria-hidden="true"></span>
+        <span class="brand-text">LeakLens</span>
+        <span class="badge pro">SECURE</span>
       </div>
+      <button class="modal-close" type="button" aria-label="Close login dialog">&times;</button>
+    </div>
+
+    <div class="ll-auth-hero">
+      <h3 id="auth-login-title">Welcome back.</h3>
+      <p>Continue securely with your Google Account.</p>
+    </div>
+
+    <div id="google-login-wrap" class="ll-google-wrap">
+      <div id="google-signin-btn" class="ll-google-slot"></div>
+      <div id="google-login-status" class="ll-google-status" hidden></div>
+    </div>
+
+    <div class="ll-auth-divider"><span>OR CONTINUE WITH EMAIL</span></div>
+
+    <form id="form-login" class="ll-auth-form">
+      <div id="login-error" class="error sm" role="alert" hidden></div>
+      <label class="ll-auth-field">Email or username
+        <input type="text" id="login-ident" required class="input" autocomplete="username" placeholder="Enter your email or username">
+      </label>
+      <label class="ll-auth-field">Password
+        <input type="password" id="login-pw" required class="input" autocomplete="current-password" placeholder="••••••••">
+      </label>
+      <div class="ll-auth-meta-row">
+        <button type="button" class="link small" id="btn-show-forgot">Forgot Password?</button>
+      </div>
+      <button type="submit" class="btn primary full ll-auth-submit">Sign In</button>
     </form>
+
+    <div id="google-link-box" class="ll-google-link-box" hidden>
+      <p class="ll-eyebrow" style="margin-bottom:0.35rem;"><span class="ll-eyebrow-dot" aria-hidden="true"></span> LINK EXISTING ACCOUNT</p>
+      <p class="small muted" id="google-link-desc">An account with this email already exists. Enter your existing LeakLens password to link Google Sign-In.</p>
+      <form id="form-google-link" class="ll-auth-form">
+        <div id="google-link-error" class="error sm" role="alert" hidden></div>
+        <input type="hidden" id="google-link-token">
+        <label class="ll-auth-field">Existing Password
+          <input type="password" id="google-link-pw" required class="input" autocomplete="current-password" placeholder="Enter your LeakLens password">
+        </label>
+        <div class="row" style="gap:0.6rem;">
+          <button type="button" class="btn sm outline" id="btn-cancel-google-link">Back</button>
+          <button type="submit" class="btn sm primary">Verify &amp; Link Google</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="ll-auth-footer">
+      <span class="muted small">New to LeakLens?</span>
+      <button type="button" class="link small" id="btn-switch-to-register">Create account</button>
+    </div>
   </div>
 </div>
 
-<div id="modal-register" class="modal" hidden>
-  <div class="modal-card">
-    <div class="modal-head"><h3>Create an Account</h3><button class="modal-close">&times;</button></div>
-    <form id="form-register">
-      <div id="register-error" class="error sm" hidden></div>
-      <label>Username<input type="text" id="reg-username" required class="input"></label>
-      <label>Email<input type="email" id="reg-email" required class="input"></label>
-      <label>Password (min. 8 characters)<input type="password" id="reg-pw" required minlength="8" class="input"></label>
-      <button type="submit" class="btn primary full">Register</button>
+<div id="modal-register" class="modal ll-auth-modal" hidden>
+  <div class="modal-card ll-auth-card" role="dialog" aria-modal="true" aria-labelledby="auth-register-title">
+    <div class="ll-auth-top">
+      <div class="brand">
+        <span class="logo" aria-hidden="true"></span>
+        <span class="brand-text">LeakLens</span>
+        <span class="badge pro">SECURE</span>
+      </div>
+      <button class="modal-close" type="button" aria-label="Close registration dialog">&times;</button>
+    </div>
+
+    <div class="ll-auth-hero">
+      <h3 id="auth-register-title">Create your LeakLens account.</h3>
+      <p>Start protecting your development workflow.</p>
+    </div>
+
+    <div id="google-register-wrap" class="ll-google-wrap">
+      <div id="google-signup-btn" class="ll-google-slot"></div>
+      <div id="google-register-status" class="ll-google-status" hidden></div>
+    </div>
+
+    <div class="ll-auth-divider"><span>OR REGISTER WITH EMAIL</span></div>
+
+    <form id="form-register" class="ll-auth-form">
+      <div id="register-error" class="error sm" role="alert" hidden></div>
+      <label class="ll-auth-field">Username
+        <input type="text" id="reg-username" required class="input" autocomplete="username" placeholder="Choose a username">
+      </label>
+      <label class="ll-auth-field">Email
+        <input type="email" id="reg-email" required class="input" autocomplete="email" placeholder="you@company.com">
+      </label>
+      <label class="ll-auth-field">Password (min. 8 characters)
+        <input type="password" id="reg-pw" required minlength="8" class="input" autocomplete="new-password" placeholder="At least 8 characters">
+      </label>
+      <button type="submit" class="btn primary full ll-auth-submit">Register</button>
     </form>
+
+    <div class="ll-auth-footer">
+      <span class="muted small">Already have an account?</span>
+      <button type="button" class="link small" id="btn-switch-to-login">Sign in</button>
+    </div>
   </div>
 </div>
 
@@ -1424,5 +1515,6 @@ AWS_KEY = "AKIAU2GCFJIBS14Q4CTV"
 </main>
 <script src="/static/app.js"></script>
 <script src="/static/home-chamber.js"></script>
+<script src="/static/app-motion.js"></script>
 </body>
 </html>

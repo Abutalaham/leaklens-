@@ -21,6 +21,8 @@ from typing import Optional
 
 from flask import (Flask, abort, jsonify, redirect, render_template, request,
                    send_file, session)
+from google.auth.transport import requests as google_requests
+from google.oauth2 import id_token as google_id_token
 
 import config
 from engine import catalog, extract, redact, sarif, service, store
@@ -162,16 +164,22 @@ def apply_headers(resp):
     if request.path in ("/", "/chamber", "/landing"):
         resp.headers["Content-Security-Policy"] = (
             "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; "
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+            "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://accounts.google.com/gsi/client; "
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com/gsi/style; "
             "font-src 'self' https://fonts.gstatic.com; "
-            "img-src 'self' blob: data:; "
+            "img-src 'self' blob: data: https://lh3.googleusercontent.com; "
+            "frame-src https://accounts.google.com/gsi/; "
+            "connect-src 'self' https://accounts.google.com/gsi/; "
             "object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
         )
     else:
         resp.headers["Content-Security-Policy"] = (
-            "default-src 'self'; img-src 'self' blob: data:; "
-            "style-src 'self' 'unsafe-inline'; "
+            "default-src 'self'; "
+            "script-src 'self' https://accounts.google.com/gsi/client; "
+            "img-src 'self' blob: data: https://lh3.googleusercontent.com; "
+            "style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; "
+            "frame-src https://accounts.google.com/gsi/; "
+            "connect-src 'self' https://accounts.google.com/gsi/; "
             "object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
         )
     if request.path.startswith("/api/"):
@@ -228,6 +236,7 @@ def status():
         "extensions": sorted(config.TEXT_EXTS | config.PDF_EXTS | config.IMAGE_EXTS),
         "authenticated": u is not None,
         "user": {"id": u["id"], "username": u["username"], "role": u["role"]} if u else None,
+        "google_client_id": config.GOOGLE_CLIENT_ID or None,
         "csrf_token": get_or_create_csrf_token(),
     })
 
@@ -352,6 +361,159 @@ def verify_2fa_login():
         "user": {"id": user["id"], "username": user["username"], "email": user["email"], "role": user["role"]},
         "csrf_token": get_or_create_csrf_token(),
     })
+
+
+def _rotate_session_for_user(user_id: str) -> str:
+    """Clear existing session data to prevent session fixation, then bind user_id and fresh CSRF."""
+    session.clear()
+    session["user_id"] = user_id
+    session.permanent = True
+    return get_or_create_csrf_token()
+
+
+def _verify_google_id_token(credential: str) -> dict:
+    """Verify a Google Identity Services ID token against GOOGLE_CLIENT_ID."""
+    if not config.GOOGLE_CLIENT_ID:
+        raise RuntimeError("Google Sign-In is not configured on this server.")
+    info = google_id_token.verify_oauth2_token(
+        credential,
+        google_requests.Request(),
+        config.GOOGLE_CLIENT_ID,
+    )
+    if info.get("iss") not in ("accounts.google.com", "https://accounts.google.com"):
+        raise ValueError("Invalid token issuer.")
+    if info.get("aud") != config.GOOGLE_CLIENT_ID:
+        raise ValueError("Token audience mismatch.")
+    if not info.get("sub"):
+        raise ValueError("Missing Google subject identifier.")
+    if not info.get("email") or info.get("email_verified") is not True:
+        raise PermissionError("Google account email must be verified.")
+    return info
+
+
+def _complete_user_login_or_2fa(user: dict, ip: str, audit_action: str, created: bool = False):
+    if user.get("status") == "disabled":
+        return err("This account has been disabled. Please contact an administrator.", 403)
+    if user.get("totp_enabled"):
+        temp_token = store.create_2fa_temp_token(user["id"])
+        store.record_audit(user["id"], "2fa_challenge_issued", ip)
+        return jsonify({
+            "requires_2fa": True,
+            "temp_token": temp_token,
+            "username": user["username"],
+        })
+    store.update_last_login(user["id"])
+    csrf_token = _rotate_session_for_user(user["id"])
+    store.record_audit(user["id"], audit_action, ip, f"User: {user['username']}")
+    return jsonify({
+        "success": True,
+        "created": created,
+        "user": {"id": user["id"], "username": user["username"], "email": user["email"], "role": user["role"]},
+        "csrf_token": csrf_token,
+    })
+
+
+@app.post("/api/auth/google")
+def google_auth():
+    if not config.GOOGLE_CLIENT_ID:
+        return err("Google Sign-In is not configured on this server.", 503)
+
+    ip = request.remote_addr or "127.0.0.1"
+    if store.is_rate_limited(ip, "google_oauth"):
+        store.record_audit(None, "google_login_rate_limited", ip)
+        return err(f"Too many authentication attempts. Please wait {config.LOGIN_LOCKOUT_SECONDS // 60} minutes.", 429)
+
+    body = request.get_json(silent=True) or {}
+    credential = (body.get("credential") or "").strip()
+    if not credential:
+        store.record_login_attempt(ip, "google_oauth", success=False)
+        return err("Missing Google credential token.", 400)
+
+    try:
+        info = _verify_google_id_token(credential)
+    except PermissionError as e:
+        store.record_login_attempt(ip, "google_oauth", success=False)
+        return err(str(e), 403)
+    except Exception:
+        store.record_login_attempt(ip, "google_oauth", success=False)
+        return err("Google authentication failed. Please try again.", 401)
+
+    sub = info["sub"]
+    email = info["email"].strip().lower()
+    name = (info.get("name") or "").strip()
+    email_verified = bool(info.get("email_verified"))
+
+    user = store.get_user_by_identity("google", sub)
+    if user:
+        if user.get("status") == "disabled":
+            store.record_login_attempt(ip, "google_oauth", success=False)
+            return err("This account has been disabled. Please contact an administrator.", 403)
+        store.record_login_attempt(ip, "google_oauth", success=True)
+        return _complete_user_login_or_2fa(user, ip, "user_logged_in_google", created=False)
+
+    existing = store.get_user_by_username_or_email(email)
+    if existing:
+        if existing.get("status") == "disabled":
+            store.record_login_attempt(ip, "google_oauth", success=False)
+            return err("This account has been disabled. Please contact an administrator.", 403)
+        link_token = store.create_oauth_link_token("google", sub, email, email_verified)
+        store.record_audit(existing["id"], "google_link_challenge_issued", ip)
+        return jsonify({
+            "requires_link": True,
+            "link_token": link_token,
+            "email": email,
+            "error": "An account with this email already exists. Enter your LeakLens password to link Google Sign-In.",
+        }), 409
+
+    try:
+        user = store.create_google_user(email=email, name=name, provider_sub=sub, email_verified=email_verified)
+    except ValueError as e:
+        return err(str(e), 409)
+
+    store.record_login_attempt(ip, "google_oauth", success=True)
+    return _complete_user_login_or_2fa(user, ip, "user_registered_google", created=True)
+
+
+@app.post("/api/auth/google/link")
+def google_link_account():
+    ip = request.remote_addr or "127.0.0.1"
+    body = request.get_json(silent=True) or {}
+    link_token = (body.get("link_token") or "").strip()
+    password = body.get("password") or ""
+
+    if not link_token or not password:
+        return err("Link token and existing account password are required.", 400)
+
+    if store.is_rate_limited(ip, "google_link"):
+        store.record_audit(None, "google_link_rate_limited", ip)
+        return err(f"Too many linking attempts. Please wait {config.LOGIN_LOCKOUT_SECONDS // 60} minutes.", 429)
+
+    pending = store.consume_oauth_link_token(link_token)
+    if not pending:
+        store.record_login_attempt(ip, "google_link", success=False)
+        return err("Invalid or expired linking session. Please try Google Sign-In again.", 401)
+
+    user = store.get_user_by_username_or_email(pending["email"])
+    if not user or not store.verify_user_password(user, password):
+        store.record_login_attempt(ip, "google_link", success=False)
+        return err("Incorrect password for the existing account.", 401)
+
+    if user.get("status") == "disabled":
+        return err("This account has been disabled. Please contact an administrator.", 403)
+
+    try:
+        store.link_user_identity(
+            user_id=user["id"],
+            provider=pending["provider"],
+            provider_sub=pending["provider_sub"],
+            email=pending["email"],
+            email_verified=bool(pending["email_verified"]),
+        )
+    except ValueError as e:
+        return err(str(e), 409)
+
+    store.record_login_attempt(ip, "google_link", success=True)
+    return _complete_user_login_or_2fa(user, ip, "google_identity_linked", created=False)
 
 
 @app.get("/api/auth/2fa/status")

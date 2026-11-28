@@ -156,7 +156,15 @@ function switchView(viewName) {
     if (active) x.setAttribute("aria-current", "page");
     else x.removeAttribute("aria-current");
   });
-  $$(".view").forEach((v) => (v.hidden = v.id !== "view-" + viewName));
+  $$(".view").forEach((v) => {
+    const show = v.id === "view-" + viewName;
+    v.hidden = !show;
+    if (show) {
+      v.classList.remove("ll-view-enter");
+      void v.offsetWidth;
+      v.classList.add("ll-view-enter");
+    }
+  });
   if (mobileNavQuery.matches && primaryMenu.classList.contains("is-open")) closeMobileNavigation(true);
 
   if (viewName === "dashboard") loadDashboard();
@@ -173,6 +181,7 @@ async function initApp() {
   try {
     const s = await api("/api/status");
     S.csrfToken = s.csrf_token;
+    S.googleClientId = s.google_client_id || null;
 
     S.uploadExtensions = s.extensions;
     S.maxUploadMB = Number(s.max_mb);
@@ -219,6 +228,8 @@ async function initApp() {
   } catch (err) {
     console.warn("Auth init error:", err);
   }
+
+  initGoogleIdentity(S.googleClientId);
 }
 initApp();
 
@@ -250,8 +261,200 @@ $$(".modal-close").forEach((btn) => btn.addEventListener("click", (e) => {
   e.target.closest(".modal").hidden = true;
 }));
 
-$("#btn-show-login").addEventListener("click", () => openModal("#modal-login"));
-$("#btn-show-register").addEventListener("click", () => openModal("#modal-register"));
+$("#btn-show-login").addEventListener("click", () => {
+  resetGoogleLinkState();
+  openModal("#modal-login");
+});
+$("#btn-show-register").addEventListener("click", () => {
+  resetGoogleLinkState();
+  openModal("#modal-register");
+});
+$("#btn-switch-to-register").addEventListener("click", () => {
+  closeModal("#modal-login");
+  resetGoogleLinkState();
+  openModal("#modal-register");
+});
+$("#btn-switch-to-login").addEventListener("click", () => {
+  closeModal("#modal-register");
+  resetGoogleLinkState();
+  openModal("#modal-login");
+});
+$("#btn-cancel-google-link").addEventListener("click", () => resetGoogleLinkState());
+
+/* ---------------------------------------------------------------- Google Identity Services (GIS) */
+let gisInitialized = false;
+
+function setGoogleStatus(msg, isError = false) {
+  ["#google-login-status", "#google-register-status"].forEach((sel) => {
+    const el = $(sel);
+    if (!el) return;
+    el.textContent = msg || "";
+    el.hidden = !msg;
+    el.style.color = isError ? "var(--ll-red)" : "var(--ll-cyan)";
+  });
+}
+
+function resetGoogleLinkState() {
+  const box = $("#google-link-box");
+  const form = $("#form-login");
+  if (box) box.hidden = true;
+  if (form) form.hidden = false;
+  if ($("#google-link-error")) $("#google-link-error").hidden = true;
+  if ($("#form-google-link")) $("#form-google-link").reset();
+}
+
+function renderGoogleButtons() {
+  if (!window.google || !window.google.accounts || !window.google.accounts.id) return;
+  const loginSlot = $("#google-signin-btn");
+  const regSlot = $("#google-signup-btn");
+  if (loginSlot && !loginSlot.hasChildNodes()) {
+    window.google.accounts.id.renderButton(loginSlot, {
+      theme: "outline",
+      size: "large",
+      type: "standard",
+      text: "continue_with",
+      shape: "pill",
+      width: 340
+    });
+  }
+  if (regSlot && !regSlot.hasChildNodes()) {
+    window.google.accounts.id.renderButton(regSlot, {
+      theme: "outline",
+      size: "large",
+      type: "standard",
+      text: "signup_with",
+      shape: "pill",
+      width: 340
+    });
+  }
+}
+
+async function handleGoogleCredentialResponse(response) {
+  if (!response || !response.credential) {
+    setGoogleStatus("Google Sign-In was cancelled or returned no credential.", true);
+    return;
+  }
+  setGoogleStatus("Verifying Google account securely…");
+  if ($("#login-error")) $("#login-error").hidden = true;
+  if ($("#register-error")) $("#register-error").hidden = true;
+
+  try {
+    const res = await fetch("/api/auth/google", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": S.csrfToken || ""
+      },
+      body: JSON.stringify({ credential: response.credential })
+    });
+    const data = await res.json().catch(() => ({}));
+
+    if (res.status === 409 && data.requires_link) {
+      setGoogleStatus("");
+      closeModal("#modal-register");
+      openModal("#modal-login");
+      $("#form-login").hidden = true;
+      $("#google-link-token").value = data.link_token;
+      $("#google-link-desc").textContent = `An account for ${data.email} already exists. Enter your existing LeakLens password to link Google Sign-In.`;
+      $("#google-link-error").hidden = true;
+      $("#google-link-box").hidden = false;
+      return;
+    }
+
+    if (!res.ok) {
+      throw new Error(data.error || `Google sign-in failed (${res.status})`);
+    }
+
+    if (data.csrf_token) S.csrfToken = data.csrf_token;
+
+    if (data.requires_2fa) {
+      setGoogleStatus("");
+      closeModal("#modal-login");
+      closeModal("#modal-register");
+      $("#twofa-temp-token").value = data.temp_token;
+      $("#twofa-code").value = "";
+      $("#twofa-login-error").hidden = true;
+      openModal("#modal-2fa-verify");
+      return;
+    }
+
+    setGoogleStatus("");
+    setAuthUser(data.user);
+    closeModal("#modal-login");
+    closeModal("#modal-register");
+  } catch (err) {
+    setGoogleStatus(err.message, true);
+  }
+}
+
+function initGoogleIdentity(clientId) {
+  if (!clientId) {
+    ["#google-login-wrap", "#google-register-wrap"].forEach((sel) => {
+      const wrap = $(sel);
+      if (wrap) wrap.hidden = true;
+    });
+    $$(".ll-auth-divider").forEach((d) => { d.hidden = true; });
+    return;
+  }
+
+  const startGIS = () => {
+    if (gisInitialized) return;
+    if (!window.google || !window.google.accounts || !window.google.accounts.id) return;
+    gisInitialized = true;
+    window.google.accounts.id.initialize({
+      client_id: clientId,
+      callback: handleGoogleCredentialResponse,
+      auto_select: false,
+      cancel_on_tap_outside: true
+    });
+    renderGoogleButtons();
+
+    if (!S.user && !sessionStorage.getItem("leaklens_onetap_dismissed")) {
+      window.google.accounts.id.prompt((notification) => {
+        if (notification.isDismissedMoment && notification.isDismissedMoment()) {
+          sessionStorage.setItem("leaklens_onetap_dismissed", "1");
+        }
+      });
+    }
+  };
+
+  if (window.google && window.google.accounts && window.google.accounts.id) {
+    startGIS();
+  } else {
+    window.addEventListener("load", startGIS, { once: true });
+  }
+}
+
+$("#form-google-link").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const errBox = $("#google-link-error");
+  errBox.hidden = true;
+  try {
+    const res = await api("/api/auth/google/link", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        link_token: $("#google-link-token").value,
+        password: $("#google-link-pw").value
+      })
+    });
+    if (res.csrf_token) S.csrfToken = res.csrf_token;
+    resetGoogleLinkState();
+    if (res.requires_2fa) {
+      closeModal("#modal-login");
+      $("#twofa-temp-token").value = res.temp_token;
+      $("#twofa-code").value = "";
+      $("#twofa-login-error").hidden = true;
+      openModal("#modal-2fa-verify");
+      return;
+    }
+    setAuthUser(res.user);
+    closeModal("#modal-login");
+  } catch (err) {
+    errBox.textContent = err.message;
+    errBox.hidden = false;
+  }
+});
 $("#btn-show-forgot").addEventListener("click", () => {
   closeModal("#modal-login");
   openModal("#modal-forgot");
@@ -419,6 +622,9 @@ $("#btn-logout").addEventListener("click", async () => {
     if (res.csrf_token) S.csrfToken = res.csrf_token;
   } catch (err) {
     console.warn("Logout error:", err);
+  }
+  if (window.google && window.google.accounts && window.google.accounts.id) {
+    window.google.accounts.id.disableAutoSelect();
   }
   setAuthUser(null);
   switchView("home");
@@ -957,8 +1163,8 @@ async function loadDashboard() {
   }
   $("#dashboard-guest").hidden = true;
   $("#dashboard-authenticated").hidden = false;
-  $("#dashboard-auth-welcome").textContent = `Welcome back, ${S.user.username}!`;
-  $("#dashboard-status").replaceChildren(h("span", { class: "dashboard-loading" }, "Loading dashboard…"));
+  $("#dashboard-auth-welcome").innerHTML = `Your Security <span class="ll-accent">Intelligence.</span>`;
+  $("#dashboard-status").replaceChildren(h("span", { class: "dashboard-loading" }, `Loading intelligence for ${S.user.username}…`));
   try {
     const [stats, recent] = await Promise.all([
       api(`/api/user/stats?days=${dashboardDays}`),
@@ -1013,22 +1219,35 @@ function renderTrendsChart(trends) {
     grid.setAttribute("y1", yy); grid.setAttribute("y2", yy); grid.setAttribute("class", "chart-grid");
     svg.append(grid);
   }
+  const tooltip = h("div", { class: "ll-chart-tooltip", hidden: true });
   [["files", "files", (t) => t.files], ["findings", "findings", (t) => t.h + t.m + t.l]].forEach(([kind, cls, getValue]) => {
+    const pts = trends.map((t, i) => `${left + i * step},${y(getValue(t))}`).join(" ");
     const line = document.createElementNS(svg.namespaceURI, "polyline");
-    line.setAttribute("points", trends.map((t, i) => `${left + i * step},${y(getValue(t))}`).join(" "));
+    line.setAttribute("points", pts);
     line.setAttribute("class", `chart-line ${cls}`);
     svg.append(line);
     trends.forEach((t, i) => {
       const value = getValue(t);
+      const cx = left + i * step;
+      const cy = y(value);
       const dot = document.createElementNS(svg.namespaceURI, "circle");
-      dot.setAttribute("cx", left + i * step); dot.setAttribute("cy", y(value));
-      dot.setAttribute("r", "4"); dot.setAttribute("class", `chart-dot ${cls}`);
+      dot.setAttribute("cx", cx); dot.setAttribute("cy", cy);
+      dot.setAttribute("r", "4.5"); dot.setAttribute("class", `chart-dot ${cls}`);
+      const label = `${t.day}: ${value} ${kind === "files" ? "files scanned" : "findings"}`;
       const title = document.createElementNS(svg.namespaceURI, "title");
-      title.textContent = `${t.day}: ${value} ${kind === "files" ? "files scanned" : "findings"}`;
-      dot.append(title); svg.append(dot);
+      title.textContent = label;
+      dot.append(title);
+      dot.addEventListener("mouseenter", () => {
+        tooltip.textContent = label;
+        tooltip.hidden = false;
+        tooltip.style.left = `${Math.min(82, Math.max(8, (cx / width) * 100))}%`;
+        tooltip.style.top = `${Math.max(4, (cy / height) * 100 - 14)}%`;
+      });
+      dot.addEventListener("mouseleave", () => { tooltip.hidden = true; });
+      svg.append(dot);
     });
   });
-  container.replaceChildren(svg, h("div", { class: "chart-legend" },
+  container.replaceChildren(svg, tooltip, h("div", { class: "chart-legend" },
     h("span", null, h("i", { class: "legend-files" }), "Files Scanned"),
     h("span", null, h("i", { class: "legend-findings" }), "Findings")
   ));
@@ -1787,30 +2006,140 @@ async function loadEval() {
       ml_only: "ML only (TF-IDF + LR)",
       hybrid: "Hybrid (rules + context + ML)"
     };
-    const f3 = (x) => x.toFixed(3), d = m.dataset;
-    box.replaceChildren(
-      h("p", { class: "muted" }, `Held-out synthetic test set: ${d.test} snippets (${d.test_sensitive} sensitive, ${d.test_non_sensitive} non-sensitive). Trained on ${d.train}, thresholds tuned on a separate ${d.validation}-snippet validation split. Generated ${m.created}.`),
-      h("table", { class: "t" },
-        h("thead", null, h("tr", null, ["System", "Precision", "Recall", "F1", "False-positive rate", "TP", "FP", "TN", "FN"].map((x) => h("th", null, x)))),
-        h("tbody", null, Object.entries(m.systems).map(([k, v]) => h("tr", null,
-          h("td", null, h("strong", null, names[k] || k)),
-          h("td", null, f3(v.precision)),
-          h("td", null, f3(v.recall)),
-          h("td", null, f3(v.f1)),
-          h("td", null, f3(v.fpr)),
-          h("td", null, v.tp),
-          h("td", null, v.fp),
-          h("td", null, v.tn),
-          h("td", null, v.fn))))
+    const f3 = (x) => Number(x).toFixed(3), d = m.dataset;
+    const sysKeys = Object.keys(m.systems || {});
+    let activeSys = m.systems.hybrid ? "hybrid" : sysKeys[0];
+
+    const kpiRow = h("div", { class: "ll-eval-kpis" });
+    const cmPanel = h("div", { class: "ll-panel" });
+    const tabsWrap = h("div", { class: "ll-sys-tabs", role: "tablist", "aria-label": "Select evaluated system" });
+
+    function renderSelectedSystem(key) {
+      activeSys = key;
+      const v = m.systems[key];
+      if (!v) return;
+      tabsWrap.querySelectorAll(".ll-sys-tab").forEach((b) => b.classList.toggle("active", b.dataset.sys === key));
+      kpiRow.replaceChildren(
+        h("div", { class: "ll-eval-kpi" }, h("span", { class: "small muted" }, "Precision"), h("strong", null, f3(v.precision))),
+        h("div", { class: "ll-eval-kpi" }, h("span", { class: "small muted" }, "Recall"), h("strong", null, f3(v.recall))),
+        h("div", { class: "ll-eval-kpi" }, h("span", { class: "small muted" }, "F1 Score"), h("strong", null, f3(v.f1))),
+        h("div", { class: "ll-eval-kpi" }, h("span", { class: "small muted" }, "False-Positive Rate"), h("strong", null, f3(v.fpr)))
+      );
+      cmPanel.replaceChildren(
+        h("h3", { style: "margin:0 0 0.25rem;" }, `Confusion Matrix · ${names[key] || key}`),
+        h("p", { class: "small muted", style: "margin:0;" }, `Test split: ${d.test} synthetic snippets (${d.test_sensitive} sensitive, ${d.test_non_sensitive} non-sensitive)`),
+        h("div", { class: "ll-cm-grid" },
+          h("div", { class: "ll-cm-cell is-tp" }, h("span", { class: "small muted" }, "True Positives (TP)"), h("strong", null, v.tp)),
+          h("div", { class: "ll-cm-cell is-fp" }, h("span", { class: "small muted" }, "False Positives (FP)"), h("strong", null, v.fp)),
+          h("div", { class: "ll-cm-cell is-fn" }, h("span", { class: "small muted" }, "False Negatives (FN)"), h("strong", null, v.fn)),
+          h("div", { class: "ll-cm-cell is-tn" }, h("span", { class: "small muted" }, "True Negatives (TN)"), h("strong", null, v.tn))
+        )
+      );
+    }
+
+    sysKeys.forEach((k) => {
+      const btn = h("button", { type: "button", class: "ll-sys-tab", "data-sys": k, onclick: () => renderSelectedSystem(k) }, names[k] || k);
+      tabsWrap.append(btn);
+    });
+
+    // Grouped SVG bar chart comparing Precision, Recall, F1 across systems
+    const svgW = 640, svgH = 230, padL = 42, padB = 38, padT = 18, padR = 16;
+    const plotW = svgW - padL - padR, plotH = svgH - padT - padB;
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", `0 0 ${svgW} ${svgH}`);
+    svg.setAttribute("class", "trend-svg");
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", "Precision, Recall, and F1 comparison across evaluated systems");
+    [0, 0.25, 0.5, 0.75, 1].forEach((tick) => {
+      const yy = padT + plotH * (1 - tick);
+      const gl = document.createElementNS(svg.namespaceURI, "line");
+      gl.setAttribute("x1", padL); gl.setAttribute("x2", svgW - padR);
+      gl.setAttribute("y1", yy); gl.setAttribute("y2", yy);
+      gl.setAttribute("stroke", "rgba(248,250,252,0.1)");
+      svg.append(gl);
+      const lbl = document.createElementNS(svg.namespaceURI, "text");
+      lbl.setAttribute("x", 6); lbl.setAttribute("y", yy + 4);
+      lbl.setAttribute("fill", "#A1A1B5"); lbl.setAttribute("font-size", "10");
+      lbl.textContent = tick.toFixed(2);
+      svg.append(lbl);
+    });
+    const metricsList = [["precision", "#38BDF8"], ["recall", "#8B5CF6"], ["f1", "#34D399"]];
+    const groupW = plotW / Math.max(sysKeys.length, 1);
+    sysKeys.forEach((k, gi) => {
+      const sys = m.systems[k];
+      const gx = padL + gi * groupW + groupW * 0.16;
+      const barW = (groupW * 0.68) / metricsList.length - 3;
+      metricsList.forEach(([metric, color], mi) => {
+        const val = Number(sys[metric]) || 0;
+        const bh = Math.max(2, val * plotH);
+        const rect = document.createElementNS(svg.namespaceURI, "rect");
+        rect.setAttribute("x", gx + mi * (barW + 4));
+        rect.setAttribute("y", padT + plotH - bh);
+        rect.setAttribute("width", barW);
+        rect.setAttribute("height", bh);
+        rect.setAttribute("rx", "4");
+        rect.setAttribute("fill", color);
+        const tt = document.createElementNS(svg.namespaceURI, "title");
+        tt.textContent = `${names[k] || k} · ${metric}: ${val.toFixed(3)}`;
+        rect.append(tt);
+        svg.append(rect);
+      });
+      const xLbl = document.createElementNS(svg.namespaceURI, "text");
+      xLbl.setAttribute("x", padL + gi * groupW + groupW / 2);
+      xLbl.setAttribute("y", svgH - 12);
+      xLbl.setAttribute("text-anchor", "middle");
+      xLbl.setAttribute("fill", "#A1A1B5");
+      xLbl.setAttribute("font-size", "10");
+      xLbl.textContent = k.replace("_", " ");
+      svg.append(xLbl);
+    });
+
+    const chartPanel = h("div", { class: "ll-panel" },
+      h("h3", { style: "margin:0 0 0.25rem;" }, "System Comparison (Synthetic Test Split)"),
+      h("div", { class: "chart-legend", style: "margin-bottom:0.65rem;" },
+        h("span", null, h("i", { style: "background:#38BDF8" }), "Precision"),
+        h("span", null, h("i", { style: "background:#8B5CF6" }), "Recall"),
+        h("span", null, h("i", { style: "background:#34D399" }), "F1 Score")
       ),
-      h("h3", null, "Read this honestly"),
-      h("ul", { class: "clean-list" }, m.notes.map((n) => h("li", null, n))),
-      h("details", { style: "margin-top: 1rem;" },
-        h("summary", null, "Sample hybrid errors (synthetic snippets)"),
-        h("div", null, h("strong", null, "Missed (false negatives)")),
-        m.hybrid_errors_sample.false_negatives.map((x) => h("div", { class: "err-list" }, x)),
-        h("div", null, h("strong", null, "Wrongly flagged (false positives)")),
-        m.hybrid_errors_sample.false_positives.map((x) => h("div", { class: "err-list" }, x))
+      svg
+    );
+
+    renderSelectedSystem(activeSys);
+
+    box.replaceChildren(
+      h("div", { class: "ll-eval-notice" },
+        h("span", null, h("strong", null, "Synthetic Evaluation Dataset: "), `Held-out ${d.test} snippets (${d.test_sensitive} sensitive, ${d.test_non_sensitive} non-sensitive). Trained on ${d.train}, tuned on ${d.validation} validation snippets. Generated ${m.created}.`),
+        h("span", { class: "ll-home-demo-tag" }, "NOT PRODUCTION PERFORMANCE")
+      ),
+      tabsWrap,
+      kpiRow,
+      h("div", { class: "ll-eval-grid" }, chartPanel, cmPanel),
+      h("div", { class: "ll-panel" },
+        h("h3", { style: "margin:0 0 0.75rem;" }, "Full Evaluation Breakdown"),
+        h("table", { class: "t" },
+          h("thead", null, h("tr", null, ["System", "Precision", "Recall", "F1", "False-positive rate", "TP", "FP", "TN", "FN"].map((x) => h("th", null, x)))),
+          h("tbody", null, Object.entries(m.systems).map(([k, v]) => h("tr", null,
+            h("td", null, h("strong", null, names[k] || k)),
+            h("td", null, f3(v.precision)),
+            h("td", null, f3(v.recall)),
+            h("td", null, f3(v.f1)),
+            h("td", null, f3(v.fpr)),
+            h("td", null, v.tp),
+            h("td", null, v.fp),
+            h("td", null, v.tn),
+            h("td", null, v.fn))))
+        )
+      ),
+      h("div", { class: "ll-panel" },
+        h("h3", { style: "margin:0 0 0.6rem;" }, "Methodology & Honest Limitations"),
+        h("ul", { class: "clean-list" }, m.notes.map((n) => h("li", null, n))),
+        h("details", { style: "margin-top: 1rem;" },
+          h("summary", null, "Sample hybrid errors (synthetic snippets)"),
+          h("div", { style: "margin-top:0.65rem;" }, h("strong", null, "Missed (false negatives)")),
+          m.hybrid_errors_sample.false_negatives.map((x) => h("div", { class: "err-list" }, x)),
+          h("div", { style: "margin-top:0.65rem;" }, h("strong", null, "Wrongly flagged (false positives)")),
+          m.hybrid_errors_sample.false_positives.map((x) => h("div", { class: "err-list" }, x))
+        )
       )
     );
   } catch (e) { box.replaceChildren(h("p", { class: "muted" }, e.message)); }

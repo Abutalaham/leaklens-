@@ -8,3 +8,4 @@ pytesseract>=0.3.10
 reportlab>=4.0
 pytest>=8.0
 cryptography>=42.0
+google-auth>=2.29.0

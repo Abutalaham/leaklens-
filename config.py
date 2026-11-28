@@ -7,6 +7,14 @@ import secrets
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
+_ENV_FILE = BASE_DIR / ".env"
+if _ENV_FILE.is_file():
+    for _line in _ENV_FILE.read_text(encoding="utf-8").splitlines():
+        _line = _line.strip()
+        if _line and not _line.startswith("#") and "=" in _line:
+            _k, _v = _line.split("=", 1)
+            os.environ.setdefault(_k.strip(), _v.strip().strip('"').strip("'"))
+
 INSTANCE_DIR = BASE_DIR / "instance"
 TMP_DIR = INSTANCE_DIR / "tmp"
 DB_PATH = INSTANCE_DIR / "leaklens.db"
@@ -31,6 +39,7 @@ else:
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"
 SESSION_LIFETIME_HOURS = 12
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "").strip()
 
 # ---- rate limiting ----
 LOGIN_MAX_ATTEMPTS = 5
